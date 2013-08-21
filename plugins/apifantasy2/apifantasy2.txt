@@ -1,0 +1,186 @@
+Este plugin es un ejemplo de la segunda generación de "programabilidad del fantasy". En este 
+caso usaremos la posibilidad de obtener un objeto de tipo FantasyAPI, con el que podremos 
+manejar las interioridades del engine de una forma más cómoda que antes. También aprovecharé 
+este plugin para ir documentando las funciones del API del fantasy.
+
+
+Requisitos:
+-----------
+
+- Versión 2.0 del fantasy (junio 2004)
+- Epopeia 1.1.5 o posterior (con soporte de devolución de parámetros)
+
+Uso y disfrute:
+---------------
+
+Para obtener un puntero al objeto API es sencillo:
+
+Escena3D logo ("escenas/arbol/fantasy.u3d","escenas/arbol/fantasy.mat");
+APIFantasy2 prueba();
+
+...
+
+prueba.GetPointer(logo.GetAPI());
+
+Y ya tenemos el objeto creado y a nuestra disposición. El resto de la operativa se ve 
+fácilmente en el plugin.
+
+
+Funciones disponibles:
+----------------------
+
+Aquí están descritas de forma simple. Para ver más a fondo cómo funcionan (y de paso conocer las 
+interioridades del fantasy), mirad el archivo fantasy_api.cpp
+
+NOTA: para el fantasy 2.0, debido a la complejidad que supondría, se ha eliminado la opción de
+crear un nuevo objeto, sólo se puede copiar uno ya existente. De todas formas, nunca se había
+usado la otra funcionalidad :)
+
+* int FantasyAPI::GetActiveCamera(void)
+
+Devuelve la cámara actual del mundo
+
+* int FantasyAPI::CopyObject(char *original_object, char *dst_object)
+
+Copia un objeto y lo añade a la escena actual
+
+ - original_object: nombre del objeto 
+ - dst_object:      nombre del nuevo objeto 
+
+Devuelve un valor entero, correspondiente al identificador del nuevo objeto. Si no se puede 
+crear, devuelve -1. Casos por los que no pueda crearlo:
+
+ -> No existe el objeto original
+ -> El objeto original es parte de una jerarquía
+ -> El objeto original tiene skin y bones asociados
+
+Ojito, la gestión de objetos ha cambiado respecto al fantasy 1, y es un poco más restrictiva. 
+Ahora lo vemos
+
+* void UpdateObject(object_type *obj,unsigned char flags)
+
+Actualiza de forma "efectiva" los datos de vértices y/o normales del objeto. Bueno, en realidad
+activa un flag para que sea el propio fantasy el que lo haga cuando se vaya a dibujar el frame.
+La actualización de normales es equivalente a hacer un Normalize()
+
+- obj: puntero al objeto
+- flags: Máscara de bits. Bit 0-> actualiza vértices; Bit 1 -> actualiza normales
+
+Ahora el objeto mantiene dos tipos de punteros:
+
+VertexPointer: datos tal cual los tiene el objeto
+GLVertexPointer: datos que se pasan al pipeline de OpenGL
+
+Esto es así porque hay veces que un vértice tiene diferentes coordenadas de textura según el
+polígono en el que esté. El plugin que modifique debe tocar OBLIGATORIAMENTE el VertexPointer,
+y DESPUÉS llamar a UpdateObject para que se actualice el otro puntero. En resumen:
+
+// Obtenemos puntero al objeto
+// Manipulamos vértices y/o normales
+APIObject.UpdateObject(obj, flags);
+
+Atributos de un objeto que NO SE PUEDEN MODIFICAR:
+
+- TexCoordPointer (coordenadas de textura)
+- IndexPointer (asignación de vértices a polígonos)
+
+
+* void FantasyAPI::CopyQuaternion(int original_object, int dst_object)
+
+Copia el quaternio de rotacion de un objeto a otro
+
+ - original_object: identificador del objeto origen
+ - dst_object:      identificador del objeto destino
+
+* void FantasyAPI::SetPosition(int objindex,float x,float y,float z)
+
+Sitúa un objeto en el mundo
+
+ - objindex: 	identificador del objeto 
+ - x,y,z:	posicion
+
+* void FantasyAPI::SetPivot(int objindex,float pivotx,float pivoty,float pivotz)
+
+Cambia el pivot point de un objeto
+
+ - objindex: 	identificador del objeto 
+ - pivotx,pivoty,pivotz: posicion del pivot point
+
+* void FantasyAPI::SetScale(int objindex,float scalex,float scaley,float scalez)
+
+Cambia la escala de un objeto
+
+ - objindex: 	identificador del objeto 
+ - scalex,scaley,scalez: nueva escala
+
+* void FantasyAPI::SetRotation(int objindex, Quaternion *rotation)
+
+Establece un nuevo quaternio de rotación para un objeto
+
+ - objindex: 	identificador del objeto 
+ - rotacion: 	puntero a un quaternio con la nueva rotación
+
+* void FantasyAPI::SetAnimateFlag(int objindex, int flag)
+
+Establece el flag "animate" a un objeto. Si el flag está activo, es el propio fantasy el que,
+según la información de keyframing, anima el objeto. Si no, aunque haya splines el fantasy no va
+a animar el objeto, y podremos hacerlo a mano
+
+ - objindex: 	identificador del objeto 
+ - flag:	0: fantasy NO anima el objeto; 1: fantasy ANIMA el objeto
+
+* void FantasyAPI::GetPosition(int objindex,float frame,float *x,float *y,float *z)
+
+Devuelve la posición de un objeto en un momento (frame) exacto
+
+ - objindex:	identificador del objeto
+ - frame: 	frame del que se quiere extraer la posición del objeto
+ - x,y,z: 	ahí se devolverá la posición del objeto
+
+* void FantasyAPI::GetRotation(int objindex,float frame,Quaternion *q)
+
+Devuelve la rotación de un objeto en un momento (frame) exacto
+
+ - objindex:	identificador del objeto
+ - frame: 	frame del que se quiere extraer la rotación del objeto
+ - q: 		quaternio en el que se devolverá la posición del objeto
+
+* void FantasyAPI::GetScale(int objindex,float frame,float *scalex,float *scaley,float *scalez)
+
+Devuelve la escala de un objeto en un momento (frame) exacto
+
+ - objindex:	identificador del objeto
+ - frame: 	frame del que se quiere extraer la escala del objeto
+ - scalex,scaley,scalez: 	ahí se devolverá la escala del objeto
+
+
+
+* void FantasyAPI::Normalize(int objindex)
+
+Recalcula las normales de un objeto. Bueno, en realidad activa un flag para que sea el propio fantasy el que lo haga cuando se vaya a dibujar el frame.
+
+ - objindex: 	identificador del objeto 
+
+* void FantasyAPI::SetMaterial(int objindex, char *matname)
+
+Cambia el material de un objeto
+
+ - objindex: 	identificador del objeto 
+ - matname:	nombre del material
+
+* int FantasyAPI::FindObject(char *name)
+
+
+Devuelve el identificador de un objeto, a partir de su nombre
+
+ - name: nombre del objeto (max 29 chars)
+
+Si no localiza el objeto, devuelve -1 como identificador
+
+* void FantasyAPI::API_Axis_to_Quat(float x, float y, float z, float angle, Quaternion *result)
+* void FantasyAPI::API_Quat_to_RotMatrix(Quaternion *q1, float matrix[4][4])
+* void FantasyAPI::API_Quat_to_Axis(Quaternion *q, float *x, float *y, float *z, float *angle)
+
+Estas tres funciones exponen algo de la funcionalidad de manejo de quaternions del fantasy, 
+en concreto la conversión de un eje+ángulo a quaternio, la conversión de quaternio en matriz de 
+rotación y la conversión de un quaternio en eje+ángulo.

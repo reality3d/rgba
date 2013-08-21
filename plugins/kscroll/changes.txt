@@ -1,0 +1,10 @@
+-------------------
+ Changes :: KScroll
+-------------------
+
+>> 03/11/2003 enlar
+   - Arreglar makefile.linux
+
+>> 28/03/2003 utopian
+   - Primera versión. Pendiente de portar a Linux y ajustar un poco las constantes...
+

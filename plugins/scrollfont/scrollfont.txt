@@ -1,0 +1,30 @@
+------------------------------------
+SCROLLFONT(scrollfont.epl)
+------------------------------------
+-- Inicializacion
+ScrollFont MiScroll(string fichero_con_texto1,string fichero_con_texto2,string fichero_con_texto3,int interspace, int space, string fontfile, string interpreter);
+	fichero_con_textoX: nombre del archivo que contiene el texto del scroller
+	interline  : pixeles entre cada letra
+	space	   : cantos pixeles son un espacio
+	fontfile   : el fichero PNG con la fuente
+	interpreter: fichero que interpreta las fuentes(generado por fopt)
+	
+	Desde el segundo parámetro son clavados al plugin Font
+
+MiScroll.SetAlpha(real alpha)
+	alpha	 : canal alpha a aplicar
+
+MiScroll.SetAlphaChange(real delta_alpha,real tiempo)
+	delta_alpha: Variaci¢n del alpha, en unidades por segundo
+        tiempo	 : duraci¢n en segundos del efecto
+
+MiScroll.SetScale(real x, real y)
+	x,y	 : escalado en el eje X e Y de la fuente
+
+Para el scroll se asume un viewport de 256x256, que por lo tanto es independiente de resolución. Según el tipo de letra habrá que ajustar la escala.
+
+MiScroll.SetBlend(int blend_type)
+	blend_type: 0 -> no blend, sobreimprimir; 1 -> blend
+
+Pulsando arriba y abajo, pgup y pgdn avanza y baja el texto. Pulsando SPACE, rota entre los
+textos con un hermoso fade

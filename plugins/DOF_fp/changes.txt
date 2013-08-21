@@ -1,0 +1,17 @@
+------------------------
+ Changes :: DOF_FP
+------------------------
+
+15/11/2005: enlar
+	- Corregir x,y de entrada para r2t de forma que bajamos la res r2t 
+        en caso de que la res fisica sea menor que lo especificado en el script.
+
+28/12/2004: utopian
+	- Más o menos listo para el CVS, con sus 3 algoritmos y todo 
+
+18/10/2004: utopian
+	- Corregido bug SetBlurIterations (no se exportaba)
+	- Añadida posibilidad de controlar el tamaño del render a textura
+
+13/10/2004: utopian
+	- Primera version

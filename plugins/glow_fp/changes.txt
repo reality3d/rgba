@@ -1,0 +1,23 @@
+--------------------
+ Changes :: GLOW_FP
+--------------------
+>> 15/11/2005 enlar
+   - Corregir x,y de entrada para r2t de forma que bajamos la res r2t 
+   en caso de que la res fisica sea menor que lo especificado en el script.
+
+
+>> 10/04/2005 utopian
+   - Corregidos orientación y filtrado de la textura GLT 
+   - La textura GLT ahora hace stretching, en vez de asumir un tamaño de 1024x1024
+
+>> 13/03/2005 utopian
+   - Corregidos múltiples errores en el algoritmo 2.
+
+>> 29/12/2004 utopian
+   - Añadido algoritmo 2 (textura GLT). Además, se ha simplificado el render final a 1 sola
+     pasada. Ahora mismo es algo más lento, pero lo optimizaré :)
+
+>> 18/10/2004 utopian
+   - Primera versión
+   - Añadida posibilidad de PostOverbright, tamaño de la textura r2t...
+

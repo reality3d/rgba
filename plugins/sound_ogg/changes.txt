@@ -1,0 +1,10 @@
+2005/12/06 enlar:
+
+- Fix: 	use GETODELAY IOCTL to get actual delay of sound; this makes
+	timing accurate and much smother!! :)
+
+2005/12/06 enlar:
+
+- Release: Ogg Vorbis sound system. Only replays ogg vorbis files but
+at least it's not fucked up like fmod/linux :) Compile on Debian Sarge
+with development packages libogg, libvorbis and libvorbisfile

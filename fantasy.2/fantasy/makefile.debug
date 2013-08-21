@@ -1,0 +1,17 @@
+CC=cl
+CFLAGS=/O2sy /Zi /G5As /DWINDOZE /DWIN32  /c /I../../include
+
+OBJS   = fantasy.obj carga.obj misc.obj vista.obj raster.obj mates.obj textura.obj quatern.obj material.obj interp.obj fantasy_api.obj extgl.obj vbo.obj
+DST    = fantasy.lib
+
+
+
+$(DST) : $(OBJS)
+	lib  /out:$(DST) $(OBJS)  ../../../rgba-bin/lib/glt.lib ../../../rgba-bin/lib/epopeia.lib 
+
+.cpp.obj:
+	$(CC) -c $(CFLAGS) $<
+
+clean:
+	del *.obj
+        del *.lib

@@ -1,0 +1,11 @@
+-----------------
+ Changes :: MATH
+-----------------
+
+>> 04/01/2005 enlar
+   - Fix epopeia_system include path
+   - Create makefile, makefile.linux
+
+>> 13/11/2004 r3d
+   - Primera version
+   

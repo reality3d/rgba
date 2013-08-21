@@ -1,0 +1,19 @@
+include makefile.common
+
+PLUGINS = $(PLUGINS_COMMON) \
+graphics_wgl \
+menu_win32 #\
+#sound_bass
+
+
+PLATFORM=mingw32
+.phony: plugins
+
+plugins: $(foreach PLUGIN,$(PLUGINS), $(PLUGIN)/$(PLUGIN).epx)
+
+%.epx : 
+	cd $(dir $@); make -f makefile.$(PLATFORM); cd ..
+        
+clean:
+	$(foreach PLUGIN,$(PLUGINS),cd $(PLUGIN); make -f makefile.$(PLATFORM) clean; cd ..;)
+

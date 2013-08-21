@@ -1,0 +1,31 @@
+
+                                                              IMAGE LIB
+_______________________________________________________________________
+
+>> 09/05/2006 enlar:
+ - Arreglar compilaci¢n de glt.dll. La libreria libpng.lib o los ficheros
+ de encabezamiento png que se usaban eran incorrectos y el glt.dll
+ que se generaba cascaba. Se ha a¤adido un directorio win32 en img_png
+ con la libreria binaria y sus correspondientes ficheros de encabezado.
+
+>> 23/12/2002 utopian:
+ - Integrada una modificacion de Epsilum para que el cargador de jpgs no casque
+
+>> 22/12/2002 enlar
+- #ifdefs para que compile en linux
+- Makefile para Linux (Makefile.linux)
+- Añadido al CVS
+
+>> 21/12:2002
+- Actualizada libPNG a 1.2.5 (compilada usando C+ASM)
+
+
+>> 4/10/2002
+   - La libJPEG se ha compilado SIN debug. Por algun despieste en todas
+     las versiones anteriores estaba CON debug!!!
+   - Se ha sacado de la libreria el código para cargar imagenes desde
+     un packer. Ahora, si se quiere hacer esto, hay que usar la
+     funcion IMG_SetIO() para establecer los 'callbacks'.
+   - Los PNGs de 32bpp pasan del formato GL_BGRA a GL_RGBA. En un futuro
+     se deberían implementar los formatos graficos dentro de la propia
+     estructura de imagen, para poder hacer conversiones entre ellos.

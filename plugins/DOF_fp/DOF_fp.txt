@@ -1,0 +1,99 @@
+---------------------------------------
+Depth of field, FP version (DOF_FP.epl)
+--------------------------------------
+
+Simula un efecto de depth of field a partir de la información del color buffer y el zbuffer (o
+algún otro tipo de textura que lo simule). El funcionamiento básico del algoritmo es:
+
+0. Hacer render a textura del zbuffer (usando la extensión ARB_depth_texture o tomando una textura)
+1. Hacer render a textura de la pantalla
+2. Blur del render a textura de la pantalla, en una textura 256x256
+3. Montar el render a pantalla completo y el de la textura, mezclando en un pixel shader
+   según la distancia (dada por la textura del zbuffer)
+
+Hay dos parámetros básicos para controlar el efecto: focus y range. Gráficamente sería tal
+que así
+
+
+
+                     {-----} range
+		|       |		       |
+    -{		|-------|----------------------|
+   cámara	|       |		       |
+		^       ^                      ^
+	       0.0    focus		      1.0
+
+
+Todo aquello cuya Z esté en focus, dentro del rango definido por range, se ve en primer 
+plano, sin desenfocar. Lo que esté por delante o por detrás se verá blurreado, con más 
+blur cuando más lejos se esté de focus.
+
+En el efecto, range es inverso: cuando mayor es range, menos cosas se ven enfocadas, y al
+revés.
+
+
+* DOF_FP dof(int r2tsizex, int r2tsizey);
+
+	Inicializa el efecto. Los parámetros definen el tamaño de la textura que se blurreará.
+	Estos tamaños tienen que ser:
+	
+	- Potencia de 2
+	- Si es mayor que el tamaño de la pantalla, se ajusta a la potencia de 2 inferior más cercana.
+
+* dof.SetFocus(float focus);
+
+	Establece el punto de enfoque, entre 0.0 y 1.0. En teoría nada nos impide ponerlo más
+	allá, pero seguramente todo saldrá desenfocado :). Por defecto es 0.1
+
+
+* dof.SetRange(float range);
+
+	Establece la amplitud de la zona que se ve enfocada. A mayor "range", menos zona se ve
+ 	enfocada. Es un poco anti-intuitivo, pero bueno... Por defecto es 3.0
+
+* dof.SetBlurIterations(int iterations);
+
+   	Define el número de pasadas de blur que se harán a la imagen de brillos. A más pasadas, 
+	más blur (pero más lento). Por defecto es 1. Se aplica un box blur de radio 4 (la segunda 
+	pasada sería radio 16, y así).
+
+* dof.SetAlgorithm(int algoritmo);
+
+	Define qué algoritmo vamos a usar para el DOF. Hay tres opciones:
+	
+	0: Lee la profundidad directamente del Zbuffer, usando la extensión ARB_depth_texture
+	   (opción por defecto). Es posiblemente el que dé un efecto menos vistoso
+	
+	1: Utiliza el canal alpha de la textura de pantalla. Un valor alpha de 0 indica máxima
+	   cercanía a la pantalla, y 1 de máxima lejanía. Para poner el alpha se requiere pintar
+	   los objetos con un vertex shader específico, que ponga los valores apropiados de alpha 
+	  
+	2: Utiliza una textura auxiliar, compartida con GLT, como "zbuffer". Así, tendríamos 3
+	   texturas:
+	   
+	   - pantalla
+	   - pantalla "blurreada"
+	   - pantalla en escala de grises, siendo cada pixel un indicador de la distancia
+	     respecto a la pantalla
+	     
+	   El valor de color se utilizará para definir el nivel de blur/no blur. Además, por si
+	   una escena tiene fondo vacío, el canal alpha definirá si hay objeto o fondo. Un valor
+	   de 0.5 (+- 0.1) dice que hay objeto, mientras que cualquier otro valor dice que está
+	   el fondo.
+	   
+	   Para utilizar este algoritmo es necesario definir la textura GLT que almacenará la
+	   profundidad (con SetSharedDepthTexture), y activar el FX de DOF en el fantasy (ver 
+	   la documentación del fantasy para saber cómo hacerlo). 
+	   
+* dof.SetSharedDepthTexture(string Texture)
+
+	Define la textura compartida GLT para usar como buffer de profundidad, sólo si se está
+	usando el algoritmo 2.
+
+
+TODO:
+-----
+
+- Probar a blurrear la textura de profundidad
+- Múltiples texturas con distintos niveles de blur
+- Efecto bokeh (hexágonos en los puntos desenfocados)

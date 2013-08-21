@@ -1,0 +1,2 @@
+PLATFORM=linux
+include makefile

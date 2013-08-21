@@ -1,0 +1,54 @@
+SHELL=command.exe
+# Epopeia demosystem makefile by Enlar 2002 for GNU make
+
+OBJ_SUFFIX	= obj
+LIB_PREFIX	=
+LIB_SUFFIX	= lib
+
+EXE_SUFFIX	= exe
+
+CC		= cl
+CCINCLUDES	= /I../include /Ieffects/png/h /I../include/packer
+CCOPTS		= /c /Ox /DWIN32 $(CCINCLUDES)
+CCOUT        	= /Fo
+
+LINK		= link
+#LINKOPTS    	= /nologo /incremental:no /subsystem:console /LIBPATH:c:\archiv~1\micros~1\vc98\lib /NODEFAULTLIB:LIBC
+LINKOPTS    	= /nologo /incremental:no /subsystem:windows /LIBPATH:c:\archiv~1\micros~1\vc98\lib /NODEFAULTLIB:LIBC
+LINKOUT        	= /OUT:
+LINKSRC		= $(OBJS) $(LIBS) $(SYSLIBS) $(RES) $(LIBS_WIN) $(LIBS_EPOPEIA)
+
+RES		= win32/res/resource.res
+
+LIB		= lib
+LIBSRC		= $(OBJS) $(RES)
+LIBOUT		= /OUT:
+LIBOPTS		= /NOLOGO /NODEFAULTLIB 
+
+LIBS 		= gdi32.lib opengl32.lib glu32.lib glaux.lib
+LIBS_WIN	= 
+SYSLIBS 	= user32.lib kernel32.lib advapi32.lib msvcrt.lib shell32.lib ComCtl32.lib ComDlg32.lib 
+LIBS_EPOPEIA	= ../lib/epopeia.lib 
+
+OBJS  = $(addsuffix .$(OBJ_SUFFIX), $(OBJ_MAIN) $(OBJ_EFFECTS) $(OBJ_DIALOG))
+        
+OBJ_MAIN 	= main
+OBJ_EFFECTS	= 
+
+OBJ_DIALOG	= 
+TARGET		= epopeia
+
+$(TARGET).$(EXE_SUFFIX) : $(OBJS) $(LIBS_EPOPEIA)
+	@echo $(LINKOPTS) $(LINKSRC) >link.cmd
+	$(LINK) $(LINKOUT)$@ @link.cmd
+
+install : $(TARGET)
+	copy $(TARGET) ..\..\rgba-bin\lib
+
+
+%.$(OBJ_SUFFIX) : %.c
+	@echo $(CC) $(CCOPTS) $< $(CCOUT)$@
+	$(CC) $(CCOPTS) $< $(CCOUT)$@
+
+%.res : %.rc
+	cvtres $< 

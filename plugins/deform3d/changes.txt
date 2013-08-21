@@ -1,0 +1,23 @@
+---------------------------------------------------
+ Changes :: Deformaci¢n de mallas 3d (deform3d.epl)
+---------------------------------------------------
+
+>> 12/08/2004 enlar
+   - Quitar fichero normal.cpp que estaba de sobra
+   - Hacer merge manual del cambio anterior de r3D al CVS y actualizar makefiles
+
+>> 08/06/2004 r3D
+   - Soporte de Wildcard(multiples objetos deformandose a la vez)
+   
+>> 04/06/2004 utopian
+   - Nueva versión, adaptada al API del fantasy 2.0
+
+>> 27/04/2004 enlar
+   - Makefile mingw32 unificado con linux
+
+>> 04/05/2003 enlar
+   - Subido al CVS
+   - Fixes y makefile para Linux
+
+>> 14/04/2003
+   - Primera versi¢n

@@ -1,0 +1,42 @@
+#
+# PLUGIN Makefile
+#
+
+
+DST = apifantasy2.epx
+OBJ = apifantasy2.o
+
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../../rgba-bin/lib/
+
+# System libs
+LIB_SYS     = -Lgl -Lglu
+
+# Compiler options
+CC	= gcc
+CCOPTS  = -c -O3 -march=pentium -ffast-math -DLINUX  -I../../include
+
+# Linker options
+LINKOPTS =
+
+#
+# Main
+#
+$(DST): $(OBJ) $(LIB_FANTASY)
+	gcc -shared $(OBJ) $(LIB_FANTASY) -L../../../rgba-bin/lib/ -lglt -lepopeia  -o $(DST) 
+
+clean:
+	rm -f $(OBJ)
+	rm -f *.so
+	rm -f *.epx
+	
+install: $(DST)
+	cp $(DST) ../../../rgba-bin/demosystem/plugin
+#
+# Objs
+#
+
+apifantasy2.o: apifantasy2.cpp
+	$(CC) $(CCOPTS) apifantasy2.cpp

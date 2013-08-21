@@ -1,0 +1,10 @@
+WIN32 MENU PLUGIN
+By epsilum/rgba
+add. code enlar/rgba
+
+2004/08/16 enlar
+- Primera version del plugin, basado en el code del main.exe de la
+  R.E.D.
+- Pluginizar, hacer que los textos de la ventana y la barra de tareas
+  sean el nombre de demo indicado por Epopeia, makefile para mingw32.
+

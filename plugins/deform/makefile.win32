@@ -1,0 +1,56 @@
+#
+# PLUGIN Makefile
+#
+
+DST      = deform.dll
+DST_FILE = ..\..\plugin\deform.epl
+OBJ      = deform.obj wave.obj vector.obj deform_epopeia.obj interp.obj
+
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../epopeia.lib
+
+# System libs
+LIBS        = c:\prog\glt\glt.lib expr/expreval.lib
+LIB_SYS     = user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib
+
+# Compiler options
+CC	= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA) -Ic:\prog\glt
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows
+
+
+#
+# Main
+#
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIBS) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+	copy $(DST) $(DST_FILE)
+
+clean:
+	del $(OBJ)
+	del deform.exp
+	del deform.dll
+	del deform.lib
+
+
+#
+# Objs
+#
+deform.obj: deform.c
+	$(CC) $(CCOPTS) deform.c
+
+wave.obj: wave.c
+	$(CC) $(CCOPTS) wave.c
+
+vector.obj: vector.c
+	$(CC) $(CCOPTS) vector.c
+
+deform_epopeia.obj: deform_epopeia.c
+	$(CC) $(CCOPTS) deform_epopeia.c
+
+interp.obj: interp.c
+	$(CC) $(CCOPTS) interp.c

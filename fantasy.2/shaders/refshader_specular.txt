@@ -1,0 +1,116 @@
+!!ARBvp1.0
+
+# Intento de shader de referencia para simular la iluminacion de opengl
+# con luces posicionales. Esta version añade la simulacion del comportamiento de
+# GL_SEPARATE_SPECULAR_COLOR.
+#
+# Basado el algo de código de nVidia y peculiaridades propias del fantasy :)
+# Comentarios
+#
+# - Al ser una primera prueba, sólo tiene en cuenta la primera fuente de luz. Expandirlo a 
+#   multiples fuentes de luz es facil, pero largo... Es una pena que no haya bucles.
+#
+# - La luz no me sale 100% clavada a como lo hace OpenGL. Tendré que investigarlo.
+
+
+ATTRIB inPosition = vertex.position;
+ATTRIB inNormal = vertex.normal;
+ATTRIB inTexcoord = vertex.texcoord;
+
+PARAM mvinv[4] = { state.matrix.modelview.invtrans };
+PARAM mv[4] = { state.matrix.modelview };
+PARAM mvp[4] = { state.matrix.mvp };
+PARAM specExp = state.material.shininess;
+PARAM emission = state.material.emission;
+PARAM lightPos = state.light[0].position;
+PARAM atten = state.light[0].attenuation;
+PARAM ambientCol = state.lightprod[0].ambient;
+PARAM diffuseCol = state.lightprod[0].diffuse;
+PARAM specularCol = state.lightprod[0].specular;
+
+
+TEMP xfNormal, temp, dots;
+TEMP outPosTemp;
+TEMP vert2light,eye2vertex;
+TEMP distance,halfvector;
+TEMP attcoef;
+
+OUTPUT outPos = result.position;
+OUTPUT outColor = result.color;
+OUTPUT outColor2 = result.color.secondary;
+OUTPUT outTexcoord = result.texcoord;
+
+
+# Transform the vertex to clip coordinates.
+DP4 outPos.x, mvp[0], inPosition;
+DP4 outPos.y, mvp[1], inPosition;
+DP4 outPos.z, mvp[2], inPosition;
+DP4 outPos.w, mvp[3], inPosition;
+
+# Transform the vertex to eye coordinates, for the lighting calculations
+DP4 outPosTemp.x, mv[0], inPosition;
+DP4 outPosTemp.y, mv[1], inPosition;
+DP4 outPosTemp.z, mv[2], inPosition;
+DP4 outPosTemp.w, mv[3], inPosition;
+
+# Transform the normal to eye coordinates.
+DP3 xfNormal.x, mvinv[0], inNormal;
+DP3 xfNormal.y, mvinv[1], inNormal;
+DP3 xfNormal.z, mvinv[2], inNormal;
+
+# Normalizamos el vector normal
+
+DP3 xfNormal.w, xfNormal, xfNormal;
+RSQ xfNormal.w, xfNormal.w;
+MUL xfNormal, xfNormal, xfNormal.w;
+
+# Create the normalized vector from the eye to the vertex
+DP3 eye2vertex.w, outPosTemp, outPosTemp;
+RSQ eye2vertex.w, eye2vertex.w;
+MUL eye2vertex, -outPosTemp, eye2vertex.w;
+
+# Para despues, cogemos el valor de shininess del material
+MOV dots.w, specExp.x;
+
+####################### Light 0 #######################
+
+# Empezamos con el calculo de la luz
+ADD vert2light, lightPos, -outPosTemp;		# Tenemos el vector del vertice a la fuente
+DP3 temp.w, vert2light, vert2light;		# temp.w = x*x + y*y + z*z
+RSQ vert2light.w, temp.w;			# vert2light.w = 1 / sqrt (x*x+y*y+z*z)
+DST distance, temp.wwww, vert2light.wwww;	# en distance.y tenemos la distancia
+
+# Normalizamos el vector vert2light
+MUL vert2light, vert2light, vert2light.w;
+
+# Para el calculo del coeficiente especular necesitamos el half vector (light vector + eye vector)
+# y normalizarlo
+ADD halfvector, vert2light, eye2vertex;
+DP3 halfvector.w, halfvector, halfvector;
+RSQ halfvector.w, halfvector.w;
+MUL halfvector, halfvector, halfvector.w;
+
+# Calculo del coeficiente difuso
+DP3 dots.x, xfNormal, vert2light;
+# Calculo del coeficiente especular
+DP3 dots.y, xfNormal, halfvector ;
+
+# Calculo del coeficiente de atenuacion
+DP3 temp.w, distance, atten;		# a0 + a1*d + a2*d2
+RCP attcoef.w, temp.w;			# 1 / (a0 + a1*d + a2*d2), o el factor de atenuacion
+
+# Calculo de la luz
+LIT dots, dots;
+MUL dots, dots, attcoef.w;		# Utilizamos la atenuacion
+
+# Acumulamos las contribuciones...
+MAD temp, dots.y, diffuseCol, ambientCol;	# (difusa * Kdifusa) + ambient
+ADD outColor.xyz, temp, emission;			# metemos la emision 
+MOV outColor.w, diffuseCol.w;
+
+# Ahora la componente especular 
+MUL outColor2.xyz, dots.z, specularCol;		# (specular * Kspecular)
+
+# Sacamos la coordenada de textura
+MOV outTexcoord, inTexcoord;
+END

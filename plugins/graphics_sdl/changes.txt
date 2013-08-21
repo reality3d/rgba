@@ -1,0 +1,5 @@
+2004-10-31 enlar:
+
++ Fix: retry mode change resetting SDL_GL depth buffer attribute
+	to minimun-good value of 16. This makes the subsystem work on
+        enlar's laptop Ati Match64

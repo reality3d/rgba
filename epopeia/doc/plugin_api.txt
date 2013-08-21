@@ -1,0 +1,52 @@
+Legacy (upto and including 1.2.x)
+------
+
+char *Epopeia_PluginName(void)
+MANDATORY
+
+Returns plugin name string (usually includes author)
+
+void  Epopeia_RegisterType(void)
+MANDATORY
+
+This callback registers zero to various types with their methods, as well as additional 
+functions.
+
+Each registered type must have at least the following methods:
+(parameters in brackets show parameters of the method that must not be
+added with Method_AddParameterType, but the method receives upon invocation)
+
+void *New()
+      Delete([void *self])
+      DoFrame([void *self], [TRenderContext *rc], [TSoundContext *sc])
+      Start([void *self], int z)
+      Stop([void *self])
+      
+The method can have any additional methods, that are callable from the script.
+
+
+The available API from Epopeia for plugins is the following:
+
+EPOPEIA_API TTypeId  Type_Register (char * TypeName);
+EPOPEIA_API void     Type_AddMethod(TTypeId Type, TMethod* Method);
+EPOPEIA_API TMethod* Method_New(char* Name, void* CallAddress);
+// Los parametros hay que anyadirlos en orden. El primer parametro
+// siempre es el objeto mismo (self), ese no hay que meterlo
+EPOPEIA_API void     Method_AddParameterType(TMethod* Method, TTypeId Type);
+EPOPEIA_API void     Method_SetReturnType(TMethod* Method, TTypeId Type);
+extern EPOPEIA_API_VAR TTypeId Type_IntegerId;
+extern EPOPEIA_API_VAR TTypeId Type_RealId;
+extern EPOPEIA_API_VAR TTypeId Type_StringId;
+
+/* Alta de funciones intrinsecas */
+EPOPEIA_API void        Function_AddParameterType(TFunctionId FunctionId, TTypeId Type);
+EPOPEIA_API TFunctionId Function_New(const char* FunctionName, void* CallAddress, TTypeId ReturnType);
+
+EPOPEIA_API unsigned long Epopeia_GetTimeMs(void);
+EPOPEIA_API void          Epopeia_GetResolution(int* width, int* height, int* bpp, int* windowed);
+EPOPEIA_API unsigned int  Epopeia_GetResX(void);
+EPOPEIA_API unsigned int  Epopeia_GetResY(void);
+
+      
+
+.

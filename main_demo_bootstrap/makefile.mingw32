@@ -1,0 +1,60 @@
+# Linux rulez
+# Epopeia demosystem makefile by Enlar 2002 for GNU make
+
+ifeq ($(MINGW32_PREFIX),)
+	MINGW32_PREFIX=i386-mingw32
+endif
+
+OBJ_SUFFIX	= o
+LIB_PREFIX	= lib
+LIB_SUFFIX	= a
+
+EXE_SUFFIX	= .exe
+
+CC		= $(MINGW32_PREFIX)-gcc -c
+CCINCLUDES	= -I../include-mingw32 -I../include 
+CCOPTS		= -O3 -march=pentium -ffast-math -DMINGW32 $(CCINCLUDES)
+CCOUT        	= -o
+
+LINK		= $(MINGW32_PREFIX)-gcc 
+LINKOPTS    	= -L../lib -lepopeiadll ../lib/glt.lib
+LINKOUT        	= -o
+LINKSRC		= $(OBJS) $(LIBS) $(SYSLIBS) $(RES) $(LIBS_WIN) $(LIBS_EPOPEIA)
+
+RC		= $(MINGW32_PREFIX)-windres
+STRIP		= $(MINGW32_PREFIX)-strip
+
+RES		= resource.o
+
+LIBS 		= 
+LIBS_WIN	= 
+SYSLIBS 	= 
+LIBS_EPOPEIA	= 
+
+OBJS  = $(addsuffix .$(OBJ_SUFFIX), $(OBJ_MAIN) $(OBJ_EFFECTS) $(OBJ_DIALOG))
+        
+OBJ_MAIN 	= main $(OBJ_DIALOG)
+OBJ_EFFECTS	= 
+
+OBJ_DIALOG	= 
+
+TARGET		= epopeia
+
+$(TARGET)$(EXE_SUFFIX) : $(OBJS)  $(RES) $(LIBS_EPOPEIA)
+	$(LINK) $(LINKSRC) $(LINKOPTS) $(LINKOUT)$@
+	$(STRIP) $@
+
+install : $(TARGET)
+	cp $(TARGET) ../../rgba-bin/lib
+        
+clean:
+	-rm $(OBJS)
+	-rm $(TARGET)$(EXE_SUFFIX)
+	-rm $(RES)
+
+%.$(OBJ_SUFFIX) : %.c
+	$(CC) $(CCOPTS) $< $(CCOUT)$@
+        
+%.$(OBJ_SUFFIX) : %.rc
+	$(RC) $< -o $@
+

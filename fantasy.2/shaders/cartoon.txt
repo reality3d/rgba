@@ -1,0 +1,55 @@
+!!ARBvp1.0
+
+# Constantes
+PARAM mvp[4]     = { state.matrix.mvp }; # modelview projection matrix
+PARAM mvinv[4] = { state.matrix.modelview.invtrans };
+PARAM  lightPos     = state.light[0].position;
+PARAM menosuno = { 1.0, 1.0, -1.0, 1.0 };
+
+# Per-vertex inputs
+ATTRIB inPosition = vertex.position;
+ATTRIB inColor    = vertex.color;
+ATTRIB inTexcoord = vertex.texcoord;
+ATTRIB inNormal = vertex.normal;
+
+
+# Per-vertex outputs
+OUTPUT outPosition    = result.position;
+OUTPUT outColor    = result.color;
+OUTPUT outTexcoord = result.texcoord;
+
+
+# Temporales
+
+TEMP kk,xfNormal,outPosTemp;
+TEMP lightDir;
+
+# Primero pasamos a coordenadas de vista
+
+DP4 outPosTemp.x, mvp[0], inPosition;   # Transform the x component of the per-vertex position into clip-space
+DP4 outPosTemp.y, mvp[1], inPosition;   # Transform the y component of the per-vertex position into clip-space
+DP4 outPosTemp.z, mvp[2], inPosition;   # Transform the z component of the per-vertex position into clip-space
+DP4 outPosTemp.w, mvp[3], inPosition;   # Transform the w component of the per-vertex position into clip-space
+MOV outPosition, outPosTemp;
+
+# Tambien transformamos la normal
+
+DP3 xfNormal.x, mvinv[0], inNormal;
+DP3 xfNormal.y, mvinv[1], inNormal;
+DP3 xfNormal.z, mvinv[2], inNormal;
+
+# Calculamos el vector de la fuente al vertice
+SUB lightDir, lightPos, outPosTemp;
+
+# Normalizamos el vector de luz
+DP3 kk.w, lightDir, lightDir; # result.w = nx^2+ny^2+nz^2
+RSQ kk.w, kk.w; 		  # result.w = 1/sqrt(nx^2+ny^2+nz^2)
+MUL kk.xyz, kk.w, lightDir;
+MUL kk, kk, menosuno;
+
+DP3 kk, xfNormal, kk;
+
+MAX outTexcoord.x, kk.x, 0;
+
+MOV outColor, inColor;                   # Use the original per-vertex color specified
+END

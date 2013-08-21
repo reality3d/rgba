@@ -1,0 +1,53 @@
+##
+## COMPILER OPTIONS
+##
+
+
+#
+# PLUGIN Makefile
+#
+
+DST_FILE = fantasy.epx
+OBJ      = fantasy_epopeia.o
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../include
+
+
+# System libs
+LIB_SYS     = -LGL -LGLU -Lglx
+LIB_FANTASY = fantasy/fantasy.a
+
+# Compiler options
+CC	= gcc
+CCOPTS  = -O3 -march=pentium -ffast-math -DLINUX  -I$(H_EPOPEIA)
+
+# Linker options
+LINKOPTS =
+
+#
+# Main
+#
+
+$(DST_FILE): $(OBJ) $(LIB_FANTASY)
+	gcc -shared $(OBJ)  $(LIB_FANTASY) -L../../rgba-bin/lib/ -lglt -lepopeia -lstdc++  -o $(DST_FILE) 
+
+clean:
+	rm -f $(OBJ)
+	rm -f *.so
+	rm -f *.epx
+
+install: $(DST_FILE)
+	cp $(DST_FILE) ../../rgba-bin/demosystem/plugin
+
+#
+# Objs
+#
+fantasy_epopeia.o: fantasy_epopeia.cpp
+	$(CC) -c  $(CCOPTS) fantasy_epopeia.cpp
+
+fantasy/fantasy.so:
+	cd fantasy
+	make -f makefile.linux
+	cd ..
+

@@ -1,0 +1,29 @@
+-----------------
+ Changes :: Fondo
+-----------------
+
+>> 2004/10/31 enlar
+
+- Create makefile.mingw32
+- Update to Epopeia 1.4.0 API and change comments to english.
+
+>> 05/05/2003 enlar
+- Renombrados los makefiles a lowercase 
+- Cambiados al sistema estandar de los plugins
+
+>> 29/03/2003 epsilum:
+   - Se actualiza a la nueva version del epopeia, poniendole un parametro
+   al metodo Start.
+   - Se cambia el inicializar el color de borrado del metodo Start al New,
+   porque si haciamos un SetColor antes del Start, luego se ponia el color
+   por defecto! ;)
+enlar:
+   - Fix para que compile bien con los paths de CVS
+   - Subir al CVS
+
+>> 15/07/2002
+   - Ahora solo se borra el COLOR BUFFER (el depth buffer lo debe limpiar
+   cada plugin que lo use)
+
+>> 14/07/2002
+   - Añadido método para poder cambiar el color de fondo (SetColor)

@@ -1,0 +1,26 @@
+----------------------------------
+ MBLUR  - Motion Blur (mblur.epl)
+----------------------------------
+
+ Hace el efecto "motion blur", a todo lo que esté en el color buffer
+cuando le toque ejecutarse, es decir, a todos los "layers" que estén
+por encima de él.
+
+>> MBlur mblur ( );
+
+>> mblur.SetAlpha (real alpha)
+    Nivel de "motion blur" [0..1]
+    0.00 -> Imagen original (sin nada de blur)
+    0.99 -> Maximo motion blur
+
+>> mblur.SetAlphaNew (real alpha)
+    Establece la transparencia de del nuevo frame [0..1]
+
+>> mblur.SetMode (int mode)
+    Modo de mezcla entre los frames antigüos y el nuevo
+    mode = 0 => Blend normal
+    mode = 1 => Blend aditivo
+
+>> mblur.Clear ( )
+    Limpia el buffer de los frames antigüos. Util, por ejemplo, si queremos que
+al cambiar de escena, no queden rastros de la anterior en el blur.

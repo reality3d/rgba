@@ -1,0 +1,139 @@
+------------------------------------
+SPRITE(sprite.epl)
+------------------------------------
+  >> NOTA: Las modificaciones para soporte de multisprite estan al final!
+
+
+-­Ojo! Cada comando SetXXX anula los efectos del SetXXXChange anterior.
+Por defecto los valores son:
+Posicion: x=0, y=0. Escalado: x=1, y=1. Alpha: 1. Blend: 0 (no blend).
+-- Inicializacion
+Sprite Misprite(string filename,int resx,int resy)
+	filename : nombre del sprite a dibujar
+        resx     : resolucion X de la pantalla
+        resy	 : resolucion Y de la pantalla
+
+
+
+
+Misprite.SetPos(real x, real y)
+	x,y	 : posicion en pantalla, relativa al CENTRO del sprite
+
+Misprite.SetPosChange(real delta_x, real delta_y)
+	delta_x	 : Desplazamiento en el eje X, en pixeles por segundo
+        delta_y	 : Desplazamiento en el eje Y, en pixeles por segundo
+
+Misprite.SetPosRandom(real centerx, real centery,real maxdespx, real maxdespy)
+	centerx,centery: punto central de la posición aleatoria
+	maxdespx,maxdespy: desplazamientos máximos respecto al punto central
+
+Lo que hace este efecto es, cada frame, calcular un número aleatorio según los 
+desplazamientos máximos, que servirá para mover el sprite respecto al punto que
+se le especificó.
+
+Cada SetPos anula a los anteriores, es decir, un SetPos anula el SetPosChange 
+y/o SetPosRandom anterior, y un SetPosRandom anula el SetPosChange y el SetPos 
+anterior. El SetPoschange anula el SetPosRandom, pero NO el SetPos.
+
+Misprite.SetScale(real x, real y)
+	x,y	 : escalado en el eje X e Y
+
+Misprite.SetScaleChange(real delta_x, real delta_y)
+	delta_x	 : Variacion de escalado en el eje X, en unidades por segundo
+        delta_y	 : Variacion de escalado en el eje Y, en unidades por segundo
+
+Misprite.SetScaleFade (real scale_src_x, real scale_src_y,
+                       real scale_dst_x, real scale_dst_y,
+                       real dtime)
+  Hace una transicion de escalado entre scale_src y scale_dst en dtime (segundos)
+
+Misprite.SetAlpha(real alpha)
+	alpha	 : canal alpha a aplicar
+
+Misprite.SetAlphaChange(real delta_alpha,real tiempo)
+	delta_alpha: Variacion del alpha, en unidades por segundo
+        tiempo	 : duracion en segundos del efecto
+
+Misprite.SetAlphaSin(real amplitud, real fase)
+	amplitud: amplitud del seno (altura máxima de la variación)
+	fase: fase del seno (número de ciclos por segundo)
+	
+Misprite.SetAlphaPulse(real amplitud, real fase)
+	amplitud: amplitud del pulso (altura máxima de la variación)
+	fase: fase del pulso (número de ciclos por segundo)
+	Nota: El pulso empieza en amplitud máxima
+
+Misprite.SetAlphaRandom(real alpha, real maxdesp)
+	alpha: alpha "central"
+	maxdesp: máxima variación respecto del centro
+
+Su funcionamiento es análogo a la versión del SetPosRandom
+
+Aquí cada SetAlphaXXX también anula los efectos de los SetAlphaXXX anteriores, y 
+el SetAlphaChange NO anula el SetAlpha anterior. Es fácil de recordar si se sabe 
+cómo está implementado. Hay una variable que define cómo se varía el alpha cada 
+frame. Sus valores son:
+
+0 -> No se varía el alpha (puesto por SetAlpha)
+1 -> Variación lineal (SetAlphaChange)
+2 -> Variación sinusoidal (SetAlphaSin)
+3 -> Variación aleatoria (SetAlphaRandom)
+
+Y sólo el SetAlphaChange utiliza el valor anterior del alpha para calcular el 
+siguiente. Por eso no anula un SetAlpha y el resto sí.
+
+Misprite.SetBlend(int blend)
+	blend: 0 = no hacer blend; 1 = hacer blend; 2 = hacer add blend (en pruebas)
+        
+        Notas: es independiente de que se le ponga un valor de alpha o no.
+               Si le ponemos blend, aunque el alpha sea 1 har  una cierta
+               mezcla. Lo mejor es probar las diferencias...
+
+               Para hacer un fade, queda muy efectivo lo siguiente:
+
+               SetBlend(1)
+               SetAlphaChange(-0.1,tiempodefade)
+
+Misprite.SetGridSize (int size_x, int size_y);--Define el tamaño del grid(puede ser dinámico). Mayor numero mayor suavidad
+
+Misprite.SetDeform (int deform); -- 0: No Deform (default), 1: Deform UV, 2: Deform XY
+
+-- Deformación de las coordenadas de los vértices (coord. de textura fijas!)
+-- waves: Numero de olas que se forman en la deformación
+Misprite.SetDeformX (real waves, real amplitude, real frequency);
+Misprite.SetDeformY (real waves, real amplitude, real frequency);
+
+-- Deformación de las coordenadas de la textura (vértices fijos!)
+--   La amplitud como múcho podría ser 1.0, y los valores normales de
+-- media deberían ser en torno a 0.05 mas o menos.
+--   El numero de "olas" (waves) en este tipo de deformación no debe
+-- ser muy alto, sino, no se ve nada. De 0.0 a 5.0 o así
+Misprite.SetDeformU (real waves, real amplitude, real frequency);
+Misprite.SetDeformV (real waves, real amplitude, real frequency);
+
+
+
+-----------------
+MULTISPRITE ADDON
+-----------------
+
+  Para cargar varios sprites, en la inicializacion del objeto, pasarle
+los nombres de fichero separados por coma ",".
+  Ej: Sprite spr ("img1.png,img2.jpg,img3.png", 640, 480);
+
+
+NUEVAS OPERACIONES:
+-------------------
+
+>> sprite.SetSprite (int num_sprite)
+    Fija el sprite a utilizar (por defecto se inicializa a cero)
+
+>> sprite.SetLoopMode (int mode)
+    mode 0: Static sprite
+    mode 1: Loop
+    mode 2: Ping - Pong
+    mode 3: Random
+
+>> sprite.SetChangeSpeed (float sprites_per_secs)
+    Fija la velocidad de transición entre sprites en sprites por segundo (def: 1.0)
+    Una velocidad de 0.0 significa que se cambie de sprite cada frame.

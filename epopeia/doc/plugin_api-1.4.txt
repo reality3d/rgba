@@ -1,0 +1,116 @@
+Version 1.4.0
+-------------
+
+A Epopeia plugins is a Win32 dynamic library (DLL) with an EPL
+file extension, or a Linux/i386 .so library with EPX extension.
+The plugin must implement and export the following entry-points:
+
+
+int Epopeia_PluginAPIVersion()
+MANDATORY (1.4.0)
+
+	Must return 140 (1.4.0) or higher.
+
+EPluginType Epopeia_PluginType()
+MANDATORY (1.4.0)
+
+	Returns what type of plugin it is. Possible values are:
+	* Effect: ptEffect
+        * Loading menu: ptMenu
+        * Sound Subsystem: ptSound
+        * Graphics Subsystem (also keyboard due to window focus etc.): ptGraphics
+
+char *Epopeia_PluginName(void)
+MANDATORY 
+
+	Returns plugin name string (usually includes author)
+
+* LOADING MENU PLUGINS
+
+int Epopeia_LaunchMenu(const char *demoname, int *width, int *height, int *windowed) 
+MANDATORY (1.4.0)
+
+Launches the menu contained in the plugin. It receives the demo name as well as
+pointers to width, height, bpp and windowed with default values that should be 
+changed on users request. The menu system should be able to detect what modes
+are available on the system. 
+
+It should be able to browse SoundSystems and
+GraphicsSystems available from Epopeia with some new API *FIXME* list API here
+
+Returns 0 if successful nonzero value if error.
+
+* GRAPHICS SUBSYSTEM
+TGraphics *Epopeia_GetGraphicsSystem() MANDATORY (1.4.0)
+
+Returns GraphicsSystem TGraphics object. Look at graphics_wgl example plugin in
+src directory.
+
+TGraphics object has a GetKeyboardSubsystem method that returns a TKeyboard object.
+
+
+* SOUND SUBSYSTEM
+TSound *Epopeia_GetSoundSystem()
+MANDATORY (1.4.0)
+
+Returns SoundSystem TSound object. Look at sound_fmod example plugin in
+src directory.
+
+
+* EFFECT PLUGINS
+
+void  Epopeia_RegisterType(void)
+MANDATORY
+
+This callback registers zero to various types with their methods, as well as additional 
+functions.
+
+Each registered type must have at least the following methods:
+(parameters in brackets show parameters of the method that must not be
+added with Method_AddParameterType, but the method receives upon invocation)
+
+void *New()
+      Delete([void *self])
+      DoFrame([void *self], [TGraphicsContext *rc], [TSoundContext *sc])
+      Start([void *self], int z)
+      Stop([void *self])
+      
+The method can have any additional methods, that are callable from the script.
+
+Look at fondo and simplefx example effect plugins inside "src"
+directory.
+
+
+Epopeia plugin API
+------------------
+
+Epopeia exports the following functions to be used from plugins:
+
+// Register a new type
+EPOPEIA_API TTypeId  Type_Register (char * TypeName);
+// Add a method to a type
+EPOPEIA_API void     Type_AddMethod(TTypeId Type, TMethod* Method);
+// Create a new method
+EPOPEIA_API TMethod* Method_New(char* Name, void* CallAddress);
+// Parameters must be added in order. The first parameter is allways the type instance
+// (self), so it must not be add.
+EPOPEIA_API void     Method_AddParameterType(TMethod* Method, TTypeId Type);
+// Sets a methods return type. Methods can return values that are later used
+// as parameters to other methods or in math calculations
+EPOPEIA_API void     Method_SetReturnType(TMethod* Method, TTypeId Type);
+// These three are the simple default types defined by the system
+extern EPOPEIA_API_VAR TTypeId Type_IntegerId;
+extern EPOPEIA_API_VAR TTypeId Type_RealId;
+extern EPOPEIA_API_VAR TTypeId Type_StringId;
+
+// Registration of intrinsic functions
+EPOPEIA_API TFunctionId Function_New(const char* FunctionName, void* CallAddress, TTypeId ReturnType);
+// Definition of function parameters, in order
+EPOPEIA_API void        Function_AddParameterType(TFunctionId FunctionId, TTypeId Type);
+
+// Get running time in miliseconds
+EPOPEIA_API unsigned long Epopeia_GetTimeMs(void);
+// Get graphics context information, for buffer, etc.
+EPOPEIA_API void          Epopeia_GetResolution(int* width, int* height, int* bpp, int* windowed);
+EPOPEIA_API unsigned int  Epopeia_GetResX(void);
+EPOPEIA_API unsigned int  Epopeia_GetResY(void);

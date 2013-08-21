@@ -1,0 +1,61 @@
+----------------
+  BLUR TEXTURE
+----------------
+
+  Aplica el efecto "blur" a una textura de la cache de GLT.
+  Basicamente hay dos tipos de blur, iterativos y no iterativos:
+   - Iterativos: El blur se aplica sobre el ultimo frame, es decir, se
+     va machacando la imagen. No se puede aplicar el metodo SetLevel para
+     indicar el nivel de blur.
+   - No Iterativos: El blur siempre se calcula sobre la imagen original, lo
+     que permite usar SetLevel para indicar el nivel de blur.
+
+
+>> BlurText bt (string texture_name);
+
+>> bt.SetBlur (real blur_level)
+    Indica el nivel de blur que se aplica sobre los metodos no iterativos.
+   El valor de este nivel es dependiente del modo, por ejemplo, en el blur
+   por hardware va de 0 a 100, y en el box filter no hay limite.
+
+>> bt.SetBlurFade (real dst_blur_level, real time)
+    Cambia desde el nivel de blur actual hasta "dst_blur_level" en "time"
+   segundos.
+
+>> bt.SetMode (int mode)
+
+  + ITERATIVOS:
+    - mode 0: Horizontal
+              [1 0 1]
+
+    - mode 1: Vertical
+              [1]
+              [0]
+              [1]
+
+    - mode 2: All
+              [0 1 0]
+	      [1 0 1]
+              [0 1 0]
+
+    - mode 3: Horizontal2x
+              [1 1 0 1 1]
+
+    - mode 4: Vertical2x
+              [1]
+              [1]
+              [0]
+              [1]
+              [1]
+
+    - mode 5: All2
+    	      [0 0 1 0 0]
+	      [1 0 0 0 1]
+              [0 0 1 0 0]
+
+
+  + NO ITERATIVOS:
+    - mode 6: Horizontal box filter (level 0.. hasta donde se quiera)
+              [1 1 1 ... 1 1 1]
+
+    - mode 9: Hardware  (level 0..100)

@@ -1,0 +1,2 @@
+PLATFORM=win32
+include Makefile

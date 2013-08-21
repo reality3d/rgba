@@ -1,0 +1,26 @@
+MODULO COMMAND - Epopeia Scripting DemoSystem
+---------------------------------------------
+by Enlar/RGBA
+
+Este modulo abstrae la secuencia de comandos que hay que ejecutar
+durante la demo. Ejemplos de estos comandos son, la carga de un
+efecto, el comienzo de un efecto, la finalizacion del mismo, etc.
+
+Internamente esta implementado como una lista de listas de comandos.
+La lista de nivel superior ordena las listas por order:row, de menor a
+mayor y admitiendo valores negativos.
+
+Todos aquellos comandos incluidos en listas con un order negativo se
+ejecutaran antes del comienzo de la demo (util para inicializacion de
+efectos, precalculos, ...)
+
+Los comandos que tengan un order positivo pero un row negativo, se
+ejecutaran tan pronto como sea order:0, y antes que cualquier comando
+en la lista de order:0. (por supuesto, de menor a mayor)
+
+En las sublistas tendremos los comandos ordenados por tick. Tick es
+cuantos milisegundos han pasado desde que fue order:row. El valor
+de tick puede ser tan grande como se desee, pues los que tengan un
+tick de 0 (por defecto) se ejecutaran en order:row, y el resto se meten
+en una lista de tiempo de ejecucion de la demo que llevara el control
+de que comando se tiene que ejecutar cuando.

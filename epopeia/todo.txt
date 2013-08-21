@@ -1,0 +1,67 @@
+Epopeia
+-------
+
+Objetivos 1.4.x
+---------------
+ * Recarga
+ * Que funcione la flecha atras
+ * Ruler/GUI para moverse en la demo
+- Definir un parametro de script de la Demo para establecer una
+  imagen para el tiempo de carga.
+- Capa NoSound de SS para sistemas sin tarjeta de sonido
+
+
+Objetivos 1.6.0
+---------------
+
+- Posibilidad de definir constantes SPRITE.BLEND_ADD
+- Posibilidad de elegir SS ?
+- Plugin de "carga" (barrita...)
+ Asi que lo unico que se me ocurre es hacer una funcion especial, en plan
+"LoadSequence"/"EndLoadSequence", de forma que todo lo contenido dentro se trate
+como inicializacion. Internamente haria las guarrerias necesarias para que cada
+comando sea en un At diferente y se incremente el contador, sabiendo de antemano
+el maximo. Tengo que ver como "enchufar" al loadsequence el plugin, ya pensaré
+algo :)
+- Hacer funcionar el fs<->window en windows
+- Cambiar tecla de fs<->win a Alt+Enter
+- Posibilidad de autodocumentacion
+	* Nombres de parametros, descripcion 
+        * Descripcion del metodo/funcion
+        * Descripcion del valor de retorno
+        * Generador de la documentacion en HTML
+- Soporte de multiples modulos/ogg
+
+Para futuras versiones: (2.0?)
+------------------------------
+- Layers: (r3d)
+>        Yo creo que el sistema de capas que propuso r3d está bien, con la
+>"clase" Layer y el parametro adicional al Start. Una cosa que tb habria
+>que hacer es un Start a cada objeto layer, sobre la capa "world" o como
+>se nos ocurra llamar al general.
+
+Si se puede hacer perfecto. Porque andar con viewports lia bastante la cosa
+si necesitas varias capas pequeñitas y abstraerse de todo eso sería genial.
+En cuanto a lo del start a las capas tambien lo planteo, incluso comenté la
+posibilidad de tener capas anidadas(la cosa sería tal que hay una capa WORLD
+definida en el sistema. Las demas capas tendrían su start(profundidad,capapadre).
+La profundidad determina en que orden se mezclan las capas y la capa padre
+normalmente sería world(dudo que usasemos capas anidadas), pero podría ser
+una capa definida lineas mas arriba(aquí quizas podria haber problemas con
+tamaños de distintas capas, habria que hacer clippings y mas historias). Todo
+esto para obtener algo lo mas generalizado posible. Dime si es posible.
+Sino capas normales.
+
+- Macros
+- Funciones
+- Sobrecarga de métodos y funciones
+- Oigo sobrecarga de operadores? X-D
+
+CONCRETOS
+- Ver como hacer para que un plugin pueda pedir el Id de un tipo
+  aunque este no haya sido todavia definido (por el orden de carga de plugins).
+  Posiblemente crear el Id del tipo antes que se defina, y al final de la carga
+  de plugins pasar un TypeIdCheck que compruebe que todos los tipos pre-definidos
+  han sido dados de alta correctamente.
+- El soporte de expresiones en el constructor no es completo ??
+

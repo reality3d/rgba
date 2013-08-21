@@ -1,0 +1,63 @@
+---------------------------------------------------
+ DEFORM3D - Deformaci¢n de mallas 3d (deform3d.epl)
+---------------------------------------------------
+
+ Deforma una malla 3d con la estructura del fantasy seg£n una turbulence.
+Cada v‚rtice es alterado de su posici¢n "est tica" dada por la malla
+original una cantidad proporcional a una turbulence.
+
+ El turbulence puede ser 3d o 4d. Depende de la posici¢n del v‚rtice
+original y del tiempo. Todo es escalable.
+
+ Podr¡a mejorarse mucho cambiando la funci¢n turbulence, o pas ndola por
+una funci¢n de transferencia (relaci¢n no lineal entre turbulence y
+desplazamiento del v‚rtice...)
+
+
+>> Deform3D    deform( int semilla, int is4d, int octavas )
+
+    semilla : semilla para el generador de n£meros aleatorios
+    is4d    : 0 para deformaci¢n 4d fake, 1 para deformaci¢n 4d real
+    octavas : n£mero de octavas del turbulence [2..16], 5 recomendado
+
+    Example : Deform3D    deform( 1234, 0, 4 );
+
+
+>> deform.SetMesh( int world_ptr, string object_name );
+
+
+
+>> deform.SetTParams( real freq );
+
+
+    freq : frecuencia de la componente "t" turbulence. Cuanto mayor sea,
+           m s r pida va la deformaci¢n. El constructor de la deformaci¢n
+           asigna el valor 1.0 por defecto.
+
+           default : [1.0]
+
+
+>> deform.SetXParams( amp, freq, phax, phay, phaz, phat );
+>> deform.SetYParams( amp, freq, phax, phay, phaz, phat );
+>> deform.SetZParams( amp, freq, phax, phay, phaz, phat );
+
+    amp  : amplitud de la deformaci¢n en el eje. Es un porcentaje (en
+           tanto por uno) respecto al tama¤o total del objeto 3d.
+
+           default : [0.1] (10%)
+
+    freq : frecuencia de la componente "x" turbulence. Cuanto mayor sea,
+           m s "concentrada" en la deformaci¢n.
+
+           default : [1.0]
+
+    phax : phase del turbulence en la componente x para el eje.
+    phay : phase del turbulence en la componente y para el eje.
+    phaz : phase del turbulence en la componente z para el eje.
+    phat : phase del turbulence en la componente t para el eje.
+
+
+           default: ejex = [ phax=0.0, phay=1.0, phaz= 2.0, phat= 3.0 ]
+           default: ejey = [ phax=4.0, phay=5.0, phaz= 6.0, phat= 7.0 ]
+           default: ejez = [ phax=8.0, phay=9.0, phaz=10.0, phat=11.0 ]
+

@@ -1,0 +1,13 @@
+------------------------
+ Changes :: Test_retorno
+------------------------
+
+03/11/2003 enlar:
+  - Renombrar Makefile.linux a makefile.linux
+
+08/04/2003 enlar:
+  - Fix en la declaracion de la estructura que milagrosamente compilaba en Linux
+
+29/03/2003 enlar:
+  - Primera version del plugin de test para valores de
+retorno

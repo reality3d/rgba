@@ -1,0 +1,30 @@
+----------------------
+-- PLUGIN: Viewport --
+----------------------
+
+  El viewport por si solo no hace gran cosa, mas que nada, para que se
+entienda, indica una "subventana" donde TODO lo siguiente que se ejecute
+se va a escribir, y nada se va a salir fuera de esa ventana.
+  Las utilidades, por ejemplo, podría ser hacerse una ventana de 256x256
+para poder renderizar a textura; tener varias ventanas con diferentes
+efectos, etc.
+
+
+Viewport vp (int mode, int x_offset, int y_offset, int width, int height)
+
+  >> Mode: 0 -> Los valores x_offset, ..., height son valores físicos (en pixels)
+           1 -> Los valores son porcentajes
+  >> x_offset: Posicion inicial en 'x'
+  >> y_offset: Posicion inicial en 'y'
+  >> width: Ancho del viewport
+  >> height: Alto del viewport
+
+
+vp.Set (int mode, int x_offset, int y_offset, int width, int height)
+
+  Igual que el constructor, pero para modificar el viewport en cualquier
+momento de ejecucion.
+
+
+vp.SetPosChange (real dx, real dy)
+ - Igual que el sprite

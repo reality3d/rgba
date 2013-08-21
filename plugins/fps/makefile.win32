@@ -1,0 +1,46 @@
+#
+# PLUGIN Makefile
+#
+
+DST      = fps.dll
+DST_FILE = ..\..\..\plugin\fps.epl
+OBJ      = fps.obj fonts.obj
+
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../lib/epopeia.lib
+
+# System libs
+LIB_SYS     = user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib msvcrt.lib winmm.lib
+
+# Compiler options
+CC		= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA) /DPACKER_DLL
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+#
+# Main
+#
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+    copy $(DST) $(DST_FILE)
+
+clean:
+	del $(OBJ)
+    del fps.exp
+    del fps.dll
+    del fps.lib
+
+
+#
+# Objs
+#
+fps.obj: fps.c
+	$(CC) $(CCOPTS) fps.c
+
+fonts.obj: fonts.c
+	$(CC) $(CCOPTS) fonts.c

@@ -1,0 +1,75 @@
+rgba's demo bootstrap binary
+----------------------------
+
+2004/08/18 enlar:
+ - Fix		: añadir la opcion de linkaje -rpath para arreglar el path
+ 		  de resolucion de librerias dinamicas en runtime. Gracias
+                  a Susse/excess por su post en pouet (r.e.d.)
+
+2004/08/14 enlar:
+ - Fix		: se habia comentado por equivocacion la inicializacion del GLT
+   		  para usar el packer.
+ - Fix		: eliminar dependencia fmod
+ - Refactor	: quitar dialogo viejo de win32 y mover recursos de icono al raiz 
+ - Fix		: arreglar makefile mingw32 que nunca funcionó
+ - Fix	        : hacer strip al exe para reducir espacio
+
+2004/08/12 enlar:
+ - Nuevas opciones de linea de comandos (Epopeia 1.3.2 o superior)
+ 	-w 0/1
+        -x width
+        -y height
+        -bpp bpp
+        --disable-menu
+ - Quitar el menu (para pasarlo a plugin)
+ - Quitar dependencias de librerias e includes en X, GDK, GTK del makefile
+ - Quitar opcion sound-delay. Fmod 3.72 deberia solucionar los problemas
+
+2004/05/03 enlar:
+ - Nueva opcion (requiere libepopeia 1.2.1)
+ 	--sound-delay x		Establece el retraso del timer del Sound System
+   Es un work-around para el problema que tiene el fmod sobre linux con es1371
+
+2003/11/05 enlar:
+ - Nueva opcion (requiere libepopeia 1.1.96)
+ 	-s#	Elige cancion # para la banda sonora
+
+2003/08/13 enlar:
+ - Nuevas opciones
+    -dp / --dump-plugin-api  	Vuelca todas las clases con sus metodos y parametros
+    -df / --dump-functions  	Vuelca todas las funciones definidas con sus parametros
+    
+2003/08/08 enlar:
+ - Añadidas opciones de linea de comandos:
+    -h		Muestra comandos disponibles
+    -e		Guarda mensajes de error en script.err
+
+2003/08/08 enlar:
+ - Integrar dialog de la dp4
+ - Establecer el fichero de salida de errores a script.err
+ - Compilado contra epopeia 1.1.92a
+
+2003/05/05 enlar:
+ - Renombrados los makefiles al nombre en minusculas
+ - Añadido target install a los makefiles de linux y win32
+ - Quitada la copia de la dll al directorio local en win32
+
+2003/05/04 enlar:
+ - Modificado el dlg de linux para que no muestre grafico. Cambiado el orden de
+   los botones "run" y "exit". Parametro para indicar el nombre de la demo.
+
+2003/03/28 enlar:
+ - Añadir rutinas del dialog de linux de Epsilum al CVS
+ - Adecuado makefiles al estandar RGBA
+
+2003/03/19 enlar:
+ - Eliminar debug.c de la compilacion. Debe usar lo que venga en la libreria del Epopeia,
+ sino machaca las funciones del .SO con las propias.
+
+2002/12/23 enlar:
+ - Añadir llamada a Dialog y rutinas establecimiento de resolucion
+
+2002/12/22 enlar:
+ - Inicializar CACHE del GLT (CACHE_Init)
+ - Establecer la carga de imagelib por el packer
+ - Linkado dinamico del GLT

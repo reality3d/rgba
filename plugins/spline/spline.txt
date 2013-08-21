@@ -1,0 +1,26 @@
+---------------------
+ SPLINE (spline.epl)
+---------------------
+
+  Evalua un spline, generado con el editor de splines y guardado en
+formato binario (polynomial) con extensi¢n .bps por defecto.
+
+
+>> Spline spl (string filename)
+
+>> spl.SetFactor (real tfactor)
+   Establece un factor por el que se multiplicara el tiempo, de forma que
+ si tenemos un spline de 0..1 y queremos interpolarlo en 0..100, ponemos
+ un t-factor de 1/100 = 0.01
+
+>> real spl.Eval (real t)
+   Evalua el spline, devolviendo un real
+
+>> spl.SetLoopMode (int mode)
+   Indica el modo en que se interpola cuando se encuentra fuera
+ del intervalo de interpolacion del spline:
+
+    - mode 0: Constant
+    - mode 1: Continuity
+    - mode 2: Mod
+    - mode 3: PingPong

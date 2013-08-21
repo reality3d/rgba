@@ -1,0 +1,387 @@
+!!ARBvp1.0
+
+# Shader para skinned objects
+#
+# Requisitos y comentarios
+#
+# - Máximo 28 bones
+# - 4 pesos
+# - De momento, 3 coordenadas de textura... ¿Generación de coordenadas? Habrá que mirarlo...
+# - Puede que aún se pueda optimizar para reducir el número de temporales. 
+
+# Constantes
+
+PARAM bonetr[84] = { program.local[0..83] };   # bone transformations (m_ref_inv * affine transform)
+PARAM mvinv[4] = { state.matrix.modelview.invtrans };
+PARAM mv[4] = { state.matrix.modelview };
+PARAM mvp[4]     = { state.matrix.mvp };   # modelview projection matrix
+PARAM specExp = state.material.shininess;
+PARAM emission = state.material.emission;
+
+PARAM lightPos = state.light[0].position;
+PARAM atten = state.light[0].attenuation;
+PARAM ambientCol = state.lightprod[0].ambient;
+PARAM diffuseCol = state.lightprod[0].diffuse;
+PARAM specularCol = state.lightprod[0].specular;
+
+PARAM lightPos2 = state.light[1].position;
+PARAM atten2 = state.light[1].attenuation;
+PARAM ambientCol2 = state.lightprod[1].ambient;
+PARAM diffuseCol2 = state.lightprod[1].diffuse;
+PARAM specularCol2 = state.lightprod[1].specular;
+
+PARAM lightPos3 = state.light[2].position;
+PARAM atten3 = state.light[2].attenuation;
+PARAM ambientCol3 = state.lightprod[2].ambient;
+PARAM diffuseCol3 = state.lightprod[2].diffuse;
+PARAM specularCol3 = state.lightprod[2].specular;
+
+PARAM lightPos4 = state.light[3].position;
+PARAM atten4 = state.light[3].attenuation;
+PARAM ambientCol4 = state.lightprod[3].ambient;
+PARAM diffuseCol4 = state.lightprod[3].diffuse;
+PARAM specularCol4 = state.lightprod[3].specular;
+
+
+
+# Address register
+
+ADDRESS addr;
+
+# Per-vertex inputs
+
+ATTRIB inPosition = vertex.position;
+ATTRIB inNormal = vertex.normal;
+ATTRIB inColor    = vertex.color;
+ATTRIB inTexcoord = vertex.texcoord;
+ATTRIB inTexcoord2 = vertex.texcoord[1]; 
+ATTRIB inTexcoord3 = vertex.texcoord[2]; 
+
+# These attributes must be enabled via glVertexAttrib4NuivARB and EnableVertexAttribArrayARB(X)
+
+ATTRIB weights = vertex.attrib[6];
+ATTRIB boneids = vertex.attrib[7];
+
+# Per-vertex outputs
+
+OUTPUT outPosition    = result.position;
+OUTPUT outColor    = result.color;
+OUTPUT outColor2    = result.color.secondary;
+OUTPUT outTexcoord = result.texcoord;
+OUTPUT outTexcoord2 = result.texcoord[1];
+OUTPUT outTexcoord3 = result.texcoord[2];
+
+# Temporales
+
+TEMP tmp1, tmpn1;
+TEMP vert2light,eye2vertex;
+TEMP distance,halfvector;
+TEMP attcoef, dots;
+
+TEMP xfNormal, outPosTemp;
+TEMP outColorTemp, outColor2Temp;
+
+# Beginning of the program
+
+# Load the index for the 1st bone
+ARL addr.x, boneids.x;
+
+# Transform the vertex by bone one's tranform
+DP4 tmp1.x, bonetr[addr.x],     inPosition;
+DP4 tmp1.y, bonetr[addr.x + 1], inPosition;
+DP4 tmp1.z, bonetr[addr.x + 2], inPosition;
+
+# Multiply the transformed offset by the weight
+MUL tmp1.xyz, tmp1, weights.x;
+
+# Transform the normal by bone one's tranform
+DP3 tmpn1.x, bonetr[addr.x],     inNormal;
+DP3 tmpn1.y, bonetr[addr.x + 1], inNormal;
+DP3 tmpn1.z, bonetr[addr.x + 2], inNormal;
+
+# Multiply the transformed normal by the weight
+MUL tmpn1.xyz, tmpn1, weights.x;
+
+# Repeat for bone 2: load the index for the 2nd bone
+ARL addr.x, boneids.y;
+
+# Transform the vertex by bone two's tranform
+DP4 dots.x, bonetr[addr.x],     inPosition;
+DP4 dots.y, bonetr[addr.x + 1], inPosition;
+DP4 dots.z, bonetr[addr.x + 2], inPosition;
+
+# Multiply the transformed offset by the weight
+# The final result is accumulated in tmp1
+MAD tmp1.xyz, dots, weights.y, tmp1;
+
+# Transform the normal by bone two's tranform
+DP3 dots.x, bonetr[addr.x],     inNormal;
+DP3 dots.y, bonetr[addr.x + 1], inNormal;
+DP3 dots.z, bonetr[addr.x + 2], inNormal;
+
+# Multiply the transformed normal by the weight
+# The final result is accumulated in tmpn1
+MAD tmpn1.xyz, dots, weights.y, tmpn1;
+
+
+# Repeat for bone 3: load the index for the 3rd bone
+ARL addr.x, boneids.z;
+
+# Transform the vertex by bone three's tranform
+DP4 dots.x, bonetr[addr.x],     inPosition;
+DP4 dots.y, bonetr[addr.x + 1], inPosition;
+DP4 dots.z, bonetr[addr.x + 2], inPosition;
+
+# Multiply the transformed offset by the weight
+# The final result is accumulated in tmp1
+MAD tmp1.xyz, dots, weights.z, tmp1;
+
+# Transform the normal by bone three's tranform
+DP3 dots.x, bonetr[addr.x],     inNormal;
+DP3 dots.y, bonetr[addr.x + 1], inNormal;
+DP3 dots.z, bonetr[addr.x + 2], inNormal;
+
+# Multiply the transformed normal by the weight
+# The final result is accumulated in tmpn1
+MAD tmpn1.xyz, dots, weights.z, tmpn1;
+
+
+# Repeat for bone 4: load the index for the 4th bone
+ARL addr.x, boneids.w;
+
+# Transform the vertex by bone four's tranform
+DP4 dots.x, bonetr[addr.x],     inPosition;
+DP4 dots.y, bonetr[addr.x + 1], inPosition;
+DP4 dots.z, bonetr[addr.x + 2], inPosition;
+
+# Multiply the transformed offset by the weight
+# The final result is accumulated in tmp1
+MAD tmp1.xyz, dots, weights.w, tmp1;
+
+# Transform the normal by bone four's tranform
+DP3 dots.x, bonetr[addr.x],     inNormal;
+DP3 dots.y, bonetr[addr.x + 1], inNormal;
+DP3 dots.z, bonetr[addr.x + 2], inNormal;
+
+# Multiply the transformed normal by the weight
+# The final result is accumulated in tmpn1
+MAD tmpn1.xyz, dots, weights.w, tmpn1;
+
+# So the final result is now on tmp1 (vertex) and tmpn1 (normal)
+# Set the vertex w to 1.0
+SGE tmp1.w, tmp1.w, tmp1.w;
+
+# Normalize the vertex normal 
+#DP3 tmpn1.w, tmpn1, tmpn1;
+#RSQ tmpn1.w, tmpn1.w;
+#MUL tmpn1, tmpn1, tmpn1.w;
+
+# Finally, project and lit this and we are done
+# Currently, tmp1 is the vertex and tmpn1 the vertex normal
+
+DP4 outPosition.x, mvp[0], tmp1;   # Transform the x component into clip-space
+DP4 outPosition.y, mvp[1], tmp1;   # Transform the y component into clip-space
+DP4 outPosition.z, mvp[2], tmp1;   # Transform the z component into clip-space
+DP4 outPosition.w, mvp[3], tmp1;   # Transform the w component into clip-space
+
+# Transform the vertex to eye coordinates, for the lighting calculations, store in tmp4
+DP4 outPosTemp.x, mv[0], tmp1;
+DP4 outPosTemp.y, mv[1], tmp1;
+DP4 outPosTemp.z, mv[2], tmp1;
+DP4 outPosTemp.w, mv[3], tmp1;
+
+# Transform the normal to eye coordinates, and store in tmpn4
+DP3 xfNormal.x, mvinv[0], tmpn1;
+DP3 xfNormal.y, mvinv[1], tmpn1;
+DP3 xfNormal.z, mvinv[2], tmpn1;
+
+# Normalizamos el vector normal
+
+DP3 xfNormal.w, xfNormal, xfNormal;
+RSQ xfNormal.w, xfNormal.w;
+MUL xfNormal, xfNormal, xfNormal.w;
+
+# Create the normalized vector from the eye to the vertex
+DP3 eye2vertex.w, outPosTemp, outPosTemp;
+RSQ eye2vertex.w, eye2vertex.w;
+MUL eye2vertex, -outPosTemp, eye2vertex.w;
+
+
+
+
+####################### Light 0 #######################
+
+# Empezamos con el calculo de la luz
+ADD vert2light, lightPos, -outPosTemp;		# Tenemos el vector del vertice a la fuente
+DP3 tmp1.w, vert2light, vert2light;		# tmp1.w = x*x + y*y + z*z
+RSQ vert2light.w, tmp1.w;			# vert2light.w = 1 / sqrt (x*x+y*y+z*z)
+DST distance, tmp1.wwww, vert2light.wwww;	# en distance.y tenemos la distancia
+
+# Normalizamos el vector vert2light
+MUL vert2light, vert2light, vert2light.w;
+
+# Para el calculo del coeficiente especular necesitamos el half vector (light vector + eye vector)
+# y normalizarlo
+ADD halfvector, vert2light, eye2vertex;
+DP3 halfvector.w, halfvector, halfvector;
+RSQ halfvector.w, halfvector.w;
+MUL halfvector, halfvector, halfvector.w;
+
+# Calculo del coeficiente difuso
+DP3 dots.x, xfNormal, vert2light;
+# Calculo del coeficiente especular
+DP3 dots.y, xfNormal, halfvector ;
+# Valor de shininess del material
+MOV dots.w, specExp.x;
+
+# Calculo del coeficiente de atenuacion
+DP3 tmp1.w, distance, atten;		# a0 + a1*d + a2*d2
+RCP attcoef.w, tmp1.w;			# 1 / (a0 + a1*d + a2*d2), o el factor de atenuacion
+
+# Calculo de la luz
+LIT dots, dots;
+MUL dots, dots, attcoef.w;		# Utilizamos la atenuacion
+
+# Acumulamos las contribuciones...
+MAD tmp1, dots.y, diffuseCol, ambientCol;	# (difusa * Kdifusa) + ambient
+ADD outColorTemp.xyz, tmp1, emission;			# metemos la emision 
+MOV outColorTemp.w, diffuseCol.w;
+
+# Ahora la componente especular 
+MUL outColor2Temp.xyz, dots.z, specularCol;		# (specular * Kspecular)
+
+
+####################### Light 1 #######################
+
+# Empezamos con el calculo de la luz
+ADD vert2light, lightPos2, -outPosTemp;		# Tenemos el vector del vertice a la fuente
+DP3 tmp1.w, vert2light, vert2light;		# tmp1.w = x*x + y*y + z*z
+RSQ vert2light.w, tmp1.w;			# vert2light.w = 1 / sqrt (x*x+y*y+z*z)
+DST distance, tmp1.wwww, vert2light.wwww;	# en distance.y tenemos la distancia
+
+# Normalizamos el vector vert2light
+MUL vert2light, vert2light, vert2light.w;
+
+# Para el calculo del coeficiente especular necesitamos el half vector (light vector + eye vector)
+# y normalizarlo
+ADD halfvector, vert2light, eye2vertex;
+DP3 halfvector.w, halfvector, halfvector;
+RSQ halfvector.w, halfvector.w;
+MUL halfvector, halfvector, halfvector.w;
+
+# Calculo del coeficiente difuso
+DP3 dots.x, xfNormal, vert2light;
+# Calculo del coeficiente especular
+DP3 dots.y, xfNormal, halfvector ;
+# Valor de shininess del material
+MOV dots.w, specExp.x;
+
+# Calculo del coeficiente de atenuacion
+DP3 tmp1.w, distance, atten2;		# a0 + a1*d + a2*d2
+RCP attcoef.w, tmp1.w;			# 1 / (a0 + a1*d + a2*d2), o el factor de atenuacion
+
+# Calculo de la luz
+LIT dots, dots;
+MUL dots, dots, attcoef.w;		# Utilizamos la atenuacion
+
+# Acumulamos las contribuciones...
+MAD tmp1, dots.y, diffuseCol2, ambientCol2;	# (difusa * Kdifusa) + ambient
+ADD tmp1, tmp1, emission;			# metemos la emision 
+ADD outColorTemp.xyz, outColorTemp, tmp1;			
+MUL outColorTemp.w, outColorTemp.w, diffuseCol2.w;
+
+# Ahora la componente especular 
+MAD outColor2Temp.xyz, dots.z, specularCol2, outColor2Temp;		# (specular * Kspecular)
+
+####################### Light 2 #######################
+
+# Empezamos con el calculo de la luz
+ADD vert2light, lightPos3, -outPosTemp;		# Tenemos el vector del vertice a la fuente
+DP3 tmp1.w, vert2light, vert2light;		# tmp1.w = x*x + y*y + z*z
+RSQ vert2light.w, tmp1.w;			# vert2light.w = 1 / sqrt (x*x+y*y+z*z)
+DST distance, tmp1.wwww, vert2light.wwww;	# en distance.y tenemos la distancia
+
+# Normalizamos el vector vert2light
+MUL vert2light, vert2light, vert2light.w;
+
+# Para el calculo del coeficiente especular necesitamos el half vector (light vector + eye vector)
+# y normalizarlo
+ADD halfvector, vert2light, eye2vertex;
+DP3 halfvector.w, halfvector, halfvector;
+RSQ halfvector.w, halfvector.w;
+MUL halfvector, halfvector, halfvector.w;
+
+# Calculo del coeficiente difuso
+DP3 dots.x, xfNormal, vert2light;
+# Calculo del coeficiente especular
+DP3 dots.y, xfNormal, halfvector ;
+# Valor de shininess del material
+MOV dots.w, specExp.x;
+
+# Calculo del coeficiente de atenuacion
+DP3 tmp1.w, distance, atten3;		# a0 + a1*d + a2*d2
+RCP attcoef.w, tmp1.w;			# 1 / (a0 + a1*d + a2*d2), o el factor de atenuacion
+
+# Calculo de la luz
+LIT dots, dots;
+MUL dots, dots, attcoef.w;		# Utilizamos la atenuacion
+
+# Acumulamos las contribuciones...
+MAD tmp1, dots.y, diffuseCol3, ambientCol3;	# (difusa * Kdifusa) + ambient
+ADD tmp1, tmp1, emission;			# metemos la emision 
+ADD outColorTemp.xyz, outColorTemp, tmp1;			
+MUL outColorTemp.w, outColorTemp.w, diffuseCol3.w;
+
+# Ahora la componente especular 
+MAD outColor2Temp.xyz, dots.z, specularCol3, outColor2Temp;		# (specular * Kspecular)
+
+####################### Light 3 #######################
+
+# Empezamos con el calculo de la luz
+ADD vert2light, lightPos4, -outPosTemp;		# Tenemos el vector del vertice a la fuente
+DP3 tmp1.w, vert2light, vert2light;		# tmp1.w = x*x + y*y + z*z
+RSQ vert2light.w, tmp1.w;			# vert2light.w = 1 / sqrt (x*x+y*y+z*z)
+DST distance, tmp1.wwww, vert2light.wwww;	# en distance.y tenemos la distancia
+
+# Normalizamos el vector vert2light
+MUL vert2light, vert2light, vert2light.w;
+
+# Para el calculo del coeficiente especular necesitamos el half vector (light vector + eye vector)
+# y normalizarlo
+ADD halfvector, vert2light, eye2vertex;
+DP3 halfvector.w, halfvector, halfvector;
+RSQ halfvector.w, halfvector.w;
+MUL halfvector, halfvector, halfvector.w;
+
+# Calculo del coeficiente difuso
+DP3 dots.x, xfNormal, vert2light;
+# Calculo del coeficiente especular
+DP3 dots.y, xfNormal, halfvector ;
+# Valor de shininess del material
+MOV dots.w, specExp.x;
+
+# Calculo del coeficiente de atenuacion
+DP3 tmp1.w, distance, atten4;		# a0 + a1*d + a2*d2
+RCP attcoef.w, tmp1.w;			# 1 / (a0 + a1*d + a2*d2), o el factor de atenuacion
+
+# Calculo de la luz
+LIT dots, dots;
+MUL dots, dots, attcoef.w;		# Utilizamos la atenuacion
+
+# Acumulamos las contribuciones...
+MAD tmp1, dots.y, diffuseCol4, ambientCol4;	# (difusa * Kdifusa) + ambient
+ADD tmp1, tmp1, emission;			# metemos la emision 
+ADD outColor.xyz, outColorTemp, tmp1;			
+MUL outColor.w, outColorTemp.w, diffuseCol4.w;
+
+# Ahora la componente especular 
+MAD outColor2.xyz, dots.z, specularCol4, outColor2Temp;		# (specular * Kspecular)
+
+
+######################### End of the lighting part ######################### 
+
+# Transfer the texture coords as they are 
+MOV outTexcoord, inTexcoord;
+MOV outTexcoord2, inTexcoord2;
+MOV outTexcoord3, inTexcoord3;
+END

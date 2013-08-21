@@ -1,0 +1,33 @@
+---------------------
+ Changes :: BlurText
+---------------------
+
+>> 26/04/2004 enlar
+   - Crear makefile mingw32 unificado con linux
+   - Arreglar compilacion mingw32 quitando optimizaciones BLURMMX
+
+>> 18/04/2004 enlar
+   - Arreglar el makefile de linux incluyendo interp.c y añadir interp.c y interp.h al CVS
+
+>> 19/11/2003 enlar
+   - Subir version (espero que) final al CVS. Almenos la Red compila bien el script. :)
+
+>> 13/11/2003 enlar
+   - Arreglar problema de dependecias con BLURMMX_All2: 
+     El define/la funcion estaban mal nombradas.
+
+>> 12?/11/2003 enlar
+   - Crear makefile.linux, hacer compilar en Linux, etc. etc.
+
+>> 07/08/2003
+   - Nuevo metodo SetBlur y SetBlurFade
+
+>> 22/07/2003
+   - A¤adido box filter horizontal de cualquier tama¤o (no iterativo)
+
+>> 20/07/2003
+   - A¤adido blur por hardware (usando ext GL_TEXTURE_LOD_BIAS)
+   - Optimizados todos los algoritmos por software usando MMX (mejora de hasta 5x!!)
+
+>> 19/07/2003
+   - Primera version

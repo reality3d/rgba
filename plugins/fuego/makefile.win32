@@ -1,0 +1,53 @@
+#
+# PLUGIN Makefile
+#
+
+DST_FILE = fuego.epl
+OBJ      = fx_epopeia.obj fuego.obj flame.obj turb.obj
+
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../../rgba-bin/lib/epopeia.lib ../../../rgba-bin/lib/glt.lib
+
+# System libs
+LIB_SYS     = user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib msvcrt.lib winmm.lib
+
+# Compiler options
+CC		= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA) 
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+#
+# Main
+#
+$(DST_FILE): $(OBJ)
+	link /OUT:$(DST_FILE) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+
+clean:
+	del $(OBJ)
+	del *.exp
+	del *.dll
+	del *.lib
+
+install: $(DST_FILE)
+	copy $(DST_FILE) ..\..\..\rgba-bin\demosystem\plugin
+
+#
+# Objs
+#
+fuego.obj: fuego.c
+	$(CC) $(CCOPTS) fuego.c
+
+fx_epopeia.obj: fx_epopeia.c
+	$(CC) $(CCOPTS) fx_epopeia.c
+
+flame.obj: flame.c
+	$(CC) $(CCOPTS) flame.c
+
+turb.obj: turb.c
+	$(CC) $(CCOPTS) turb.c
+

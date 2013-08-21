@@ -1,0 +1,37 @@
+GRAMATICA DE EPOPEIA SCRIPTING DEMOSYSTEM
+-----------------------------------------
+v1.0
+
+Demoscript 	-> Header Body 
+
+Header		-> DemoName "=" TextString
+		| StartMessage "=" TextString
+                | EndMessage "=" TextString
+                | ModName "=" TextString
+                | CoolKeys "=" Integer
+                | E
+
+Body		-> "begin" ComandSequence "end"
+
+CommandSequence -> Command CommandSequence
+		| E
+                
+Command		-> "At" "(" Integer "," Integer ")" ";"
+		| TypeName Identifier "(" ArgList ")" ";"
+                | Identifier "." Identifier "(" ArgList ")" ";"
+                | "SetOrder" "(" Integer "," Integer ")" ";"
+                
+ArgList		-> Term ArgListEnd
+		| E
+                
+ArgListEnd	-> "," Term ArgListEnd
+		| E
+                
+TermNoSign	-> Identifier
+		| Integer
+                | Real
+                | TextString
+                
+Term		-> "-" TermNoSign
+		| TermNoSign
+

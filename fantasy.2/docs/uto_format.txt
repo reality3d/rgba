@@ -1,0 +1,210 @@
+----------------------------------------------
+FORMATO DE FICHERO U3D. Definición preliminar
+
+24-04-2006 Añadido soporte para luces direccionales y spot. r3D
+21-04-2006 Añadido track de rotación para los target de cámara. (en realidad no ha cambiado el formato) r3D
+----------------------------------------------
+
+UTO!	<- Signature, 				4 bytes string
+*	<- format version major			1 byte unsigned
+*	<- format version minor			1 byte unsigned
+MAIN	<- Beginning of main chunk		4 bytes string
+****	<- First frame, 			4 bytes int	
+****	<- Last frame, 				4 bytes int	
+****	<- Framerate, 				4 bytes int	
+****	<- Delta time				4 bytes int // Resulta que frame = time/deltatime
+****	<- Global scale				4 bytes float	
+****	<- Número de objetos, 			4 bytes int	
+****	<- Número de cámaras, 			4 bytes int	
+****	<- Número de luces, 			4 bytes int	
+****	<- Número de materiales			4 bytes int
+****	<- Número de controllers,		4 bytes int	
+****	<- Número de bones,			4 bytes int
+
+MESH	<- Beginning of mesh chunk		4 bytes string
+/* For each object (now without the MINUS) */
+xyz	<- object name				X bytes string (null terminated)
+****	<- object ID				4 bytes int
+****	<- parent ID				4 bytes int
+****	<- is hidden?				1 bytes unsigned char
+****	<- position				3x4 bytes float
+****	<- rotation quaternion			4x4 bytes float
+****	<- scale				3x4 bytes float
+****	<- pivot point				3x4 bytes float
+****	<- flags				4 bytes int; bit 0: has bounding sphere; bit 1: dynamic object (will be modified externally), bit 2: skinned object; bit 3: cast shadows
+****	<- Número de vértices			4 bytes int
+****	<- Número de caras			4 bytes int
+****	<- Número de coordenadas de mapeo 	4 bytes int
+****	<- Número de vertex colors		4 bytes int
+/* If flags & 4 (skinned object) */
+*	<- Skin type				1 byte unsigned char; 0: simple skin (1 bone/vertex); 1: weigthed skin (multiple bones/vertex)
+	
+	/* If skin type == simple */
+	/* For each vertex */
+	****	<- bone id				4 bytes int
+
+	/* If skin type ==weighted */
+	
+	/* For each vertex */
+	****	<- number of bones 			4 bytes int
+	/* For each vertex * number of bones per vertex */
+	****	<- bone id				4 bytes int
+	/* For each vertex * number of bones per vertex */
+	****	<- weight				4 bytes float
+
+/* For each vertex */
+****	<- vertex coordinates			3x4 bytes float
+/* for each mapping coordinate */
+****	<- mapping coordinates			2x4 bytes float
+/* For each vertex color*/
+****	<- vertex colors			3x4 bytes float
+/* for each face */
+****	<- vertex assignments			3x4 bytes int
+/* for each face */
+****	<- texture coord-vertex assignments	3x4 bytes int
+/* if there are vertex colors, for each face */
+****	<- vertex color-vertex assignments	3x4 bytes int
+/* for each face */
+****	<- edge visibility			1 byte unsigned char: 1er bit a 1: 1er eje visible, y así con los otros dos
+/* for each face */
+****	<- material id for the face		4 bytes int
+/* IF AND ONLY IF flags & 1 */
+****	<- Bounding sphere center		3x4 bytes float
+****	<- Bounding sphere radius		4 bytes float
+
+
+CAMS	<- Beginning of camera chunk	4 bytes string
+/* For each camera */
+xyz	<- camera name			X bytes string (null terminated)
+****	<- object ID			4 bytes int
+****	<- parent ID			4 bytes int
+****	<- target ID			4 bytes int
+****	<- is hidden?			1 byte unsigned char
+****	<- position			3x4 bytes float
+****	<- rotation quaternion		4x4 bytes float
+****	<- scale			3x4 bytes float
+****	<- pivot point			3x4 bytes float
+****	<- FOV				4 bytes float
+****	<- near clip			4 bytes float
+****	<- far clip			4 bytes float
+
+CTGT	<- Beginning of camera target chunk	4 bytes string
+/* For each camera */
+xyz	<- object name			X bytes string (null terminated)
+****	<- object ID			4 bytes int
+****	<- parent ID			4 bytes int
+****	<- is hidden?			1 byte unsigned char
+****	<- position			3x4 bytes float
+****	<- rotation quaternion		4x4 bytes float
+****	<- scale			3x4 bytes float
+****	<- pivot point			3x4 bytes float
+
+
+LITE	<- Beginning of light chunk	4 bytes string
+/* For each light */
+xyz	<- light name			X bytes string (null terminated)
+****	<- light ID			4 bytes int
+****	<- parent ID			4 bytes int
+****	<- target ID			4 bytes int       // -1 si no tiene target al ser omni
+****	<- is hidden?			1 byte unsigned char
+****	<- position			3x4 bytes float
+****	<- rotation quaternion		4x4 bytes float
+****	<- scale			3x4 bytes float
+****	<- pivot point			3x4 bytes float
+****	<- light type			1 bytes unsigned int;	// 0: omni; 1: directional   2:spot
+****	<- light color			3x4 bytes float
+****	<- atten start			4 bytes float
+****	<- atten end			4 bytes float
+****	<- use attenuation		1 byte unsigned char
+****	<- multiplier			4 bytes floatfloat
+/* If light type = 1 (directional) || type = 2 (spot)*/
+****	<- target position 		3x4 bytes float
+/* If light type = 2 (spot) */
+****	<- Cut-Off 			4 bytes float
+****	<- Exponent 			4 bytes float
+
+
+MATS	<- Beginning of material chunk	4 bytes string
+/* for each material */
+xyz	<- material name		X bytes string (null terminated)
+****	<- material ID			4 bytes int
+
+BONE	<- Beginning of bone chunk	4 bytes string
+/* for each bone */
+xyz	<- object name			X bytes string (null terminated)
+****	<- object ID			4 bytes int
+****	<- parent ID			4 bytes int
+****	<- is hidden?			1 byte unsigned char
+****	<- position			3x4 bytes float
+****	<- rotation quaternion		4x4 bytes float
+****	<- scale			3x4 bytes float
+****	<- pivot point			3x4 bytes float
+
+
+CTRL	<- Beginning of controller chunk	4 bytes string
+****	<- Controller type			1 byte unsigned char;	// 0: position; 1: rotation; 2: scale; 3: fov; 4: roll
+****	<- controller ID			4 bytes int
+****	<- owner ID				4 bytes int
+****	<- number of keyframes			4 bytes int
+****	<- interpolation scheme			1 byte unsigned char;	// 0: linear (unsupp); 1: tcb; 2: bezier (unsupp)
+
+/* If scheme = linear	*/
+	/* If controller = position, for each keyframe */
+	****	<- Time				4 bytes int
+	****	<- Position			3x4 bytes float
+
+	/* If controller = rotation, for each keyframe */	
+	****	<- Time				4 bytes int
+	****	<- Rotation quaternion		4x4 bytes float
+
+	/* If controller = scale, for each keyframe */	
+	****	<- Time				4 bytes int
+	****	<- Scale			3x4 bytes float
+	****	<- Quaternion (what is it for?)	4x4 bytes float
+
+	/* If controller = fov || controller = roll, for each keyframe */	
+	****	<- Time				4 bytes int
+	****	<- Value			4 bytes float (fov is in degrees!)
+
+/* If scheme = tcb	*/
+	/* If controller = position, for each keyframe */
+	****	<- Time				4 bytes int
+	****	<- Position			3x4 bytes float
+	****	<- Flags			1 byte unsigned char. Bit 1: tension follows. Bit 2: Continuity follows. Bit 3: Bias follows. Bit 4: Ease in. Bit 5: Ease out
+
+	****	<- Tension			4 bytes float (si aplica...)
+	****	<- Continuity			4 bytes float
+	****	<- Bias				4 bytes float
+	****	<- Ease in			4 bytes float
+	****	<- Ease out			4 bytes float
+
+	/* If controller = rotation, for each keyframe */	
+	****	<- Time				4 bytes int
+	****	<- Rotation quaternion		4x4 bytes float
+	****	<- Flags			1 byte unsigned char. Bit 1: tension follows. Bit 2: Continuity follows. Bit 3: Bias follows. Bit 4: Ease in. Bit 5: Ease out
+	****	<- Tension			4 bytes float
+	****	<- Continuity			4 bytes float
+	****	<- Bias				4 bytes float
+	****	<- Ease in			4 bytes float
+	****	<- Ease out			4 bytes float
+
+	/* If controller = scale, for each keyframe */	
+	****	<- Time				4 bytes int
+	****	<- Scale			3x4 bytes float
+	****	<- Quaternion (what is it for?)	4x4 bytes float
+	****	<- Flags			1 byte unsigned char. Bit 1: tension follows. Bit 2: Continuity follows. Bit 3: Bias follows. Bit 4: Ease in. Bit 5: Ease out
+	****	<- Tension			4 bytes float
+	****	<- Continuity			4 bytes float
+	****	<- Bias				4 bytes float
+	****	<- Ease in			4 bytes float
+	****	<- Ease out			4 bytes float
+
+	/* If controller = fov || controller = roll, for each keyframe */	
+	****	<- Time				4 bytes int
+	****	<- Value			4 bytes float
+	****	<- Flags			1 byte unsigned char. Bit 1: tension follows. Bit 2: Continuity follows. Bit 3: Bias follows. Bit 4: Ease in. Bit 5: Ease out
+	****	<- Tension			4 bytes float
+	****	<- Continuity			4 bytes float
+	****	<- Bias				4 bytes float
+	****	<- Ease in			4 bytes float
+	****	<- Ease out			4 bytes float

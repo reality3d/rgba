@@ -1,0 +1,47 @@
+#
+# PLUGIN Makefile
+#
+
+DST      = mblur.dll
+DST_FILE = ..\..\plugin\mblur.epl
+OBJ      = mblur.obj mblur_epopeia.obj
+
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../epopeia.lib
+
+# System libs
+LIBS        = c:\prog\glt\glt.lib
+LIB_SYS     = user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib msvcrt.lib winmm.lib
+
+# Compiler options
+CC     = cl
+CCOPTS = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA) -Ic:\prog\glt
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+#
+# Main
+#
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIBS) $(LIB_EPOPEIA) $(LINKOPTS)
+	copy $(DST) $(DST_FILE)
+
+clean:
+	del $(OBJ)
+	del mblur.exp
+	del mblur.dll
+	del mblur.lib
+
+
+#
+# Objs
+#
+mblur.obj: mblur.c
+	$(CC) $(CCOPTS) mblur.c
+
+mblur_epopeia.obj: mblur_epopeia.c
+	$(CC) $(CCOPTS) mblur_epopeia.c

@@ -1,0 +1,59 @@
+---------------
+  GLT Changes
+---------------
+
+>> 09/05/2006 enlar
+ - Cambiar makefiles a los estandares del CV (makefile.win32).
+   Eliminar makelib.mak y makedll.mak tanto en GLT como en imagelib
+
+>> 21/06/2004 utopian
+ - Modificado TEX_UpdateData para separarlo en dos funciones: una para la carga inicial (glTexImage2D) y otro para sucesivos updates (glTexSubImage2D, más rápido)
+ - Añadido soporte para texturas de tipo DEPTH_COMPONENT
+
+>> 15/08/2004 enlar
+ - Corregir dependencias de linux. Faltaban -lm, -lGLU
+>> 05/05/2003 enlar
+ - Fix en el makefile de linux (no se incluia la libreria GL)
+ 
+>> 04/05/2003 enlar
+ - Definido _strdup como strdup cuando compilamos en linux
+ 
+>> 07/04:2003:
+ - Arreglado los filtros (min, mag) que se ponian al reves!
+
+>> 22/12/2002 enlar:
+ - Parcheado para que compile en Linux
+ - Creado Makefile para Linux
+ - Subido al CVS
+
+
+>> 21/12/2002:
+ - Actualizado a ImageLib de 21/12/2002 (actualiza libpng a 1.2.5)
+
+
+>> 15/12/2002:
+ - Arreglado error con los mipmaps (por Utopian)
+
+
+>> 01/12/2002:
+ - Soporte CubeMaps (mediante el flag TEX_CUBEMAP)
+
+
+>> 05/10/2002:
+ - Sacada la libreria de carga de imagenes del GLT. Ahora simplemente se
+   enlaza, pero no es necesario compilar ninguna de sus partes.
+ - Posibilidad de insertar texturas que no sean de fichero en la cache
+ - Actualizado el glTexImage2D a OpenGL 1.1 (en vez de "depth" es "internal_format")
+
+
+>> 29/07/2002:
+ - Corregido el soporte de imagenes en 16bpp (GRAYSCALE + ALPHA)
+
+
+>> 10/07/2002:
+ - Habia un error muy extraño que parece estar corregido. He cambiado los
+   strdup() por _strdup(), que se supone que usan la libreria msvcrt.dll. Sino,
+   petaba al hacer malloc en muy determinadas ocasiones... rarisimo! :)
+ - texture.c :: En "TEX_New", si data es NULL, se reserva internamente y luego
+                se libera (util para inicializar una textura para renderizar
+                sobre ella).

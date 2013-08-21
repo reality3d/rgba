@@ -1,0 +1,1 @@
+link.exe /OUT:fantasy.epl fantasy_epopeia.obj user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib msvcrt.lib fantasy/fantasy.lib ../../rgba-bin/lib/epopeia.lib ../../rgba-bin/lib/glt.lib /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB 

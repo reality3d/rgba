@@ -1,0 +1,34 @@
+Notas acerca del soporte de materiales usando GLSL:
+---------------------------------------------------
+
+- Se mantiene la sintaxis del fichero .mat, con un par de cambios:
+
+	a) En vez de usar el token "static", se usa "shader", y a continuación 2
+	   cadenas de texto que indican el nombre del vertex y el fragment shader (en
+	   este orden). Si se usa el token especial "standard" para el vertex shader, se
+	   mantiene el pipeline normal de OpenGL. OJO! Es sólo para el vertex shader, hay 
+	   que escribirse siempre un pixel shader a pelo.
+
+	   El otro cambio importante es que, cuando se especifica más de una textura, no
+	   se especifica el modo de blending, sólo el tipo de coordenadas de textura.
+
+	   Respecto al tipo de coordenadas, sólo se soportan uv y cubemap (el resto dará
+	   un warning y lo pondrá como uv). Para los cubemap hay que construirse las 
+  	   coordenadas de textura en el vertex shader (buscaré por ahí un ejemplo).
+
+
+  Como ejemplo, si teníamos un material tal que así:
+
+  deste  static transp  2sided add  2  3d\cueva\vol.png   uv  3d\cueva\vol.png   uv add  glossiness 17.0   specular 0.210857 0.210857 0.210857   emission 0.094118 0.054902 1.015686	
+
+  Le escribimos unos shaders llamados kk.vert y kk.frag, y el material pasaría a ser:
+
+  deste shader shaders/kk.vert shaders/kk.frag transp 2sided add 2 3d\cueva\vol.png uv 3d\cueva\vol.png   uv glossiness 17.0   specular 0.210857 0.210857 0.210857   emission 0.094118 0.054902 1.015686	
+
+  Si nos fijamos, hemos cambiado "static" por "shader", hemos añadido los shader y hemos quitado el "add" de la segunda unidad de textura. Y yastá!
+
+- Se admiten hasta 8 samplers de texturas (8 texture units, vaya). Deben llamarse de forma 
+  estándar, a saber: TexUnit0, TexUnit1 ... TexUnit7
+
+- Aparte de esos, no se admiten de momento otro tipo de uniforms (es complicado de hacerlo 
+  lo bastante genérico)

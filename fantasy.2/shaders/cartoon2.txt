@@ -1,0 +1,88 @@
+!!ARBvp1.0
+
+# Constantes
+PARAM mvp[4]     = { state.matrix.mvp }; # modelview projection matrix
+PARAM mvinv[4] = { state.matrix.modelview.invtrans };
+PARAM tres = { 3.0, 3.0, 3.0, 3.0 };
+PARAM ocho = { 8.0, 8.0, 8.0, 8.0 };
+PARAM invocho = { 0.125, 0.125, 0.125, 0.125 };
+
+# Per-vertex inputs
+ATTRIB inPosition = vertex.position;
+ATTRIB inColor    = vertex.color;
+ATTRIB inTexcoord = vertex.texcoord;
+ATTRIB inTexcoord2 = vertex.texcoord[1];
+ATTRIB inNormal = vertex.normal;
+
+
+# Per-vertex outputs
+OUTPUT outPosition    = result.position;
+OUTPUT outColor    = result.color;
+#OUTPUT outTexcoord = result.texcoord;
+#OUTPUT outTexcoord2 = result.texcoord[1];
+
+# Temporales
+
+TEMP kk,xfNormal,outPosTemp;
+TEMP u2, uu;
+
+
+# Primero pasamos a coordenadas de vista
+
+DP4 outPosTemp.x, mvp[0], inPosition;   # Transform the x component of the per-vertex position into clip-space
+DP4 outPosTemp.y, mvp[1], inPosition;   # Transform the y component of the per-vertex position into clip-space
+DP4 outPosTemp.z, mvp[2], inPosition;   # Transform the z component of the per-vertex position into clip-space
+DP4 outPosTemp.w, mvp[3], inPosition;   # Transform the w component of the per-vertex position into clip-space
+MOV outPosition, outPosTemp;
+
+# Normalizamos el "vector"
+RCP kk.w, outPosTemp.w;
+MUL outPosTemp, outPosTemp, kk.w;
+
+# Tambien transformamos la normal
+
+DP3 xfNormal.x, mvinv[0], inNormal;
+DP3 xfNormal.y, mvinv[1], inNormal;
+DP3 xfNormal.z, mvinv[2], inNormal;
+
+# Como estamos en coordenadas de vista, el valor de outPosition es tambien el vector a la camara
+#Un rayo desde la camera.pos hasta el mesh.vert[i]. Y calulo el angulo entre este vector y la normal.
+#VecSub( campos, &v->vert, &dir );
+#VecNorm( &dir );
+#u = VecDot( &v->norm, &dir );
+#kk ya tiene el valor de gris desde 0 (en los contornos) hasta 1. 
+
+DP3 kk, xfNormal, outPosTemp;
+
+# Ahora reescalo u para que los negros y blancos se concentren mas (u=u*u*(3-2*u) varias veces). 
+MUL u2, kk, kk;
+ADD uu, kk, kk;
+SUB uu, tres, uu;
+MUL kk, u2, uu;
+
+MUL u2, kk, kk;
+ADD uu, kk, kk;
+SUB uu, tres, uu;
+MUL kk, u2, uu;
+
+MUL u2, kk, kk;
+ADD uu, kk, kk;
+SUB uu, tres, uu;
+MUL kk, u2, uu;
+
+#MUL u2, kk, kk;
+#ADD uu, kk, kk;
+#SUB uu, tres, uu;
+#MUL kk, u2, uu;
+
+# Y tambien discretizo el gris a 8 nievels: u=floor(u*8.0)/8.0
+
+MUL kk, kk, ocho;
+FLR kk, kk;
+MUL kk, kk, invocho;
+
+
+MOV outColor, kk;                   # Use the original per-vertex color specified
+#MOV outTexcoord,kk;			# Con este valor indexamos la textura
+#MOV outTexcoord2,kk;
+END

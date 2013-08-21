@@ -1,0 +1,61 @@
+#
+# Fichero de definicion de materiales del Fantasy rev. 0.4
+#
+# Utopian / RGBA
+# Documentacion:Utopian y r3D
+
+#
+# Reglas generales:
+# - Los comentarios serán una línea que empieza con el caracter #
+# - Los campos no son case-sensitive
+# - El separador es un caracter espacio o un tabulador
+#
+# Nombre del material (es el mismo que viene dado en el fichero 3ds). Máximo 256 caracteres
+
+# static dynamic - Estático (texturas) o dinámico (por código, no implementado aún)
+
+# opaque transp - Opaco o traslucido
+
+# 1sided o 2sided - Una cara o dos caras
+
+# Si es traslúcido, tipo de blending (add,blend,multiply,sub)
+
+# Numero de texturas: 0 (sin textura), 1, 2... seguido de:
+
+# uv,same,spheremap,eyelinear,objectlinear,cubemap - Coordenadas UV a usar
+# uv:las coordenadas que trae el objeto
+# same: las coordenadas del anterior
+# spheremap:coordenadas esfericas
+# eyelinear y objectlinear:Hay que indicar mediante un float una escala de repetición de la textura. Eyelinear depende de la vista. Object del objeto
+# cubemap: coordenadas cubicas segun 6 imagenes. Indicamos la raiz del nombre(con la extension) y usara los bitmaps segun la designacion "nvidia"
+
+
+# A continuación indicamos como se mezclara la unidad de textura superior a 1 con la/s anterior/es
+# modulate add mask dot3 
+# modulate:Mezcla multiplicativa 
+# add:Mezcla additiva
+# dot3:Bumpmapping
+
+
+# Podríamos introducir otra textura(si hemos indicado 3) y seguidamente indicarle las coordenadas uv a usar y como se 
+# mezcla con las anteriores
+
+# Nota: La geforce 2 solo soporta 2 unidades de textura en una pasada!
+
+# Por último, indicamos las propiedades(no obligatorias) de iluminación del material que son
+
+# shininess/glossiness:Un valor float de 0 128. Cuanto mayor sea el especular será menor
+# specular:Un valor float r g b de 0 a 1 donde indicamos el color del especular
+# emission:Un valor float r g b que indica la propiedad de iluminación propia(Util para anular la iluminación de la escena en un objeto)
+
+# Nota:El orden de cada termino de iluminacion no es importante
+
+
+#Ejemplos
+
+#Nmaterials 4
+
+#material1 static opaque 1sided 2 1.png uv 2.jpg same modulate shininess 50.3 specular 0.2 0.4 0.7
+#material2 static opaque 1sided 1 1.png spheremap 
+#material3 static opaque 1sided 3 1.png uv 2.jpg spheremap modulate  3.png uv add emission 0.2 0.2 0.2 shininess 50.3 specular 0.2 0.4 0.7
+#material4 static transp 1sided add 2 1.png uv 2.jpg eyelinear 1.54 modulate emission 1.0 0.0 0.0

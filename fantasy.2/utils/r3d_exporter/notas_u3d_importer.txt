@@ -1,0 +1,3 @@
+El importador saca mal los bones. No se por qué no se sobreescriben
+bien los pesos en determinadas circunstancias. La solución es grabar los pesos en un
+archivo y cargarlos a mano con el load. De todas maneras, tampoco se usará mucho xD.

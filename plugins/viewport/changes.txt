@@ -1,0 +1,19 @@
+---------------------
+ Changes :: Viewport
+---------------------
+
+>> 03/11/03 enlar
+   - Arreglado .obj->.o en makefile.linux
+   - Arreglado path de epopeia_system segun el cvs
+
+>> 29/07/03 utopian
+   - Adaptado al epopeia 1.1.5+, nuevos makefiles para que compile en linux. Subido al CVS
+
+>> 25/07/02
+   - Corregido el SetPosChange... pero de verdad, creo! :D
+
+>> 22/07/02
+   - Corregido el SetPosChange, que no funcionaba como debia :)
+
+>> 15/07/02
+   - Añadido método "SetPosChange" para dar movilidad a los viewports

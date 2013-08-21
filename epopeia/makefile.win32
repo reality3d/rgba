@@ -1,0 +1,79 @@
+# Makefile para win32
+
+# incluir partes comunes del proyecto
+
+include makefile.common
+SHELL=command.com
+
+OBJ_SUFFIX	= obj
+LIB_PREFIX	= 
+LIB_SUFFIX	= lib
+DLL_PREFIX	= 
+DLL_SUFFIX	= dll
+
+CC		= cl
+CCOPTS		=  /c /d /nologo /Ox /DWIN32 /DEPOPEIA_EXPORTS /Irgba /I../include
+CCOUT        	= /Fo
+
+ASM_SUFFIX      = asm
+AC              = nasmw
+ACOPTS          = -f win32
+ACOUT           = -o
+
+LINK		= link
+LINKOPTS    	= /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB:LIBC /LIBPATH=c:\archiv~1\micros~1\vc98\lib 
+LINKOUT        	= /OUT:
+LINKSRC		= $(OBJ) $(LIBS) $(SYSLIBS) $(RES) $(LIBS_WIN)
+
+LIBS_DIR	= /LIBPATH=../lib
+LIBS 		= gdi32.lib winmm.lib #opengl32.lib glu32.lib glaux.lib 
+LIBS_WIN	= #../lib/fmodvc.lib #../lib/libpng.lib ../lib/glt.lib
+SYSLIBS 	= user32.lib kernel32.lib advapi32.lib msvcrt.lib
+
+LIB		= lib
+LIBSRC		= $(OBJ) $(RES)
+LIBOUT		= /OUT:
+LIBOPTS		= /NODEFAULTLIB /NOLOGO
+
+$(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX): $(OBJ) 
+	echo $(LINKOPTS)>l.k
+	echo $(OBJ0)>>l.k
+	echo $(OBJ1)>>l.k
+	echo $(OBJ2)>>l.k
+	echo $(OBJ3)>>l.k
+	echo $(OBJ4)>>l.k
+#	echo $(OBJ5)>>l.k
+	echo $(OBJ6)>>l.k
+	echo $(LIBS)>>l.k
+	echo $(SYSLIBS)  >> l.k
+	echo $(LIBS_WIN) >> l.k
+	rename inter\permanent_command_list.o permanent_command_list.obj
+	$(LINK) $(LINKOUT)$@  @l.k
+
+$(LIB_PREFIX)$(TARGET).$(LIB_SUFFIX) : $(OBJ)
+	@echo $(LIBSRC) > lib.params
+	$(LIB) $(LIBOUT)$@  @lib.params $(LIBOPTS)
+
+%.$(OBJ_SUFFIX) : %.c
+	$(CC) $(CCOPTS) $< $(CCOUT)$@
+
+%.$(OBJ_SUFFIX) : %.$(ASM_SUFFIX)
+	$(AC) $(ACOPTS) $< $(ACOUT)$@
+
+install:
+	copy epopeia.dll ..\..\rgba-bin\lib
+	copy epopeia.lib ..\..\rgba-bin\lib
+
+clean:
+	del *.$(OBJ_SUFFIX)
+	del compiler\*.$(OBJ_SUFFIX)
+	del inter\*.$(OBJ_SUFFIX)
+	del keyboard\*.$(OBJ_SUFFIX)	
+	del render\*.$(OBJ_SUFFIX)
+	del sound\*.$(OBJ_SUFFIX)
+	del rgba\*.$(OBJ_SUFFIX)
+	del packer\*.$(OBJ_SUFFIX)
+	del $(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX)
+	del lib.cmd
+	del epopeia.exp
+	del epopeia.lib

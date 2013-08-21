@@ -1,0 +1,77 @@
+!!ARBvp1.0
+
+# Shader para cambiar entre dos texturas en un objeto, haciendo un degradado según la distancia
+#
+# Requisitos y comentarios
+#
+# - 2 unidades de textura, y el blend de la segunda unidad de textura definido como mask2
+# - De momento no calcula iluminación
+# - No es aplicable a objetos traslúcidos, porque tiene que jugar con el alpha del color
+#
+# Constantes a declarar
+# * iniciorango: inicio del rango a partir del cual se hace el degradado. Por debajo, sólo se 
+#		 pone la textura 0
+# * invrango:    1 / rango del degradado
+#
+# Si distancia < iniciorango: textura 0
+# Si iniciorango < distancia < iniciorango + rango: textura 0 y 1 interpoladas
+# Si distancia > iniciorango + rango: textura 1
+
+# Constantes
+PARAM mvp[4]     = { state.matrix.mvp };   #   modelview projection matrix
+PARAM iniciorango = 1050.0;
+PARAM invrango = 0.005;		# Es el inverso del rango, para ahorrarnos luego cálculos
+
+# Per-vertex inputs
+ATTRIB inPosition = vertex.position;
+ATTRIB inColor    = vertex.color;
+ATTRIB inTexcoord = vertex.texcoord;
+ATTRIB inTexcoord2 = vertex.texcoord[1]; 
+
+# Per-vertex outputs
+OUTPUT outPosition    = result.position;
+OUTPUT outColor    = result.color;
+OUTPUT outTexcoord = result.texcoord;
+OUTPUT outTexcoord2 = result.texcoord[1];
+
+# Temporales
+
+TEMP distancia,outPosTemp;
+TEMP temporal;
+
+# Primero pasamos a coordenadas de vista
+
+DP4 outPosTemp.x, mvp[0], inPosition;   # Transform the x component of the per-vertex position into clip-space
+DP4 outPosTemp.y, mvp[1], inPosition;   # Transform the y component of the per-vertex position into clip-space
+DP4 outPosTemp.z, mvp[2], inPosition;   # Transform the z component of the per-vertex position into clip-space
+DP4 outPosTemp.w, mvp[3], inPosition;   # Transform the w component of the per-vertex position into clip-space
+MOV outPosition, outPosTemp;
+
+# Utilizamos la componente homogenea para calcular el valor real
+MUL outPosTemp.x, outPosTemp.x, outPosTemp.w;
+MUL outPosTemp.y, outPosTemp.y, outPosTemp.w;
+MUL outPosTemp.z, outPosTemp.z, outPosTemp.w;
+
+# Calculamos la distancia entre el vertice y la camara
+
+DP3 temporal, outPosTemp, outPosTemp;     # temporal = nx^2+ny^2+nz^2
+RSQ temporal.w, temporal.x;	  	  # temporal.w = 1/sqrt(nx^2+ny^2+nz^2)
+DST distancia, temporal.xxxx, temporal.wwww;	  # asi sacamos la distancia directamente, en distancia.y
+
+# Tan solo falta calcular el alpha del color, que modelara la textura, segun el alpha
+# Para hacerlo hacemos que:
+# si d < inicio_rango, alpha=0
+# si d > fin_rango, alpha=1
+# en caso contrario, interpolamos según la distancia dentro del rango
+#
+# Por cierto, para encontrar el rango puede venir muy bien el shader en versión binaria
+
+ADD temporal.w, distancia.y, -iniciorango;
+MUL temporal.w, temporal.w, invrango;	# Ahora, temporal.w = (distancia - inicio_rango)/rango
+MAX temporal.w, 0.0, temporal.w;	# Si temporal.w < 0, temporal.w = 0
+MIN outColor.w, 1.0, temporal.w;	# Si temporal.w > 1, temporal.w = 1
+
+MOV outTexcoord, inTexcoord;
+MOV outTexcoord2, inTexcoord2;
+MOV outColor.xyz, inColor;
+END

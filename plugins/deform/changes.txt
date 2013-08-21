@@ -1,0 +1,46 @@
+-------------------
+ Changes :: Deform
+-------------------
+
+>> 12/08/2994 enlar
+   - Arreglar merge del makefile.linux para usar el sistema general de los plugins
+
+>> 27/04/2004 enlar
+   - Hacer makefiles mingw32 compartidos con linux
+   - Arreglar compilacion en mingw32 (quitar _asms)
+
+>> 12/11/2003 enlar
+   - (re)Hacer makefiles para linux
+   - Arreglar 2 errores de sintaxis en parser.y
+
+>> 01/11/2003
+   - Uso del packer para leer los ficheros
+
+>> 31/10/2003
+   - Incluidos dos nuevos modos (7 y 8) de "agua", y nuevos metodos para
+     cargar movimientos de ondas.
+
+>> 19/08/2003 [QUITADO para la red]
+   - Actualizado a nueva version de GLT: En TEX_New le pasamos un formato opengl
+   - Subida a la cache la textura para el render a textura
+
+>> 14/08/2003
+   - Nuevo metodo para elegir el color de la malla (SetWireColor)
+
+>> 11/08/2003
+   - Corregidos algunos bugs del evaluador de expresiones
+   - Iluminacion flat (por cara) y gouraud (por vertice)
+   - Posibilidad de mostrar la malla (wire)
+
+>> 20/07/2003
+   - Se permiten deformaciones en "x", "y", "z", "u" y "v"
+   - Posibilidad de deformar mediante expresiones
+
+>> 17/04/2003
+   - Arreglada la documentacion
+
+>> 15/04/2003
+   - Incluidos varios deformadores 3D (modifican la 'z')
+
+>> 14/04/2003
+   - Primera version

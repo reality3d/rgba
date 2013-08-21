@@ -1,0 +1,20 @@
+------------------
+ Changes :: Fonts
+------------------
+>> 15/08/2004 enlar
+   - Arreglar compilacion (faltaba glext.h)
+   - Quitar warnings
+
+>> 03/11/2003 enlar
+   - Poner rutas correctas para los includes en los .c
+   - Arreglar makefile.linux
+
+>> 16/01/2003
+   - Adaptado al nuevo epopeia
+   - Añadido makefile linux.
+   - Adaptado a la nueva estructura de directorios
+   - Ahora es independiente de la resolución
+
+>> 31/07/2002
+   - Primera version
+   

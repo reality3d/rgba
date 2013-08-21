@@ -1,0 +1,11 @@
+-------
+ FONDO
+-------
+
+  Limpia el color buffer y el depth buffer
+
+
+>> Fondo fondo ( );
+
+>> fondo.SetColor (real r, real g, real b, real a)
+   Establece el color de fondo con que se limpiará el color buffer

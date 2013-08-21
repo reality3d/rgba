@@ -1,0 +1,104 @@
+Demoname     = "viewport deform";
+StartMessage = "...";
+EndMessage   = "...";
+ModName      = "10kdeb3.it";
+CoolKeys     = 1; -- Habilita teclas para moverse entre patrones
+
+begin
+    Fondo fondo ( );
+    FX     fx ( );
+    Dots2 dots2 ("dot.png", "rgba.png", 64, 64);
+
+    FPS      fps ( );
+    Zoomer   zoomer ( );
+    Deform   df (32, 32);
+
+    SetOrder(1,0);
+
+At(0, 0);
+	fondo.SetColor (1.0, 1.0, 1.0, 1.0);
+	fondo.Start (10000);
+
+        fx.Start (200);
+
+        fps.Start (0);
+
+        dots2.SetMode (1);
+        dots2.SetBlend (0);
+        dots2.SetScale (0.6, 0.6);
+	dots2.Start (100);
+
+        zoomer.SetScaleOld (1.02, 1.02); -- Escalar los frames antigÅos a 1.02x1.02
+    	zoomer.SetScaleNew (1.00, 1.00);   -- El frame nuevo dejarlo sin escalar
+    	zoomer.SetAlphaOld (0.8);        -- Transparencia de frames antigÅos
+    	zoomer.SetAlphaNew (0.21);       -- Transparencia del frame nuevo
+    	--zoomer.Start (10);
+
+
+	--
+        -- RAND mode
+        -- z = 1 + amplitude * rnd
+        --
+	df.SetMode (0);
+        df.Amplitude (1.0);
+        df.AmplitudeChange (0.0, 3.0);
+	df.Start (5);
+
+At(2,0);
+	--
+        -- SPHERE mode
+        -- z = 1 + amplitude * (1 - d)
+        --
+	df.SetMode (1);
+        df.Amplitude (-1.0);
+        df.AmplitudeChange (3.0, 1.0);
+
+At(3,0);
+	--
+        -- WAVES mode
+        -- z = 1 + (1 - d) * (1 + amplitude * cos (d*num_waves + t/freq1))
+        -- 
+	df.SetMode (2);
+        df.Amplitude (0.6);
+ 	df.Frequency1 (23.0);
+        df.NumWaves (7.0);
+
+        df.NumWavesChange (0.5, 3.0);
+        df.Freq1Change (15.0, 3.0);
+        df.AmplitudeChange (2.0, 3.0);
+
+
+At(4,0);
+	--
+        -- SOMBRERO mode
+        -- z = 1 + sin (amplitude * d + t*freq1) / (amplitude * d)
+        --
+	df.SetMode (3);
+        df.Amplitude (5.0);
+ 	df.Frequency1 (23.0);
+
+At(5,0);
+	--
+        -- FUNC1 mode
+        -- z = 1 + amplitude * cos(x+t/freq1 + PI * sin(y+t/freq2))
+        --
+	df.SetMode (4);
+        df.Amplitude (0.7);
+ 	df.Frequency1 (23.0);
+        df.Frequency2 (29.0);
+
+At(6,0);
+	--
+        -- FUNC2 mode
+        -- z = 1 + amplitude * ((cos(PI*x+t/freq1) + sin(PI*y+t/freq2))*0.5)
+        --
+	df.SetMode (5);
+        df.Amplitude (0.7);
+ 	df.Frequency1 (23.0);
+        df.Frequency2 (29.0);
+
+
+At(15,0);
+	fx.Stop ( );
+
+end

@@ -1,0 +1,13 @@
+-------------------
+Math(math.epl)
+-------------------
+
+Exprexiones matemáticas adicionales
+
+
+Operaciones
+>> noise(floatx)
+Devuelve un float entre 0 y 1
+
+>> noise2(floatx, float y)
+Devuelve un float entre 0 y 1

@@ -1,0 +1,528 @@
+Epopeia Demosystem 
+v1.4.3
+
+by rgba demogroup
+
+code by:
+enlar
+
+additional code by:
+epsilum
+utopian
+
+bugfixing by
+r3d
+rest of rgba members
+
+
+PENDIENTE:
++ Defines, macros
++ Posibilidad de carga de varios modulos/canciones
++ ponga aqui su putada favorita para enlar ;) 
+envielo a enlar@rgba.org
+
+2007/12/25 enlar v1.4.3
++ Merge	   : Merge del contenido local en photon al repositorio.
+
+2007/12/25 enlar v1.4.2a
++ Merge	   : Merge del contenido local en alcaudon (linux/amd64) al
+	     repositorio.
+
+2007/08/16 enlar v1.4.2
++ Fix      : (compilation) Fix strict aliasing rules warning in generic 
+             function/method call using a union (hehe, info gcc helps!)
+             Bonus is extra-clear-and-safe code (yeah!)
++ Fix      : Expression construction was buggy; 5-2+3 != (5-2)+3
+             Merge ancient fix from 2004/11/14 found in alcaudon system
+
+2005/12/06 enlar v1.4.1
++ Fix      : Corregir el doble play de musica. Se estaba introduciendo el comando
+             de reproduccion de musica dos veces, una en el comando ModName y otro 
+             en el begin. Se ha dejado el del begin.
+
+2005/11/14 enlar year-old release v1.4.0c
++ Fix	   : Cambiar ordenamiento de la lista de New del command list 
+             para que los objetos se construyan en el orden del script.
++ Fix	   : Eliminar uso de lista de creacion de objetos en CommandList
+             No esta claro por que se incluyo la feature (spontz demoeditor?!)
+             pero no es posible poner un loading de la forma tradicional de esa manera.
+             Simplemente se vuelve a meter el new como comando normal, habria que
+             limpiar el codigo de gestion de la lista.
++ Fix      : Hacer que la musica empiece a reproducirse en (0,0) en vez de (-1,0),
+	     que provocaba que empezase antes de la carga.
+
+2004/11/10 enlar
++ Fix	   : Expression construction was buggy; 5-2+3 != (5-2)+3
+
+2004/10/31 enlar 'barna' release
++ Fix      : DLL version
++ Fix	   : changes.txt todo info
++ Fix      : epopeia.h : strcasecmp definition on Win32
++ Fix      : Bug que no actualizaba los cambios de resolucion a la vuelta del menu.
++ Fix      : me
+
+2004/08/15 enlar
++ Fix	   : Buscar el prefijo de mingw32 en la variable MINGW32_PREFIX, o bien
+             si esta vacio usar un prefijo razonable: i386-mingw32
++ Fix      : Compatibilidad hacia atras de codigo fuente, añadiendo un typedef
+	     para TRenderContext en graphics.h
+
+2004/08/14 enlar v1.3.2
++ Fix	   : exportar funciones de DEBUG en la DLL
++ Fix      : %d en 2 llamadas a de debug en inter/inter.c
++ Fix	   : Quitar dependencias de librerias de fmod, SDL, OpenGL
++ Fix 	   : Corregir dependencia en -lm
+
+2004/08/12 enlar
++ Refactor : mover render/* y sound/* a plugins
++ New      : llamar al menu de inicio, solo si está definida la funcion
++ New/fix  : comprobar que tenemos subsistemas de graficos, teclado, sonido antes 
+             de inicializarlos en Epopeia_init
++ Refactor : mover debug.c/h al raiz y eliminar directorio rgba. Actualizar makefiles y .c's
++ Refactor : Makefile* -> makefile*
++ Refactor : mover keyboard/* a sus respectivos render-plugins
++ Refactor : eliminar del directorio inter ficheros no usados: 
+             layer.* list.* gfx.*
++ Refactor : limpiar declaraciones de compiler/function.c e incluir function.h
++ Refactor : eliminar ./arglist.h vacio. Arreglar includes al arglist.h correcto
++ New      : Epopeia_DisableMenu permite indicar que no se muestre el menu
++ Change   : Cambiar forma de instanciar el objeto de teclado. Se hace mendiante un
+             metodo del objeto TGraphics en vez de una funcion especial del plugin Graphics
++ Fix	   : epopeia-API-1.4 corregido para indicar que la funcion de llamada al menu
+	     devuelve un entero
++ Delete   : Epopeia_SetTimeDelay eliminado. Fmod 3.72 deberia solventar los problemas encontrados
++ Fix      : Cambiar todas las llamadas a printf y fputf a Epopeia_Print. Esta funcion escribe
+	     a consola o a epopeia-output.txt segun el valor de la variable console_output
+
+2004/06/28 enlar
++ Refactor : Renombrar Renderer/Render a Graphics
++ Refactor : no compilar/linkar "renderer"
++ Refactor : unificar un poco epopeia.h <-> epopeia_system.h
++ Refactor : poner en epopeia_internal.h lo interno que habia en epopeia.h
++ New	   : eliminar de la compilacion linux renderers, sounds, keyboards
+
+2004/06/18 enlar
++ Fix  : si falla la carga del modulo de musica en sound_fmod hacer printf
+         solo si console_output
+
+2004/06/18 enlar
++ Fix  : eliminar dejà-vu en el changes.txt :)
++ Fix  : actualizar version a v1.2.2b en epopeia.c
+
+2004/06/15 utopian v1.2.2.b
++ Fix  : evitar que casque al salir (fallo en renderer_wgl.c)
+
+2004/06/09 enlar v1.2.2a
++ Fix  : evitar que WinXP muestre ventana de error en el ciclo de carga de plugins.
+
+2004/05/04 enlar v1.2.2
++ Fix  : quitar printf "Wavfile" en sound_fmod
+
+2004/05/03 enlar v1.2.1
++ Add  : metodo SetTimerDelay para sound_fmod (para poder hacer workaround problema es1371 en linux)
+
+2004/04/18 enlar v1.2.0
+-----------------------
++ Fix  : arreglar la exportacion de Type_* que no funcionaba con MingW32
++ Fix  : poner el nombre de la demo tambien en el icono minimizado de
+  	 la barra de tareas, en vez de "Epopeia ..."
+
+1.1.98 enlar
+------------
++ Clean: usar Epopeia_GetTimeMs en sound_fmod en vez de llamadas nativas
++ Fix  : (des)inicializar resolucion del timer de windows en epopeia.c
++ Clean: quitar delay del timer de sound_fmod
++ Add  : comando de script SetTime, "alias" de SetOrder más adecuado
+	 para usarlo con streams de audio.
+
+1.1.97 enlar "loading" release
+------------
++ Fix: sacar un warning en vez de salir de la demo al intentat hacer
+       un stop de un objeto que no esta en la lista de render
++ Fix: Modificar sound_fmod para que compile en Linux
++ Fix: Quitar definicion DISABLE_DEBUG de rgba/debug.h 
+	-> usar desde el makefile
++ Fix: Aumentar el buffer de mixing para evitar saltos en la musica
++ Fix: descomentar liberacion de memoria en pak_close
++ Fix/Update: Actualizar al Fmod 3.71
+	. Hacer cambios para que vuelva a compilar
+        . Puesto que los open/close/read/... del packer
+          parecen hacer cascar al fmod, cambiar al nuevo sistema de
+          carga desde memoria.
++ Fix:	Arreglar fallos ortográficos:
+		List_Lenght->List_Length
+        	Lenght->Length
++ Feature: Añadir capacidad de dar de alta constantes para los tipos.
++ Fix:  Arreglar modulo de lista. List_DropCurrent fallaba al quitar
+        un elemento que no fuese el primero: el puntero al siguiente
+        del elemento anterior al borrado no se actualizaba.
++ Fix:  Arreglar carga interativa de plugins: al fallar la carga de un
+        plugin no se pasaba al siguiente, sino que se quedaba eternamente
+        reintentando.
++ Fix:  Arreglar resolucion de dependencias en la carga de plugins.
+	Parece que por alguna razon cambiar la variable de entorno
+        LD_LIBRARY_PATH no funciona. Se ha solucionado añadiendo el
+        flag RTLD_GLOBAL a dlopen y no linkando el plugin dependiente
+        con el otro plugin (sino falla la carga de la libreria dinámica,
+        aunque sea posible resolver todos los simbolos externos).
++ Fix/Feature: Hacer que el packer cargue ficheros con paths estilo
+	DOS/Win en Linux.
++ Fix:	Desde el fix de las comparaciones de las listas, cada comando se
+	introducia en un PosList diferente en la lista de comandos debido
+        a un error (bug) al reemplazar el List_Goto. Esto provocaba que no
+        funcionase InsertPermanentCommands, puesto que solo introduce el 
+        primer PosList. Corregido el error.
+
+1.1.96 enlar
+------------
++ Fix:  habia varias listas con estructuras que usaban StringCompare.
+        Funcionaba milagrosamente; cambiado para que use una funcion de
+        comparacion creada para la estructura. (bcnparty)
++ Feature: modificar la gramatica a 1.1.5 de forma que ModName acepte
+	uno o varios strings separados por comas. Nuevas llamadas de API
+        Epopeia_SetSongNumber, Epopeia_GetSongNumber. Esto permite tener
+        varias canciones y poder elegir entre ellas. (r.e.d.)
++ Fix:  Revertir el cambio introducido en 1.1.92 en el packer. La cabecera
+	del unrarlib es incorrecta; se debe pasar un puntero a puntero.
+        (bcnparty)
++ Fix:	Cambiar las cabeceras urarlib_list en el .c y .h para que no de
+	warning al compilar
++ Fix:	Arreglar warning de variable no usabada en epopeia_plugin.c
++ Fix:  Arreglar la carga de plugins/dependencias que no funcionaba bien
+	(bcnparty)
+
+1.1.95 enlar:
+-------------
++ Funcion de API Epopeia_SetConsoleOutput para hacer que epopeia
+  no saque nada a stdout/stderr con printf (problemas windows subsystem)
+
+1.1.94a enlar
+-------------
++ Remozada la carga de plugins:
+	- Leer los plugins en orden alfabetico
+        - Si un plugin no se puede cargar, se reintenta mas tarde (al final).
+        - Los plugins se descargan al final
+
+1.1.94 enlar
+------------
++ Introducido el soporte de variables:
+	mivariable = 3 + 4;
+        mivariable = mivariable + 5;
+        fondo.SetColor(mivariable, mivariable, 2.5, 4.0);
++ Posibilidad de "sumar" (concatenar) dos cadenas de texto:
+	mivariable = "una " + "prueba";
+        Sprite carga("mi"+"fichero.txt");
+        
+
+1.1.93
+------
+enlar: para cambiar entre fs<->win se cierra la ventana y se abre otra 
+       en windows. Eso parece que hace que las texturas se pierdan. ¨?
+        
+1.1.92j enlar:  Epopeia_DumpClassInfo: vuelca info de las clases dadas de alta
+		Epopeia_DumpFunctionInfo: vuelca info de las funciones definidas
+1.1.92i enlar: Arreglar la gramatica+implementacion para que lea correctamente
+		+,-,*,/,% seguidos sin parentesis
+1.1.92h enlar: Hacer que el stencil y el zbuffer se pongan correctamente en linux
+		Nueva API:
+                	Epopeia_SetZBuffer(bits)
+                        Epopeia_SetStencilBuffer(bits)
+                Permitiran cambiar los bits del Z y S buffer desde el main/menu
+1.1.92g enlar: Establecer el nombre de la ventana al nombre de demo en Linux
+1.1.92f enlar: Soporte para cambiar modo ventana con espacio (win32) incompleto
+1.1.92e enlar: Soporte para cambiar modo ventana con espacio (linux)
+1.1.92d enlar: Añadir soporte para el operador % (modulo)
+1.1.92c enlar: Cambiado funcion GetTime. Ahora muestra el tiempo de la cancion,
+		solo en ogg/mp3.
+		Añadida funcion API Epopeia_GetSoundContext()
+1.1.92b enlar: arreglado asercion con untils sin comandos dentro
+
+1.1.92a
+-------
++ Nueva funcion de la API:
+	Epopeia_SetOutputFilename()
+  Establece a donde iran los errores y warnings del script. En principio
+  es para que lo use el main.exe
++ Evitar ASSERTION al no encontrarse cargado un plugin que luego se
+  usaba en el script. Mejorar la descripcion del mensaje de error.
+
+1.1.92
+------
++ Reintroducir Until
++ Pruebas de estabilidad y funcionalidad
++ packer.c:299 -> el segundo parametro de la llamada a unrarlib_list
+  era un puntero a puntero. Corregido.
++ Limpiados warnings de compilacion
++ Nuevo fichero epopeia.txt con algo de informacion
+
+1.1.91: ATENCION VERSION ALFA CASI SIN TESTAR PROHIBIDO USAR EN PROD
+-------
++ Quitado soporte until (Euskal)
++ Arreglado bug en packer: no activaba EOF cuando en una lectura
+offset = tamaño (solo cuando era >)
++ Añadido soporte de until (timing) [step(timing)] do <sentencias> end
+
+1.1.7a-g
+--------
++ Fade down del audio al darle a ESC
+b:
++ Nueva funcion en la clase render: SetGlobalFade
++ Adecuar Wgl y Sdl a SetGlobalFade
++ Fade-out de los graficos al darle al ESC
+c:
++ Cast automatico int->float en operaciones binarias (+,-,*,/)
++ Cast automatico int<->float en llamadas a funcion y metodo
+d:
++ Fade down mas rapido (1,5 seg.)
++ Funciones GetTimeMs, GetResX, GetResY: sin parametros y devuelven un
+entero
++ Nuevo parametro inicial (como CoolKeys) WarningLevel:
+	0: Ignora los warnings
+        1: Muestra los warnings
+        2: Trata los warnings como errores
+e:
++ Funciones nuevas para el script:
+	- real GetTime()        : devuelve el tiempo en segundos
+        - real Random(min, max) : devuelve un numero real entre min y max
+f:
++ Salir inmediatamente al dar por segunda vez a ESC
++ Inicializar la semilla de los numeros aleatorios
++ Parametro de inicializacion de script TimingPorTiempo, para que los At cojan
+  el tiempo en segundos como real.
+g:
++ Cambiado el sistema de seleccion de timing. El timing es por tiempo "At(1.5)"
+  para cuando la musica es WAV (OGG, MP3, ...) y por order:row en caso de los modulos.
+  Es posible forzar un timing al estilo de los modulos con los WAV poniendo 
+  ForceModTiming = 1; 
+  DESPUES del nombre del modulo (no antes). TimingPorTiempo se ha eliminado.
++ Añadir funcion real abs(real) para calcular valores absolutos.
+
+1.1.7
+-----
++ Nueva funcion Epopeia_GetResolution para que los plugins puedan obtener
+  la resolucion y si estamos en modo ventana o no.
+
+
+1.1.666b
+--------
++ Fix del fix de la 1.1.666a, de forma que para la sicro si se usa
+  el timing del Fmod con los Ogg, para que no haya desfase entre la
+  musica y la sincronizacion. El timer del sistema se usa solo para
+  el Tick que es la referencia de tiempo de los plugins.
++ Fix del fix de la 1.1.666a para que compile en win32
+
+1.1.666a
+--------
++ Fix para la granularidad del Tick con Ogg y problema al loopear la
+  musica.
+
+1.1.6/1.1.666
+-------------
++ Hacer que Coolkeys haga algo util con ficheros .Ogg
++ begin "flotante" released. La musica empieza en begin
+  y puede ponerse donde se quiera en el script
++ Fix de compilacion de un strcasestr para win32 (sux)
++ Soporte para carga de .ogg/.mp3/.mp2/.wav/.raw
++ Fix fallos de compilacion
++ A¤adido call.asm para nasm por Epsilum
++ A¤adido compilacion del call.asm al Makefile.win32
++ Arreglos en el Makefile de win32 para que compile todo y haga clean
++ Requerimientos para compilar en win32:
+	- GNU make y djecho (parte de DJGPP)
+        - Nasm win32
+
+
+1.1.5
+-----
+* Quitado el GLT de la DLL en la version win32 (continuaba ahi)
+* Quitado llamada a CACHE_Kill en renderer_wgl al finalizar.
+
+1.1.4
+-----
+* Actualizado epopeia_system.h con las nuevas funciones
+	- Method_SetReturnType
+	- Function_AddParameterType
+	- Function_New
+* Añadidas funciones intrinsecas: sin, cos, tan, asin, acos, atan,
+atan2, exp, log, sqrt, fmod, pow, fmin, fmax, min, max (los dos
+ultimos reciben parametros enteros).
+* Puestos los comentarios multilinea en marcha (un break debia ser
+return X-D)
+* Arreglado bug en modulo de debug (array de caracteres temporal
+de tamaño predefinido) que daba un SEGFAULT al sacar mensajes de debug
+largos.
+
+1.1.3
+-----
++ Pequeños bugfixes para el uso desde el script de funciones intrinsecas
++ Añadida funcion intrinseca preliminar de prueba "sin"
++ Bugfix-megahack para que el retorno de float de funciones/methodos funcione.
++ ... y sin funciono 8)
+
+
+1.1.2
+-----
++ Arreglado bug al pasar el puntero del objeto al llamar a un metodo
++ Arreglado bug al pasar primero parametro del Start al
+ordenar el render
++ Expresiones basicas suma,resta,division,multiplicacion y () funcionando
+
+1.1.1
+-----
++ Merge de los cambios del branch 1.0.x (version navmo)
+
+1.1.0
+-----
++ Modificaciones en la gramatica para soporte de Expresiones
++ Modificaciones para soporte basico de Expresiones, nuevos modulos de
+soporte function function_table expression
+
+1.0.98
+------
++ Timer windows y trazas nuevas de debug
++ Fix memory leak en List_Drop (ahora se libera el nodo)
++ Fix compilacion del packer (PACKER_API no definido en Linux)
+
+1.0.97c
+-------
++ Solucion al problema del timer del Fmod en Linux + tentativa win32
++ Asserts para que la resolucion != NULL en renderer WGL y SDL
+
+1.0.97b
+-------
++ Fixes de compilacion Linux (al intentar compilar desde el makefile
+comun modulos windows-only)
++ Quitadas las librerias libpng y libjpg del linkado, puesto que ya no
+se usan ("sacados" al glt)
++ Fixes de compilacion en Windows
+
+1.0.96
+------
++ Eliminar el GLT del Epopeia, tal como se ha convenido
++ Arreglado bug que causaba una Violacion de Segmento al encontrarse
+con un identificador no definido.
++ Arreglado bug que no comprobaba el numero de argumentos de los
+inicializadores y las llamadas a funcion.
++ Arreglado bug que causaba una Violacion de Segmento al encontrarse
+un argumento del tipo equivocado. (relacionado con los dos anteriores)
+
+1.0.95
+------
++ Incluir GLT en el libepopeia.so, que estaba extraviado
++ FIX: Realizar las llamadas a las funciones Start() y Stop()
+
+1.0.94
+------ 
++ Implementada la carga de plugins sobre Linux (.epx)
+
+1.0.93
+------
++ Backport a Linux (SDL/OGL + FMOD)
+
+1.0.92
+------
++ Nuevo GLT
++ Parches al packer
++ Arreglados los comentarios multilinea
++ A¤adido soporte para comentarios de una linea estilo C++ (// comment)
+
+
+1.0.91
+------
++ Nueva version del GTL 110702
++ Quitada la palabra reservada Flash del sistema de scripts
++ Nuevo comando de cabecera "CoolKeys" para habilitar las
+  teclas de flecha para moverse entre patrones de musica
+
+1.0.90
+------
++ Eliminado el viejo img_png del sistema, puesto que hacia
+  hacia conflicto con el GLT.
++ El subsitema grafico inicializa la cache del GLT
++ Quitado el debug
+
+1.0.6
+-----
++ Arreglado el tema de exports del GLT O8)
+
+1.0.5
+-----
++ Fixes en el packer por Utopian y Epsilum?
++ Integrado el GLT by Epsilum
++ Cambiado Z Buffer a 32 bit
++ Nuevo comando script: SetOrder(1, 0);
+
+1.0.4
+-----
++ Arreglado bug en la inicializacion de pf (eof=0)
+  cascaba la carga del script en algunas maquinas y condiciones.
+
+1.0.3
+-----
++ Comentarios multilinea estilo C ahora soportados en el script /* */
++ Al devolver un metodo NEW un NULL casca: arreglado, sale con
+  error notificando el fallo (hay que redirigir la salida estandar
+  para verlo)
+X Problemas al hacer una doble llamada a Method_New?
+  (sobreseido)
+
+1.0.2
+-----
++ Arreglado bug de emulacion fread en el layer superior urar/pak
+
+1.0.1
+-----
++ Work-around (doble) para bug del urar al abrir un fichero en modo "r" y
+  no convertir los saltos de lineas.
+
+1.0 final
+---------
+- Cargar el IT desde el PAK
+
+1.0rc8
+------
++ Arreglado fondo circulos en el init screen (Epsilum)
++ Se cargan los plugins desde el PAK:
+	1. Se buscan ficheros con extension .epl (en minusculas!) y se cargan
+        2. Se buscan ficheros .epl en el subdirectorio plugin (como siempre)
+
+1.0rc7
+------
++ Inlcuido init screen por Epsilum
++ Arreglado casque al salir con ESC
+
+1.0rc6
+------
++ Arreglado casque final al usar comando Delete()
++ Quitado DEBUG y printf's
+
+1.0rc5
+------
++ Arreglado bug en el packer (fgetc) que impedia la carga correcta
+del script desde el PAK
+
+1.0rc4
+------
++ El .exe ya tiene icono
++ Las teclas no hacen caso, excepto ESC
+
+1.0rc3-fix
+----------
+­­­NO CARGA EL SCRIPT DESDE EL PAK!!! (bug found!)
+
+1.0rc3
+------
++ Chequea que los objetos/efectos se crean bien (esta var por epsilum)
++ Integrado el packer en el dsys (epopeia DLL/LIB)
+
+1.0rc2
+------
++ Carga el script desde el packer
+
+1.0rc1
+------
++ No debug
++ No console window
++ Packer system integrado y usado para carga de PNGs.
+
+

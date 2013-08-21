@@ -1,0 +1,62 @@
+!!ARBvp1.0
+
+# Shader para modelar el valor de alpha de un vertice en base a su angulo respecto a la camara
+#
+# Por utopian/rgba
+#
+# Requisitos y comentarios:
+#
+# - No calcula iluminacion
+# - Segun la escena, hay que modificar el valor de la constante de atenuacion
+# - Habra que modificarlo para multiples unidades de textura
+
+# Constantes
+PARAM mvp[4]     = { state.matrix.mvp };   #   modelview projection matrix
+PARAM atenuacion = { 0.01, 0.01, 0.01, 0.01 };
+
+# Per-vertex inputs
+ATTRIB inPosition = vertex.position;
+ATTRIB inColor    = vertex.color;
+ATTRIB inTexcoord = vertex.texcoord;
+
+# Per-vertex outputs
+OUTPUT outPosition    = result.position;
+OUTPUT outColor    = result.color;
+OUTPUT outTexcoord = result.texcoord;
+
+# Temporales
+
+TEMP distancia,outPosTemp;
+TEMP temporal,temporal2;
+
+# Primero pasamos a coordenadas de vista
+
+DP4 outPosTemp.x, mvp[0], inPosition;   # Transform the x component of the per-vertex position into clip-space
+DP4 outPosTemp.y, mvp[1], inPosition;   # Transform the y component of the per-vertex position into clip-space
+DP4 outPosTemp.z, mvp[2], inPosition;   # Transform the z component of the per-vertex position into clip-space
+DP4 outPosTemp.w, mvp[3], inPosition;   # Transform the w component of the per-vertex position into clip-space
+MOV outPosition, outPosTemp;
+
+# Utilizamos la componente homogenea para calcular el valor real
+MUL outPosTemp.x, outPosTemp.x, outPosTemp.w;
+MUL outPosTemp.y, outPosTemp.y, outPosTemp.w;
+MUL outPosTemp.z, outPosTemp.z, outPosTemp.w;
+
+# Calculamos la distancia entre el vertice y la camara
+
+DP3 temporal, outPosTemp, outPosTemp;     # temporal = nx^2+ny^2+nz^2
+RSQ temporal2, temporal.x;	  	  # temporal2 = 1/sqrt(nx^2+ny^2+nz^2)
+DST distancia, temporal, temporal2;	  # asi sacamos la distancia directamente, en distancia.y
+
+# Tan solo falta calcular la atenuacion del alpha segun la distancia
+
+MUL distancia.y, distancia.y, atenuacion;
+RCP distancia, distancia.y;
+
+MIN outColor.w, distancia.x, 1.0;	# Este es el nuevo alpha calculado...
+
+MOV outTexcoord, inTexcoord;
+MOV outColor.x, inColor.x;
+MOV outColor.y, inColor.y;
+MOV outColor.z, inColor.z;
+END

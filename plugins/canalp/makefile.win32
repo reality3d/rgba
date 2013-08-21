@@ -1,0 +1,47 @@
+#
+# PLUGIN Makefile
+#
+
+DST      = canalp.dll
+DST_FILE = ..\..\plugin\canalp.epl
+OBJ      = canalp.obj canalp_epopeia.obj
+
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../epopeia.lib
+
+# System libs
+LIBS        = c:\prog\glt\glt.lib
+LIB_SYS     = user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib msvcrt.lib winmm.lib
+
+# Compiler options
+CC	= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA) -Ic:\prog\glt
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+#
+# Main
+#
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIBS) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+	copy $(DST) $(DST_FILE)
+
+clean:
+	del $(OBJ)
+    	del canalp.exp
+    	del canalp.dll
+    	del canalp.lib
+
+
+#
+# Objs
+#
+canalp.obj: canalp.c
+	$(CC) $(CCOPTS) canalp.c
+
+canalp_epopeia.obj: canalp_epopeia.c
+	$(CC) $(CCOPTS) canalp_epopeia.c

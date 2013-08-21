@@ -1,0 +1,71 @@
+---------
+  GLOW_FP
+---------
+
+>> GLOW_FP glow (int r2tsizex, int r2tsizey);
+
+   Inicializa el efecto. Los parámetros definen el tamaño de la textura que se blurreará.
+   Estos tamaños tienen que ser:
+	
+   - Potencia de 2
+   - Si es mayor que el tamaño de la pantalla, se ajusta a la potencia de 2 inferior más cercana.
+	   
+>> glow.SetAlgorithm(int algorithm);
+
+   Define el algoritmo que se utilizará para extraer los highlights de la imagen. Hay tres 
+   opciones:
+
+   0: resta + overbright. Resta a la imagen un cierto valor (luego veremos cuál), y multiplica
+      por otro para recuperar los brillos. Después se hace el blur y demás. Esta es la opción
+      por defecto
+
+   1: canal alpha. Todos los pixels cuyo valor de alpha supere un umbral se consideran como 
+      highlight. Permite algo más de control, pero requiere preparar las texturas...
+     
+
+   2: textura GLT. Se le pasará como parámetro una textura compartida (GLT), que será 
+      la que defina el modo de mezcla entre la imagen original y la blurreada. El identificador
+      de textura se pasará con la función SetSharedGLTTexture (ver más adelante).
+
+>> glow.SetSharedGLTTexture(string texname)
+
+   Especifica el nombre de la textura GLT que se va a usar, si el algoritmo de glow es el 2.
+   En cualquier otro caso no hace nada. Esa textura debe existir con anterioridad.
+
+>> glow.SetCutSubstract(float r, float g, float b);
+
+   Define los valores (r,g,b) que se restarán a la imagen para extraer los brillos. Por defecto
+   es (0.8,0.8,0.8). Sólo tiene efecto si el algoritmo es 0.
+
+>> glow.SetOverbright(float r, float g, float b);
+
+   Define los valores (r,g,b) que se multiplicarán a la imagen para recuperar la intensidad de 
+   color. Por defecto es (2.0,2.0,2.0). Esta multiplicación se puede aplicar ANTES o DESPUÉS de
+   hacer el blur, y se controla con la función SetPostOverbright.
+   
+>> glow.SetPostOverbright(int yesno);
+
+   Especifica cuándo se aplicará el overbright para recuperar la intensidad de color:
+   
+   0: antes del blur
+   1: después del blur
+   
+   Por defecto es 0 (antes del blur). 
+
+>> glow.SetCutAlpha(float alpha);
+
+   Define el alpha a partir del cual se considerará un pixel como highlight (y por tanto pasará
+   a ser blurreado). Por defecto es 0.5. Sólo tiene efecto si el algoritmo es 1.
+
+>> glow.SetBlurIterations(int iterations);
+
+   Define el número de pasadas de blur que se harán a la imagen de brillos. A más pasadas, más
+   blur (pero más lento). Por defecto es 1. Se aplica un box blur de radio 4 (la segunda pasada
+   sería radio 16, y así).
+
+>> glow.SetAddorMultiply(int flag);
+
+   Especifica si, una vez hecho el blur, se suma a la imagen original o se multiplica. 
+
+   0: suma (por defecto)
+   1: multiplica

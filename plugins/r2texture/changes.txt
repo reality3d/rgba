@@ -1,0 +1,6 @@
+------------------------
+ Changes :: R2Texture
+------------------------
+
+29/07/2003: utopian
+	- Primera version

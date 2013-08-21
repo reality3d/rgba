@@ -1,0 +1,17 @@
+EXPORTS
+    CACHE_FreeTexture @1
+    CACHE_Init @2
+    CACHE_InsertTexture @3
+    CACHE_Kill @4
+    CACHE_LoadTexture @5
+    TEX_Bind @6
+    TEX_Delete @7
+    TEX_Load @8
+    TEX_LoadCubeMap @9
+    TEX_New @10
+    TEX_SetCubeMapFilter @11
+    TEX_SetCubeMapWrap @12
+    TEX_SetEnvironment @13
+    TEX_SetFilter @14
+    TEX_SetWrap @15
+    TEX_UpdateData @16

@@ -1,0 +1,47 @@
+#
+# Makefile
+#
+DST     = dlg.exe
+OBJ     = dlg.obj button.obj hlink.obj tooltip.obj
+RES     = .\res\resource.res
+LIB_SYS = user32.lib kernel32.lib gdi32.lib msvcrt.lib advapi32.lib ComCtl32.lib ComDlg32.lib shell32.lib
+
+CC     = cl
+CCOPTS = /c /Ox /Iiface /D_WIN32_WINNT=0x0500
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB /LIBPATH:../../lib
+
+
+all: $(DST)
+
+#
+# Link
+#
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(RES) $(LINKOPTS)
+
+
+#
+# Resource
+#
+.\res\resource.res: .\res\resource.rc
+	rc .\res\resource.rc
+
+
+#
+# Files
+#
+dlg.obj: dlg.c
+	$(CC) $(CCOPTS) dlg.c
+
+button.obj: iface/button.c
+	$(CC) $(CCOPTS) iface/button.c
+
+hlink.obj: iface/hlink.c
+	$(CC) $(CCOPTS) iface/hlink.c
+
+tooltip.obj: iface/tooltip.c
+	$(CC) $(CCOPTS) iface/tooltip.c
+
+

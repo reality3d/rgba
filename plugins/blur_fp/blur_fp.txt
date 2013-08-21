@@ -1,0 +1,55 @@
+--------
+  BLUR_FP
+--------
+
+>> BLUR_FP blur (int type, int r2tsize );
+
+   Inicializa el objeto blur. Hay dos parámetros:
+
+   - type: define el tipo de blur: 0 -> box blur (por defecto, más rápido); 1 -> custom blur
+
+     El box blur es el de toda la vida, pero teniendo en cuenta que, en vez de hacerse
+     por potencias de 2, se hace por potencias de 4 (para aprovechar las unidades de 
+     textura). Para hacerlo en potencia de 2 hay que hacerlo custom (ahora lo vemos). 
+
+     En el custom blur definimos el filtro de convolución a mano, con lo que podemos
+     jugar bastante. El filtro es separable: se hace primero un blur horizontal y luego 
+     uno vertical. Los coeficientes del filtro son definidos con la función SetCoeffs.
+	
+     
+   - r2tsize: define el tamaño de la textura intermedia sobre la que se hace el blur. Por
+	      defecto es 0, lo que significa que se hace sobre una textura de pantalla completa.
+              Cuanto más pequeña sea la textura, más artefactos pero menos iteraciones son 
+  	      necesarias para alcanzar un cierto blur.
+
+     Este parámetro DEBE ser potencia de 2 (si no es 0), porque se define una textura de tamaño 
+     r2tsize x r2tsize sobre la que se hace el blur.
+     
+
+>> blur.SetIterations(int iterations);
+
+   Define el número de iteraciones de blur que se harán (el radio del blur será 4^iterations). 
+   A más iteraciones, más blur, pero más lento, especialmente si r2tsize == 0.
+     
+>> blur.SetCoeffs(float coeff0, float coeff1, float coeff2, float coeff3, float coeff4,
+		  float coeff5, float coeff6, float coeff7, float coeff8)
+
+   Define los coeficientes del filtro de convolución. La forma de aplicarlo es:
+
+
+   	coeff8 coeff7 coeff6 coeff5 coeff0 coeff1 coeff2 coeff3 coeff4
+				       ^
+				       |- Éste es el pixel actual
+
+
+   coeff1 ... coeff4 son los coeficientes para los pixels a la derecha (y arriba, cuando se 
+   aplica verticalmente), y así. Algunos ejemplos de coeficientes serían:
+
+
+   SetCoeffs(0.1111, 0.1111, 0.1111, 0.1111, 0.1111, 0.1111, 0.1111, 0.1111, 0.1111) -> Box blur r=4 
+   SetCoeffs(0.3333, 0.3333, 0.0, 0.0, 0.0, 0.3333, 0.0, 0.0, 0.0) -> Box blur radio = 2
+   SetCoeffs(0.25, 0.15, 0.1, 0.075, 0.05, 0.15, 0.1, 0.075, 0.05 ) -> Gaussian blur
+
+
+   Los coeficientes no necesariamente tienen por qué sumar 1. Si suman más, estamos subiendo
+   el brillo de la imagen, con lo que se pueden conseguir efectos curiosos...

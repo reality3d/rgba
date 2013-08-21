@@ -1,0 +1,47 @@
+#
+# PLUGIN Makefile
+#
+
+DST      = spline.dll
+DST_FILE = ..\..\plugin\spline.epl
+OBJ      = spline.obj spline_epopeia.obj
+
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../epopeia.lib
+
+# System libs
+LIBS        = c:\prog\glt\glt.lib
+LIB_SYS     = user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib msvcrt.lib winmm.lib
+
+# Compiler options
+CC	= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA) -Ic:\prog\glt
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+#
+# Main
+#
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIBS) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+	copy $(DST) $(DST_FILE)
+
+clean:
+	del $(OBJ)
+	del spline.exp
+	del spline.dll
+	del spline.lib
+
+
+#
+# Objs
+#
+spline.obj: spline.c
+	$(CC) $(CCOPTS) spline.c
+
+spline_epopeia.obj: spline_epopeia.c
+	$(CC) $(CCOPTS) spline_epopeia.c

@@ -1,0 +1,39 @@
+##########################################################################
+#
+#
+##########################################################################
+
+
+DST = portada.epl
+OBJ = base.obj portada.obj
+
+H_EPOPEIA   = ../../../include
+LIB_EPOPEIA = ../../../rgba-bin/lib/epopeia.lib ../../../rgba-bin/lib/glt.lib
+LIB_SYS     = user32.lib kernel32.lib msvcrt.lib opengl32.lib glu32.lib 
+
+# Compiler options
+CC		= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA)
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+$(DST): $(OBJ)
+    link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+    copy $(DST) ..\..\\plugin
+
+
+base.obj: base.cpp
+    $(CC) $(CCOPTS) base.cpp
+
+portada.obj: portada.cpp
+    $(CC) $(CCOPTS) portada.cpp
+
+
+clean:
+	del $(OBJ)
+    del *.exp
+    del *.epl
+    del *.lib
+    

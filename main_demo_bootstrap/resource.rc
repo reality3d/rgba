@@ -1,0 +1,14 @@
+#define IDI_RGBAICON                    102
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_RGBAICON            ICON    DISCARDABLE     "newrgba.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// 24
+//
+
+1                       24      DISCARDABLE     "c.exe.manifest"
+
+

@@ -1,0 +1,395 @@
+------------------------------------
+FANTASY(fantasy.epl)
+------------------------------------
+-- Inicializacion
+Escena3D MiEscena(string u3d_filename, string mat_filename)
+	u3d_filename: nombre del fichero u3d
+	mat_filename: nombre del fichero de definición de materiales
+
+MiEscena.SetActiveCamera (int camara)
+	camara: numero de la camara a activar
+
+MiEscena.SetSpeed(real speed)
+	speed: velocidad en FPS a la que se pone el engine
+
+MiEscena.SetDynLights(int luces)
+	0: sin luces dinamicas
+	1: con luces dinamicas
+
+	Por defecto con luces dinámicas
+
+MiEscena.SetZBufferClear(int sino)
+	0: no limpia el zbuffer cada vez
+	1: si que lo hace
+
+	Por defecto limpia el zbuffer
+
+MiEscena.SetFrame (int frame)
+	frame: numero del frame a saltar
+
+MiEscena.SetGlobalIlum(real ilum)
+	ilum: iluminación, en 0..1
+
+	Aplica una iluminación global (en escala de grises). 1 es el valor normal,
+	0 es todo negro
+
+MiEscena.SetFade(real ilumorigen, real ilumdestino, real tiempo)
+	Cambia de la ilumorigen a la ilumdestino en el tiempo especificado
+
+MiEscena.SetGlobalAlpha(real alpha)
+	Pone el alpha global que se especifique a la escena
+
+MiEscena.SetAlphaFade(real alphaorigen, real alphadestino, real tiempo)
+	Cambia del alphaorigen al alphadestino en el tiempo especificado
+
+	Tanto en el alpha como en la iluminación, un SetX anula un SetXFade
+
+MiEscena.SetFog(int sino,int fog_type,real r,real g,real b,real density,int invert)
+	sino: 0, no hay fog; 1, sí
+	fog_type:
+		0: GL_EXP
+		1: GL_EXP2
+		2: GL_LINEAR
+		El 0 es el más rápido, pero menos preciso, y el 2 el más lento y preciso
+	r,g,b: color de la niebla
+	density: densidad de la niebla
+	El valor de fog_invert define si se hace una niebla normal (fog_invert=0) o invirtiendo 
+	los planos (fog_invert=1). Para que r3d disfrute un poco más que nada :).
+
+MiEscena.SetUChange(string nombre_objeto, real speed)
+MiEscena.SetVChange(string nombre_objeto, real speed)
+	Hace que las coordenadas U y Vdel objeto especificado por el nombre cambien a la 
+	velocidad indicada por speed
+
+	NOTA: Acepta wildcards
+
+MiEscena.SetRenderMode(string nombre_objeto, int mode)
+	Controla el tipo de render aplicado a cada objeto
+	0: render normal (por defecto)
+	1: render wire
+	2: render flat
+	3: render normal + wire
+	4: cartoon
+
+	¡Ojo! El modo cartoon requiere, además de hacer un SetRenderMode, un SetVertexProgram
+	para el mismo objeto con el shader cartoon.txt (es un proceso en dos fases)
+
+	NOTA: Acepta wildcards
+
+int MiEscena.GetWorldPointer()
+	Devuelve en un entero el puntero al objeto world, que contiene toda la información
+	sobre la escena actual. Necesita epopeia 1.1.5 o superior!
+
+MiEscena.SetVertexProgram(string nombre_objeto, string nombre_vertex_program)
+	Carga y aplica al objeto indicado el vertex shader del fichero que se le diga. 	
+
+	El formato del vertex program es un fichero ASCII plano, con el shader en 
+	el ensamblador definido por la extensión ARB_vertex_program. En caso de no existir
+	el fichero o tener un error sintáctico, no se hace nada.
+	
+	NOTA: Acepta wildcards
+
+int MiEscena.GetAPI()
+	Devuelve en un entero el puntero al objeto API, que permite manipular toda la escena.
+	Necesita epopeia 1.1.5 o superior!
+
+float MiEscena.GetPos_X(string nombre_objeto, float frame)
+	Devuelve la posición X del objeto especificado, en el frame que se le pasa como
+	parámetro
+
+	NOTA: NO acepta wildcards (era de esperar)
+
+float MiEscena.GetPos_Y(string nombre_objeto, float frame)
+	Devuelve la posición Y del objeto especificado, en el frame que se le pasa como
+	parámetro
+
+	NOTA: NO acepta wildcards (era de esperar)
+
+float MiEscena.GetPos_Z(string nombre_objeto, float frame)
+	Devuelve la posición Z del objeto especificado, en el frame que se le pasa como
+	parámetro
+
+	NOTA: NO acepta wildcards (era de esperar)
+
+float MiEscena.GetScale_X(string nombre_objeto, float frame)
+	Devuelve la escala en X del objeto especificado, en el frame que se le pasa como
+	parámetro
+
+	NOTA: NO acepta wildcards (era de esperar)
+
+float MiEscena.GetScale_Y(string nombre_objeto, float frame)
+	Devuelve la escala en Y del objeto especificado, en el frame que se le pasa como
+	parámetro
+
+	NOTA: NO acepta wildcards (era de esperar)
+
+float MiEscena.GetScale_Z(string nombre_objeto, float frame)
+	Devuelve la escala en Z del objeto especificado, en el frame que se le pasa como
+	parámetro
+
+	NOTA: NO acepta wildcards (era de esperar)
+
+float MiEscena.GetLastFrame()
+	Devuelve el último frame pintado de la escena. No se puede devolver el actual, porque
+	simplemente "no existe", depende del tiempo que se tarde desde que se ejecuta esta
+	función hasta que de forma efectiva se dibuje el siguiente frame
+	
+
+MiEscena.SetPos_X(string nombre_objeto, float value, int modo, int type)
+ 	Aplica el valor de posicion en la coordenada x del objeto/s indicados. La forma de 
+ 	aplicar el valor puede ser de 3 tipos segun el modo
+ 	
+ 	0:replace
+ 		reemplaza completamente la animación del fichero .u3d
+ 	1:add
+ 		suma la animación de interpolación del fichero .u3d al valor indicado
+ 	2:multiply
+		multiplica la animación de interpolación del fichero .u3d al valor indicado
+	Los objetos se pueden filtrar mediante type por
+	0:objetos
+	1:luces
+	2:camaras
+	3:todos	
+
+	NOTA: ACEPTA wildcards 
+
+MiEscena.SetPos_Y(string nombre_objeto, float value, int modo, int type)
+ 	Aplica el valor de posicion en la coordenada y del objeto/s indicados. La forma de aplicar el valor puede ser de 3 tipos
+ 	segun el modo
+ 	0:replace
+ 		reemplaza completamente la animación del fichero .u3d
+ 	1:add
+ 		suma la animación de interpolación del fichero .u3d al valor indicado
+ 	2:multiply
+		multiplica la animación de interpolación del fichero .u3d al valor indicado
+	Los objetos se pueden filtrar mediante type por
+	0:objetos
+	1:luces
+	2:camaras
+	3:todos	
+
+	NOTA: ACEPTA wildcards 
+	
+MiEscena.SetPos_Z(string nombre_objeto, float value, int modo, int type)
+ 	Aplica el valor de posicion en la coordenada z del objeto/s indicados. La forma de aplicar el valor puede ser de 3 tipos
+ 	segun el modo
+ 	0:replace
+ 		reemplaza completamente la animación del fichero .u3d
+ 	1:add
+ 		suma la animación de interpolación del fichero .u3d al valor indicado
+ 	2:multiply
+		multiplica la animación de interpolación del fichero .u3d al valor indicado
+	Los objetos se pueden filtrar mediante type por
+	0:objetos
+	1:luces
+	2:camaras
+	3:todos	
+
+	NOTA: ACEPTA wildcards 
+
+MiEscena.SetScale_X(string nombre_objeto, float value, int modo)
+ 	Aplica el valor de escala en la coordenada X del objeto/s indicados. La forma de aplicar 
+ 	el valor puede ser de 3 tipos segun el modo
+ 	0:replace
+ 		reemplaza completamente la animación del fichero .u3d
+ 	1:add
+ 		suma la animación de interpolación del fichero .u3d al valor indicad
+ 	2:multiply
+		multiplica la animación de interpolación de
+
+	NOTA: ACEPTA wildcards 
+
+MiEscena.SetScale_Y(string nombre_objeto, float value, int modo)
+ 	Aplica el valor de escala en la coordenada Y del objeto/s indicados. La forma de aplicar 
+ 	el valor puede ser de 3 tipos segun el modo
+ 	0:replace
+ 		reemplaza completamente la animación del fichero .u3d
+ 	1:add
+ 		suma la animación de interpolación del fichero .u3d al valor indicad
+ 	2:multiply
+		multiplica la animación de interpolación de
+
+	NOTA: ACEPTA wildcards 
+
+MiEscena.SetScale_Z(string nombre_objeto, float value, int modo)
+ 	Aplica el valor de escala en la coordenada Z del objeto/s indicados. La forma de aplicar 
+ 	el valor puede ser de 3 tipos segun el modo
+ 	0:replace
+ 		reemplaza completamente la animación del fichero .u3d
+ 	1:add
+ 		suma la animación de interpolación del fichero .u3d al valor indicad
+ 	2:multiply
+		multiplica la animación de interpolación de
+
+	NOTA: ACEPTA wildcards 
+	
+MiEscena.SetAnimateFlag(string nombre_objeto, int flag, int type)
+ 	Aplica el valor de flar a los objetos indicados. Filtrados mediante type
+ 	0:objetos
+ 	1:luces
+ 	2:camaras
+ 	3:todos
+ 	
+ 	Si el flag es 0 La animación del .u3d será obviada
+ 	Si es 1, los valores SetPos_* SetScale_* SetRotation son obviados
+ 	 	
+ 	
+ 	NOTA: 	LOS PARAMETROS QUE NO DISPONEN DE TRACKS DE ANIMACION(LOS REFERIDOS A LAS 
+ 		LUCES:MULTIPLICADOR/COLOR) NO SON OBVIADOS SI DISPONEN DE TRACKS PERO NO 
+ 		TIENEN MAS DE 1 KEY TAMPOCO SE OBVIARAN
+ 		ACEPTA wildcards 
+ 			
+MiEscena.SetMaterial(string nombre_objeto, string nombre_material)
+	Aplica el material indicado al/los objetos indicados
+
+	NOTA:	ACEPTA wildcards 
+	
+MiEscena.SetFov(string nombre_camara, float value)
+	Aplica el fov indicado a la/s camaras indicadas
+
+	NOTA:	ACEPTA wildcards 
+
+MiEscena.SetRoll(string nombre_camara, float value)
+	Aplica el roll indicado a la/s camaras indicadas
+
+	NOTA:	ACEPTA wildcards 
+
+float MiEscena.GetFov(string nombre_camara)
+	Devuelve el fov de la camara indicadas
+
+	NOTA:	NO ACEPTA wildcards 
+
+float MiEscena.GetRoll(string nombre_camara)
+	Devuelve el roll de la camara indicadas
+
+	NOTA:	NO ACEPTA wildcards 		
+	
+MiEscena.SetLightMult(string nombre_luz, float value)
+	Aplica el multiplicador/intensida de luz a la luz indicada
+
+	NOTA:	ACEPTA wildcards 
+
+MiEscena.SetLightColor(string nombre_luz, float r, float g, float b)
+	Aplica el color de luz rgb a la luz indicada
+
+	NOTA:	ACEPTA wildcards 
+
+MiEscena.SetRotation(string nombre_objeto, float x, float y, float z, float angle, int mode)
+	Aplica la rotacion en formato AXIS ANGLE en el modo indicado
+	
+	0:reemplaza el valor actual
+	1:Lo añade al actual
+	
+
+	NOTA:	EN REALIDAD El MODO 1 NO SUMA NADA SE PONGA EL VALOR QUE SE PONGA. 
+		SU USO ESTÁ DESTINADO A "CARGAR" LA ANIMACIÓN DEL FICHERO .U3D PARA SER 
+		MOSTRADA EN UNA ANIMACIÓN PROCEDURAL
+		ACEPTA wildcards 
+
+MiEscena.SetObjectAlpha(string nombre_objeto, float alpha)
+	Modifica el alpha de un objeto (util para hacerlo desaparecer)
+	
+	NOTA: ACEPTA wildcards
+	
+MiEscena.SetDebugLevel(int debuglevel)
+	Modifica el nivel de debug del fantasy. OJITO, aplica solo a la escena actual
+	
+	0:  DEBUG_LEVEL_ERROR   	solo se ven los errores
+	1:  DEBUG_LEVEL_WARNING 	errores y warnings (opción por defecto y RECOMENDADA)
+	2:  DEBUG_LEVEL_INFO    	más información, generalmente de eventos que ocurren
+					una vez por frame (añade overhead)
+	3:  DEBUG_LEVEL_OVERDEBUG 	mogollón de debug (mucho overhead). Generalmente está
+					desactivado en el código, así que para activarlo habría
+					que compilar una versión específica del fantasy
+
+MiEscena.SetSpecialFX(string nombre_objeto, int fx)
+	Habilita un efecto especial al objeto (u objetos, admite wildcards) que se especifica.
+	
+	0: Sin efecto (render normal)
+	1: Halo
+	2: Depth of Field (DOF)
+	
+	Cada efecto tiene una serie de arrays de parámetros:
+	
+	paramf (parámetros float): hasta 8 valores float
+	paramu (parámetros unsigned int): hasta 8 valores unsigned int
+	
+	Estos parámetros sirven para personalizar el efecto, y son animables (ver más adelante
+	las funciones para animarlos). En cuanto al significado de los parámetros por efecto:
+	
+	-> HALO
+	-------
+	Utiliza el vertex shader halo.txt
+	
+	paramf[0] ... paramf[3] -> Color del halo, en rgba (por defecto 0.0,1.0,0.0,0.5)
+	paramf[4]		-> Tamaño del halo (por defecto 0.3)
+	paramu[0]		-> Reservado (guarda el id del vertex shader, NO CAMBIARLO!)
+	
+	El resto de parámetros no se usan, así que cambiarlos no sirve de nada :)
+	
+	-> DOF
+	-------
+	Utiliza el vertex shader fx_dof.txt
+	
+	paramu[0]		-> Reservado (guarda el id del vertex shader, NO CAMBIARLO!)
+	paramu[1]		-> Reservado (NO CAMBIARLO!)
+	paramf[0]		-> Escala. La distancia de cada vértice respecto a la cámara se	
+				   multiplicará por esta escala, y se almacenará en la textura
+				   
+				   
+	Este efecto tiene un funcionamiento un poco especial. Va junto con el Algoritmo 2 del
+	efecto DOF_FP, y sólo con él. Si se activa de cualquier otra forma, seguramente sólo
+	servirá para montar un carajal.
+	
+	Básicamente es un algoritmo multipass:
+	
+	1- Se pinta la escena en escala de grises, siendo los grises la distancia del pixel 
+	   respecto a la pantalla
+	2- Se almacena la pantalla en una textura, usando r2t
+	3- Se vuelve a pintar la escena, ya de forma normal
+	4- Se aplica el plugin DOF, que coge la escena "normal", la de grises, hace sus cositas,
+	   y al final va y pinta una bonita escena con su DOF correspondiente.
+	   
+	Para verlo un poco en forma de script:
+	
+	Escena3D gold1("3d/gold/gold.u3d","3d/gold/gold.mat");
+	R2Texture r2t(1024,1024,"depth1");
+	DOF_FP dof(512,512);
+	
+	dof.SetAlgorithm(2);
+	dof.SetSharedDepthTexture("depth1");
+
+	gold1.Start(99);
+	r2t.Start(65);
+	gold1.Start(60);
+	dof.Start(50);
+	
+	Si nos fijamos, se hacen dos Start de la escena 3D. Esto es así porque el shader 
+	"recuerda" si la última vez pintó la escena de forma normal o en escala de grises, y
+	hace falta pintarla 2 veces.
+	
+	
+MiEscena.SetFXParamf(string nombre_objeto, int index, float value)
+	Modifica el valor del índice que se especifica del array de parámetros float del efecto, 
+	para todos los objetos que correspondan (admite wildcards).
+	
+	En pseudocódigo:
+	
+	para todo objeto 
+	 si match(objeto.nombre, nombre_objeto)
+	   objeto.paramf[index] = value
+
+MiEscena.SetFXParamu(string nombre_objeto, int index, int value)
+	Modifica el valor del índice que se especifica del array de parámetros unsigned int del 
+	efecto, para todos los objetos que correspondan (admite wildcards).
+	
+	En pseudocódigo:
+	
+	para todo objeto 
+	 si match(objeto.nombre, nombre_objeto)
+	   objeto.paramu[index] = value
+
+
+MiEscena.SetShaderParamF(string nombre_material, string nombre_parametro, float value)
+	Introduce o actualiza si ya existiera el parametro uniform nombre_parametro en el shader asociado
+	a nombre_material(si lo tuviera) con el valor value

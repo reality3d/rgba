@@ -1,0 +1,21 @@
+include makefile.common
+
+PLUGINS = $(PLUGINS_COMMON) \
+graphics_sdl \
+menu_gtk12 \
+sound_fmod \
+\#sound_mikmod \
+sound_ogg
+
+PLATFORM=linux
+
+.phony: plugins
+
+plugins: $(foreach PLUGIN,$(PLUGINS), $(PLUGIN)/$(PLUGIN).epx)
+
+%.epx : 
+	cd $(dir $@); make -f makefile.$(PLATFORM); cd ..
+        
+clean:
+	$(foreach PLUGIN,$(PLUGINS),cd $(PLUGIN); make -f makefile.$(PLATFORM) clean; cd ..;)
+

@@ -1,0 +1,44 @@
+# Makefile para Linux
+
+# incluimos definiciones comunes del proyecto
+include makefile.common
+
+OBJ_SUFFIX	= o
+LIB_PREFIX	= lib
+LIB_SUFFIX	= a
+DLL_PREFIX	= lib
+DLL_SUFFIX	= so
+
+CC		= gcc -c
+#CCOPTS		= -O2 -march=pentium -ffast-math -fPIC -Wall -DLINUX -DEPOPEIA_EXPORTS -DDISABLE_DEBUG -Irgba -I../include
+#CCOPTS   	= -O2 -march=pentium -ffast-math -fPIC -Wall -DLINUX -DEPOPEIA_EXPORTS -g -Irgba -I../include
+CCOPTS   	= -O2 -ffast-math -fPIC -Wall -DLINUX -DEPOPEIA_EXPORTS -g -Irgba -I../include
+CCOUT        	= -o
+
+LINK		= gcc
+LINKOPTS    	= -shared --export-dynamic --no-undefined -Wl,-soname,$(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR) $(LIBS_DIR)
+LINKOUT        	= -o
+LINKSRC		= $(OBJ) $(LIBS) $(SYSLIBS) $(RES) $(LIBS_WIN)
+
+LIBS_DIR	= -L../lib -L/usr/X11R6/lib -lGLU
+LIBS 		= -lm
+LIBS_WIN	= 
+SYSLIBS 	= 
+
+
+$(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR): $(OBJ)
+	$(LINK) $(LINKOUT)$@ $(LINKOPTS) $(LINKSRC)
+#	strip $@
+
+%.$(OBJ_SUFFIX) : %.c
+	$(CC) $(CCOPTS) $< $(CCOUT)$@
+
+clean:
+	rm $(OBJ) 2> /dev/null || true
+	rm $(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR) 2> /dev/null || true
+	@echo 
+	@echo "*** Chinches exterminadas ***"
+
+install:
+	cp $(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR) ../../rgba-bin/lib/$(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR)
+

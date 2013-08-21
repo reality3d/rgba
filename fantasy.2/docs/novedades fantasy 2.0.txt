@@ -1,0 +1,31 @@
+Vamos a listar las novedades de esta versión, para que no se nos pierda nadie :)
+
+- Nuevo formato de escenas, incluyendo exportador de Max.
+
+Esto en sí no sería una gran ventaja sobre el fantasy 1, si no fuese porque nos permite:
+
+	* Múltiples coordenadas de textura para un mismo vértice, sin problemas de mapeado
+	* Vertex colors 
+	* En el futuro cercano, wire teniendo en cuenta las aristas que no se ven
+	* Y también pronto, frustum culling usando bounding sphere (soportado por el formato)
+	
+- Uso de la extensión vertex_buffer_object, que permite mayor velocidad al subir toda la 
+geometria a la memoria AGP de la tarjeta. 
+
+- Lo anterior implica cambios en el API. Ya no se pueden "crear objetos", porque sería un lío
+y además no se ha usado. A petición de r3d, se ha añadido funcionalidad en esa parte.
+
+- Soporte de jerarquias.
+
+- Soporte de bones, tanto a traves de vertex_program como por software. En el fichero .txt del 
+exportador se cuentan los detalles/limitaciones.
+
+- Soporte de wildcards en las funciones de script que toman un nombre de objeto 
+  (SetVertexProgram, SetUChange...)
+
+- Diversas mejoras internas: mejor soporte a las extensiones OpenGL, cleanups varios, 
+bugfixing...
+
+- Nuevo framework para crear "efectos especiales". De momento sólo está el halo, pero en el 
+futuro puede haber más (a petición de los artistas). En el fantasy.txt se especifican los 
+detalles.

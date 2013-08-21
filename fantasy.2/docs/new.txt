@@ -1,0 +1,83 @@
+>> 01/10/2004 utopian
+	- Corregido un bug tonto que hacía que, en jerarquías de objetos con material 
+	  transparente, se dibujasen varias veces algunos objetos
+
+>> 11/08/2004 utopian
+	- Corregido un bug en la exportación/carga de mallas con skin, cuando la malla tiene 
+	  rotación distinta de 0º. Ahora debería funcionar al 100% (crucemos los dedos)
+
+>> 18/07/2004 utopian
+	- Corregido bug en la interpolación de rotaciones, si el frame es anterior al del 
+	  primer key
+	- Modificado comportamiento del cargador, para que si aparece un track "huérfano"
+	  no salga, sino que dé un warning y salte ese controlador
+
+>> 12/07/2004 utopian
+	- Añadida estructura de efectos especiales, con un primer efecto (halo)
+
+>> 30/06/2004 utopian
+	- Añadido soporte para vertex colors
+
+>> 18/06/2004 enlar
+	- Cambiar llamadas a glXGetProcAddress por glXGetProcAddressARB en la rama linux
+        de InitGLExtensions() (4 llamadas). Da algunos problemas asi de simbolo sin resolver
+        al compilar en sistemas woody.
+
+>> 17/06/2004	utopian
+	- Corregido bug en extgl que causaba casques en linux
+
+>> 15/06/2004 	utopian
+	- Corregido (otra vez) el SetObjectAlpha, y reimplementado...
+
+>> 15/06/2004 enlar
+	- Corregir fantasy/misc.cpp para que compile en linux (string.h)
+        - Corregir fantasy/fantasy_api.cpp para que compile en linux (#define _strdup strdup)
+
+>> 14/06/2004	utopian
+	- Corregido SetObjectAlpha para un objeto traslúcido con alpha=1.0. En realidad lo he 
+	  reimplementado de otra forma, más eficiente y todo :).
+
+>> 12/06/2004	utopian
+	- Nuevos métodos a nivel de script: SetObjectAlpha, para modificar el alpha de un objeto,
+	  y SetDebugLevel, para cambiar el nivel de debug de una escena
+	- Alguna pequeña corrección en Fantasy::SetCamera, para evitar cosas raras si se intenta
+	  poner una cámara no válida, y además hacer que salga en el debug
+
+>> 10/06/2004	utopian	
+	- Rehecha la parte interna de los UTranslate y VTranslate. Nos olvidamos de la matriz de 
+	  textura (no funciona en todos los casos) y volvemos al método del fantasy 1 (desplazar
+	  a mano las coordenadas de textura).
+	- Modificada exportación de cámaras (se exportan los environment range en vez de los
+	  clip planes)
+
+>> 09/06/2004	utopian
+	- Pequeñas optimizaciones al shader de bones y a la implementación software
+	- Se fuerza la no detección de la extensión ARB_vertex_program para la invtro de la ep12
+
+>> 08/06/2004	r3d/utopian
+	- Integradas nuevas funciones implementadas por r3d (modificación de escenas por script),
+	  con bugfixing incluido :)
+	- Implementados bones por software, para tarjetas sin soporte de vertex program
+	  (falta algún detalle acerca de la detección y demás, de momento lo fuerza siempre...)
+
+>> 07/06/2004 	utopian
+	- Habilitada la funcionalidad del separate specular en los vertex program -> 
+	  glEnable(GL_COLOR_SUM_ARB)
+	- Corregido ligero bug en el shader de bones con luz (valor de shininess del material
+          en casos de más de una fuente de luz)
+	- Corregido bug en la selección del filtrado de texturas (parámetros invertidos en 
+	  TEX_SetFilter)
+
+>> 06/06/2004	utopian
+	- Solucionado bug en el cargador de los controladores de escala
+
+>> 05/06/2004	utopian
+	- Modificado shader de bones con light para que no se pase del número máximo de 
+	  temporales que define como mínimo la extensión ARB_vertex_program (12)
+
+	- Añadidas funciones GetPos_X/Y/Z y GetScale_X/Y/Z a nivel de script
+
+	- Añadida función GetLastFrame a nivel de script
+
+>> 04/06/2004 	utopian
+	Primera versión oficial

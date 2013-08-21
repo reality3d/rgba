@@ -1,0 +1,32 @@
+
+DST = sound_fmod.epl
+OBJ = sound_fmod.obj sound_fmod_epopeia.obj
+
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = epopeia.lib fmodvc.lib
+LIB_SYS     = user32.lib kernel32.lib msvcrt.lib opengl32.lib 
+
+# Compiler options
+CC	= cl
+CCOPTS  = /c /nologo /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA)
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB /LIBPATH:../../lib
+
+
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+
+sound_fmod.obj: sound_fmod.c
+	$(CC) $(CCOPTS) sound_fmod.c
+
+sound_fmod_epopeia.obj: sound_fmod_epopeia.c
+	$(CC) $(CCOPTS) sound_fmod_epopeia.c
+
+clean:
+	del $(OBJ)
+	del *.exp
+	del *.dll
+    
+install: $(DST)
+	copy $(DST) ..\..\..\rgba-bin\demosystem\plugin

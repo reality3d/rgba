@@ -1,0 +1,68 @@
+!!ARBvp1.0
+
+# Shader para cambiar entre dos texturas en un objeto, haciendo un degradado según el angulo
+# de la normal del vertice respecto a la camara
+#
+# Requisitos y comentarios
+#
+# - 2 unidades de textura, y el blend de la segunda unidad de textura definido como mask2
+# - De momento no calcula iluminación
+# - No es aplicable a objetos traslúcidos, porque tiene que jugar con el alpha del color
+#
+# Constantes a declarar
+# * angulocorte: angulo a partir del cual se cambia de textura (entre 0 y 1)
+
+# Constantes
+PARAM mvp[4]     = { state.matrix.mvp };   #   modelview projection matrix
+PARAM mvinv[4] = { state.matrix.modelview.invtrans };
+PARAM angulocorte = 0.7;
+
+# Per-vertex inputs
+ATTRIB inPosition = vertex.position;
+ATTRIB inNormal = vertex.normal;
+ATTRIB inColor    = vertex.color;
+ATTRIB inTexcoord = vertex.texcoord;
+ATTRIB inTexcoord2 = vertex.texcoord[1]; 
+
+# Per-vertex outputs
+OUTPUT outPosition    = result.position;
+OUTPUT outColor    = result.color;
+OUTPUT outTexcoord = result.texcoord;
+OUTPUT outTexcoord2 = result.texcoord[1];
+
+# Temporales
+
+TEMP xfNormal,outPosTemp;
+TEMP temporal;
+
+# Primero pasamos a coordenadas de vista
+
+DP4 outPosition.x, mvp[0], inPosition;   # Transform the x component of the per-vertex position into clip-space
+DP4 outPosition.y, mvp[1], inPosition;   # Transform the y component of the per-vertex position into clip-space
+DP4 outPosition.z, mvp[2], inPosition;   # Transform the z component of the per-vertex position into clip-space
+DP4 outPosition.w, mvp[3], inPosition;   # Transform the w component of the per-vertex position into clip-space
+
+# Transformamos la normal y la normalizamos
+DP3 xfNormal.x, mvinv[0], inNormal;
+DP3 xfNormal.y, mvinv[1], inNormal;
+DP3 xfNormal.z, mvinv[2], inNormal;
+MOV xfNormal.z, -xfNormal.z;
+# normalizamos...
+DP3 xfNormal.w, xfNormal, xfNormal;
+RSQ xfNormal.w, xfNormal.w;
+MUL xfNormal, xfNormal, xfNormal.w;
+
+# Ahora viene la gracia. Dados dos vectores normalizados, el coseno de su angulo es su producto
+# escalar. Aún mejor, como el vector de vista es (0,0,1), el coseno es simplemente la componente
+# Z del vector normal. Para rematar, el valor absoluto del coseno va entre 0 y 1: 1 para una 
+# normal paralela al vector de vista (perpendicular a la pantalla) y 0 para una perpendicular
+# (paralela a la pantalla). Como queremos que el degradado dependa de ese angulo, ponemos el 
+# alpha según el valor absoluto de la Z de la normal :).
+
+ABS xfNormal, xfNormal.z;	
+SLT outColor.w, xfNormal.z, angulocorte;
+
+MOV outTexcoord, inTexcoord;
+MOV outTexcoord2, inTexcoord2;
+MOV outColor.xyz, inColor;
+END

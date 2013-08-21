@@ -1,0 +1,26 @@
+Este plugin es un ejemplo muy sencillito sobre cómo coger el puntero del fantasy y 
+jugar con él.
+
+Requisitos:
+
+- Epopeia DK 1.1.5, con el epopeia.lib correcto y demás
+- Fantasy actualizado (se incluye en el ejemplo)
+- Ganas de divertirse :)
+
+Un par de notitas rápidas, porque el código es bastante explicativo:
+
+a) El fichero tiene que ser CPP, porque como el fantasy tiene algunas clases definidas
+   va a cascar si no.
+b) Es importante tenerlo todo en un extern "C" (como en el ejemplo), para que el 
+   epopeia pueda cargar el plugin
+c) Los ficheros .h son necesarios todos. No he querido caparlos...
+
+Ah, una cosa más para iq. La estructura interna ha cambiado un poco. Ya no hay 
+estructura vertex_type, con lo que el array VertexPointer contiene directamente
+las coordenadas locales del objeto. Para los plugins de deformaciones de objetos 
+será justo ESO lo que haya que tocar. Para llegar a la estructura sin marearse:
+
+world->obj[numero_del_objeto].VertexPointer
+
+El número del objeto lo puedes sacar en inicialización a partir del nombre, que 
+también se almacena

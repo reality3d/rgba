@@ -1,0 +1,18 @@
+CC=gcc 
+CFLAGS=-O3 -march=pentium -ffast-math -DLINUX  -I../../include
+
+OBJS   = fantasy.o carga.o misc.o vista.o raster.o mates.o textura.o quatern.o material.o interp.o extgl.o fantasy_api.o vbo.o glsl.o
+DST    = fantasy.a
+
+
+
+$(DST) : $(OBJS)
+	ar rcv $(DST) $(OBJS)
+
+
+.cpp.o:
+	$(CC) -c $(CFLAGS) $<
+clean:
+	rm -f  *.o
+	rm -f  *.so
+        

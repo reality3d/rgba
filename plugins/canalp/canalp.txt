@@ -1,0 +1,34 @@
+--------------------
+ Canal Plus Encoder
+--------------------
+
+ Ahora tiene dos modalidades, una que deforma al estilo del Canal+, y otra que
+simplemente desplaza la imagen verticalmente (ver SetDeform)
+
+CanalP cp ( );
+
+cp.SetDeform (int deform_mode)
+  - deform_mode = 0 : Modo Canal+
+  - deform_mode = 1 : Modo de desplazamiento vertical
+
+
+cp.SetMode (int max_despl, int num_lines)
+  NOTA: Solo es válido si estamos en el modo Canal+ (ver SetDeform)
+  - max_despl : Numero maximo de lineas verticales que se distorsiona
+  - num_lines : Porcentage sobre el número de lineas horizontales que se modifican.
+                NOTA: Puede ser > 100!!
+
+cp.SetNumLinesChange (int num_lines_final, real dtime)
+  NOTA: Solo es válido si estamos en el modo Canal+ (ver SetDeform)
+  - num_line_final: Porcentage de nº de lineas al final de la transicion
+  - dtime: tiempo (en segundos) que dura la transición
+
+cp.SetDesplChange (int max_despl_final, real dtime)
+  NOTA: Solo es válido si estamos en el modo Canal+ (ver SetDeform)
+  - max_despl_final: Max. desplazamiento vertical que se distorsiona (al final de la trans.)
+  - dtime: tiempo (en segundos) que dura la transición
+
+cp.SetSpeed (real speed)
+  NOTA: Solo es válido si estamos en el modo de desplazamiento vertical (ver SetDeform)
+  - speed: Indica la velocidad del desplazamiento, puede ser tanto positivo como
+  negativo.

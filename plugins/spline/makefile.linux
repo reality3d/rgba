@@ -1,0 +1,32 @@
+#
+# PLUGIN Makefile
+#
+
+PLUGIN_NAME 	= spline
+DST_FILE = $(PLUGIN_NAME).epx
+OBJ      = $(PLUGIN_NAME)_epopeia.o $(PLUGIN_NAME).o
+
+
+# Compiler options
+CC	= gcc
+CCOPTS  = -c -O3 -march=pentium -ffast-math -DLINUX  -I../../include
+
+# Linker options
+LINKOPTS = -L../../../rgba-bin/lib/ ../../../rgba-bin/lib/libglt.so ../../../rgba-bin/lib/libepopeia.so.1
+
+#
+# Main
+#
+$(DST_FILE): $(OBJ) $(LIB_FANTASY)
+	gcc -shared $(OBJ) $(LINKOPTS) -o $(DST_FILE) 
+
+
+clean:
+	rm -f $(OBJ)
+	rm -f *.epx
+
+install: $(DST_FILE)
+	cp $(DST_FILE) ../../../rgba-bin/demosystem/plugin
+
+%.o: %.c
+	$(CC) $(CCOPTS) $<

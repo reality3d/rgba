@@ -1,0 +1,38 @@
+##########################################################################
+#
+#
+##########################################################################
+
+
+DST = cross.epl
+OBJ = ffx.obj 
+
+H_EPOPEIA   = ../../../include
+LIB_EPOPEIA = ../../../rgba-bin/lib/epopeia.lib ../../../rgba-bin/lib/glt.lib
+LIB_SYS     = user32.lib kernel32.lib msvcrt.lib opengl32.lib glu32.lib 
+
+# Compiler options
+CC		= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA)
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+$(DST): $(OBJ)
+    link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+    copy $(DST) ..\..\plugin
+
+
+ffx.obj: ffx.cpp
+    $(CC) $(CCOPTS) ffx.cpp
+
+
+clean:
+	del $(OBJ)
+    del *.exp
+    del *.epl
+    del *.lib
+    
+install: $(DST)
+	copy $(DST) ..\..\..\rgba-bin\demosystem\plugin

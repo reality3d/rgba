@@ -1,0 +1,21 @@
+------------------------------------
+ Changes :: Motion Blur (mblur.epl)
+------------------------------------
+
+>> 04/05/2003 enlar
+   - Subido al CVS
+   - Fixes y makefile para Linux
+   
+>> 05/04/2002
+   - Rehecho para hacer el blur con un solo render a texture. Se pierde flexibilidad,
+     y se gana en velocidad
+   - Cambiado el nombre de "Blur" a "MBlur" de Motion Blur (para poder
+     meter un plugin Blur en condiciones en el futuro)
+   - Añadido parametro al Start para compatibilidad con el epopeia
+
+>> 30/07/2002
+   - Añadido metodo SetClear
+
+>> 11/07/2002
+   - En cada frame, si se ha cambiado el viewport, se adapta dinamicamente
+   creando las nuevas texturas.

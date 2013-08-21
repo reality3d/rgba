@@ -1,0 +1,12 @@
+
+- 2003/11/13 enlar
+  * Modificar el makefile.linux para que no linke con fantasy.epx
+    Esto permite que la carga iterativa de plugins del epopeia junto
+    con la resolución de simbolos externos entre plugins lo haga
+    cargar correctamente.
+
+- 2003/11/07 enlar
+  * Subir al CVS y arreglos de compilacion paths/Linux + makefile.linux
+
+
+- Version original por IQ

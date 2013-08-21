@@ -1,0 +1,39 @@
+##########################################################################
+#
+#
+##########################################################################
+
+
+DST = deform3d_2.epl
+OBJ = deform3d.obj turb.obj
+
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../../rgba-bin/lib/epopeia.lib ../../../rgba-bin/lib/glt.lib fantasy.lib
+LIB_SYS     = user32.lib kernel32.lib msvcrt.lib opengl32.lib glu32.lib 
+
+# Compiler options
+CC		= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA)
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+$(DST): $(OBJ)
+    link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+
+
+deform3d.obj: deform3d.cpp
+    $(CC) $(CCOPTS) deform3d.cpp
+
+turb.obj: turb.cpp
+    $(CC) $(CCOPTS) turb.cpp
+
+clean:
+	del $(OBJ)
+    del *.exp
+    del *.dll
+    del *.lib
+    
+install: $(DST)
+	copy $(DST) ..\..\..\rgba-bin\demosystem\plugin

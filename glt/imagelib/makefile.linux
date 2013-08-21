@@ -1,0 +1,40 @@
+# Linux rulez
+#
+# GLT Static LIB Makefile
+#
+
+DST = libimage.a
+OBJ = img_png.o img_jpeg.o image.o jpeg_io.o
+
+
+# Libs
+IMAGE_LIB = 
+LIB_SYS   = 
+
+# Compiler options
+CC	= gcc
+CCOPTS  = -c -O2 -DLINUX -I../../include
+
+
+#
+# Main
+#
+$(DST): $(OBJ) $(IMAGE_LIB)
+	ar r $(DST) $(OBJ) $(IMAGE_LIB)
+
+#
+# Objs
+#
+image.o: image.c
+	$(CC) $(CCOPTS) image.c
+	
+img_png.o: img_png/img_png.c
+	$(CC) $(CCOPTS) img_png/img_png.c
+
+img_jpeg.o: img_jpeg/img_jpeg.c
+	$(CC) $(CCOPTS) img_jpeg/img_jpeg.c
+
+jpeg_io.o: img_jpeg/jpeg_io.c
+	$(CC) $(CCOPTS) img_jpeg/jpeg_io.c
+
+

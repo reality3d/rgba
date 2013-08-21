@@ -1,0 +1,18 @@
+-------------------
+ Changes :: Spline
+-------------------
+
+>> 02/03/2004 enlar
+   - Quitar printf de spline.c
+
+>> 05/11/2003 enlar
+   - Añadir al CVS
+   - Renombrar makefile a makefile.win32
+   - Crear makefile makefile.linux
+   - Arreglar compilacion Linux/paths includes
+
+>> 01/11/2003
+   - Lectura de fichero con el packer
+
+>> 08/08/2003
+   - Primera version

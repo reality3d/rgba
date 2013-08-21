@@ -1,0 +1,33 @@
+
+
+DST = sound_fixed.epl
+OBJ = sound_fixed.obj sound_fixed_epopeia.obj
+
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = epopeia.lib
+LIB_SYS     = user32.lib kernel32.lib msvcrt.lib
+
+# Compiler options
+CC	= cl
+CCOPTS  = /c /nologo /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA)
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB /LIBPATH:../../lib
+
+
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+
+sound_fixed.obj: sound_fixed.c
+	$(CC) $(CCOPTS) sound_fixed.c
+
+sound_fixed_epopeia.obj: sound_fixed_epopeia.c
+	$(CC) $(CCOPTS) sound_fixed_epopeia.c
+
+clean:
+	del $(OBJ)
+	del *.exp
+	del *.dll
+    
+install: $(DST)
+	copy $(DST) ..\..\..\rgba-bin\demosystem\plugin

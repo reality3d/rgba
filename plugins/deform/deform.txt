@@ -1,0 +1,90 @@
+---------------------
+ DEFORM (deform.epl)
+---------------------
+
+  Aplica una deformacion a todo lo que haya en el viewport actual.
+  Basicamente hay 3 tipos de deformaciones, que incluso se pueden
+hacer a la vez:
+   1. Modificar z
+   2. Modificar x, y
+   3. Modificar u, v
+
+
+>> Deform df ( );
+
+>> df.SetMode (int mode)
+    - mode = 0: "Rand"        z = 1 + amplitude * rnd
+    - mode = 1: "Sphere"      z = 1 + amplitude * (1 - d)
+    - mode = 2: "Waves"       z = 1 + (1 - d) * (1 + amplitude * cos (d*num_waves + t/freq1))
+    - mode = 3: "Sombrero"    z = 1 + sin (amplitude * d + t*freq1) / (amplitude * d)
+    - mode = 4: "Func1"       z = 1 + amplitude * cos(x+t/freq1 + PI * sin(y+t/freq2))
+    - mode = 5: "Func2"       z = 1 + amplitude * ((cos(PI*x+t/freq1) + sin(PI*y+t/freq2))*0.5)
+    - mode = 6: "Expression"  df.SetExprZ ("...");
+
+  Selecciona una formula para deformar la malla. Los parametros de las formulas
+se establecen mediente los metodos siguientes:
+
+   df.Amplitude  (real v)
+   df.Frequency1 (real v)
+   df.Frequency2 (real v)
+   df.NumWaves   (real v)
+
+  NOTA: En las formulas, si z = 1 quiere decir que no hay deformacion. Si
+z esta entre 0 y 1 es como si hiciera zoom hacia nosotros, y si z>1 entonces
+se va hacia el fondo (para entendernos).
+
+  OJO! No necesariamente el nombre "Amplitude" tiene que ser lo que
+entendemos realmente por amplitud. Se ha tratado de buscar la mayor
+semantica, pero no tiene porque coincidir, asi que lo mejor es mirar
+la formula para ver lo que se desea conseguir.
+
+
+>> Movimientos lineales.
+    Para hacer interpolaciones lineales sobre los parametros en el tiempo,
+se tienen los siguientes metodos.
+
+    df.AmplitudeChange (real dst, real t)
+    df.Freq1Change     (real dst, real t)
+    df.Freq2Change     (real dst, real t)
+    df.NumWavesChange  (real dst, real t)
+
+    Cualquier df.Amplitude(), df.Frequency1()... deshabilita el
+df.AmplitudeChange(), df.Freq1Chante()... Como valor inicial para
+la interpolacion se toma el valor actual de esa variable. Si se quiere
+un valor especial, asignar el valor antes de comenzar la interpolacion.
+
+
+// -------------------------- WIRE -----------------------------------
+>> ShowGrid (int show)     -- Indica si mostrar la malla
+>> SetWireWidth (real w)   -- Establece el ancho de la linea
+>> SetWireAlpha (real a)   -- Establece el alpha (transp) de la linea
+>> SetWireColor (real r, real g, real b)
+
+
+// --------------------- ILUMINACION ---------------------------------
+   Se ha incluido iluminacion, y esta se puede hacer a nivel de quad (flat)
+o a nivel de vertice (gouraud). La iluminacion requiere calcular las
+normales para cada frame, asi que no abusar del tama¤o del "grid".
+
+>> SetIlumMode (int mode)
+    mode 0: none (default)
+    mode 1: flat
+    mode 2: gouraud
+
+>> SetLight (string *p, real a, real b, real c, real d)
+    Establece los parametros para la luz de forma generica, sin necesidad
+de utilizar mil metodos diferentes, en el string se indica el parametro a
+modificar, y en "a, b, c y d" sus valores:
+    p = "ambient"   (r, g, b, a)
+    p = "diffuse"   (r, g, b, a)
+    p = "specular"  (r, g, b, a)
+    p = "position"  (x, y, z, _)
+
+>> SetMaterial (string *p, real a, real b, real c, real d)
+    Establece los parametros para el material
+    p = "ambient"   (r, g, b, a)
+    p = "diffuse"   (r, g, b, a)
+    p = "specular"  (r, g, b, a)
+    p = "emission"  (r, g, b, a)
+    p = "shininess" (s, _, _, _)
+

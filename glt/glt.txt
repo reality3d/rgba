@@ -1,0 +1,38 @@
+
+                      GLT  -  OpenGL Texture Manager
+_______________________________________________________________________
+
+
+ >> Crear una textura (TTexture)
+
+    Tenemos dos formas de crear una textura:
+    1. Si está en un fichero de imagen PNG o JPG, debemos usar la
+       funcuón TEX_Load.
+    2. Si la imagen la queremos generar nosotros o está en otro soporte,
+       deberemos usar la función general TEX_New, a la que habrá que
+       pasarle todos los parámetros de la textura como ancho, alto, bpp,
+       etc.
+
+
+ >> Modificar una textura (sin render a textura)
+
+    Modificamos el buffer en memoria, y llamamos a TEX_UpdateData.
+
+
+ >> Aspectos importantes para compartir texturas
+
+    1. Al cargar una textura de la cache, no podemos saber a priori
+       el estado en que se encuentra (wrap, filter y environment),
+       así que es MUY RECOMENDABLE establecer estos parámetros
+       siempre antes de usar la textura (ya que puede estar compartida
+       y cada uno usándola de manera diferente).
+
+    2. Nadie nos asegura que si cargamos una textura de la cache, y
+       la queremos con mipmaps, esta los vaya a tener. Solamente los
+       tendrá en caso de que la primera vez que se cargara la textura,
+       se indicara que la quería con mipmaps.
+
+    3. Si generamos una textura y la insertamos en la cache con CACHE_InsertTexture(),
+       es importante que NUNCA deberemos liberar esa textura insertada con
+       TEX_Delete, sino con CACHE_FreeTexture(), para desreferenciar su
+       entrada en la cache.

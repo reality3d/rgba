@@ -1,0 +1,16 @@
+------------------------------------
+FLASH(flash.epl)
+------------------------------------
+Hay que hacer un primer flash para que se haga la luz
+-- Inicializacion
+Flash Miflash()
+
+
+Miflash.MakeFlash(real r, real g, real b, real alpha, real duracion)
+	r,g,b	 : color del flash [0..1]
+	alpha	 : valor máximo (inicial) del alpha
+      duracion : duracion del flash en segundos
+
+Miflash.SetBlend (int blend_mode)
+  blend_mode = 0 : Blend normal
+  blend_mode = 1 : Blend ADD

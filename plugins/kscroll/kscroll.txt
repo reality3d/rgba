@@ -1,0 +1,16 @@
+-------
+KSCROLL
+-------
+
+Scroll vertical controlado por las teclas de cursor
+
+
+>> KScroll scroll (char *filename);
+
+   filename = textura que se usará en el scroller
+
+>> scroll.SetScale (real scalex, real scaley)
+   Por defecto el plugin pone el scroll como un sprite a tamaño "pantalla completa".
+   Generalmente la textura estará hecha de otra forma (todo el ancho, 4 pantallas de 
+   alto, por ejemplo). Con esta función se especifica cual es la escala a poner en 
+   pantalla. En el ejemplo sería SetScale(1.0,4.0);

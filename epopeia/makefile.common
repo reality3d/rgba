@@ -1,0 +1,49 @@
+# Epopeia demosystem makefile
+# for GNU make
+# by Enlar 2002-2003
+
+# Si la version mayor es igual
+# epopeia es compatible hacia atras
+VER_MAJOR = 1
+VER_MINOR = 0
+
+OBJ  = $(addsuffix .$(OBJ_SUFFIX), $(addprefix compiler/,$(OBJ_COMPILER)) \
+		$(addprefix inter/,$(OBJ_INTER)) \
+        	$(addprefix rgba/,$(OBJ_RGBA)) \
+        	$(addprefix packer/,$(OBJ_PACKER)) \
+        	$(addprefix ../glt/,$(OBJ_GLT)) \
+        	$(OBJ_MAIN))
+
+#        	$(addprefix keyboard/,$(OBJ_KEYBOARD)) \
+#        	$(addprefix render/,$(OBJ_RENDER)) \
+#		$(addprefix sound/,$(OBJ_SOUND)) \
+
+
+OBJ0  = $(addsuffix .$(OBJ_SUFFIX), $(OBJ_MAIN))
+OBJ1  = $(addsuffix .$(OBJ_SUFFIX), $(addprefix compiler/,$(OBJ_COMPILER1)))
+OBJ2  = $(addsuffix .$(OBJ_SUFFIX), $(addprefix compiler/,$(OBJ_COMPILER2)))
+OBJ3  = $(addsuffix .$(OBJ_SUFFIX), $(addprefix compiler/,$(OBJ_COMPILER3)))
+OBJ4  = $(addsuffix .$(OBJ_SUFFIX), $(addprefix inter/,$(OBJ_INTER)))
+OBJ5  = $(addsuffix .$(OBJ_SUFFIX), $(addprefix keyboard/,$(OBJ_KEYBOARD)) \
+        	$(addprefix render/,$(OBJ_RENDER)))
+OBJ6  = $(addsuffix .$(OBJ_SUFFIX), $(addprefix sound/,$(OBJ_SOUND)) \
+        	$(addprefix rgba/,$(OBJ_RGBA)) \
+        	$(addprefix packer/,$(OBJ_PACKER)))
+OBJ_COMPILER1 	= automat errors grammar lex method 
+OBJ_COMPILER2   = sintax st type type_table expression 
+OBJ_COMPILER3   = function function_table constant
+
+        
+OBJ_MAIN 	= demo epopeia list pos epopeia_plugin debug dir
+OBJ_COMPILER 	= automat errors grammar lex method sintax st type type_table expression function function_table constant
+#OBJ_INTER	= call command command_list inter permanent_command_list command_list_builder
+OBJ_INTER	= call_amd64 command command_list inter permanent_command_list
+#OBJ_KEYBOARD   	= keyboard_sdl keyboard_tds
+#OBJ_RENDER	= renderer_sdl renderer_wgl
+#OBJ_SOUND	= sound_fmod
+#OBJ_RGBA   	= debug # img_png pcx6 bitmap control convert 
+OBJ_PACKER	= packer unrarlib
+#OBJ_GLT		= cache image texture img_png/img_png img_jpeg/img_jpeg img_jpeg/jpegmem
+
+TARGET		= epopeia
+

@@ -1,0 +1,50 @@
+#
+# Image LIB  -  Makefile
+#
+
+DST = image.lib
+OBJ = image.obj
+
+LIBS = .\img_png\img_png.lib .\img_jpeg\img_jpeg.lib
+
+# System libs
+LIB_SYS = user32.lib kernel32.lib
+
+# Compiler options
+CC    	= cl
+CCOPTS  = /nologo /c /Ox /DWIN32 /I../../include /DIMG_DLL /DIMG_EXPORT /D_NDEBUG
+
+
+#
+# Main
+#
+$(DST): $(OBJ) $(LIBS)
+        lib /nologo /OUT:$(DST) $(OBJ) $(LIBS) 
+
+clean:
+	del $(LIBS)
+	del $(OBJ)
+	del $(DST)
+
+
+#
+# Libs
+#
+.\img_png\img_png.lib:
+	@echo _____________________________________________ Making PNG
+	cd img_png
+	nmake /nologo -f makefile.win32
+	cd ..
+
+.\img_jpeg\img_jpeg.lib:
+	@echo _____________________________________________ Making JPEG
+	cd img_jpeg
+	nmake /nologo -f makefile.win32
+	cd ..
+
+
+#
+# Objs
+#
+image.obj: image.c
+	$(CC) $(CCOPTS) image.c

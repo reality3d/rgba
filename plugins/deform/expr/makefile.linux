@@ -1,0 +1,38 @@
+#
+# PLUGIN Makefile
+#
+
+OBJ = scanner.o parser.o expr.o ../turb.o
+
+
+# Compiler options
+CC	= gcc
+CCOPTS  = -c -O3 -march=pentium -ffast-math -DLINUX  -I../../../include
+
+#
+# Main
+#
+
+libexpreval.a : preliminar $(OBJ)
+	ar r libexpreval.a $(OBJ)
+
+preliminar: 
+	bison --verbose --defines -o parser.c parser.y
+	flex -i -oscanner.c scanner.l
+#rem xchg scanner.c /getc/mygetc/ferror/myferror/fread/myfread/
+	sed "s/getc/mygetc/g" scanner.c > scanner.tmp
+	mv scanner.tmp scanner.c
+	sed "s/ferror/myferror/g" scanner.c > scanner.tmp
+	mv scanner.tmp scanner.c
+	sed "s/fread/myfread/g" scanner.c > scanner.tmp
+	mv scanner.tmp scanner.c
+
+clean:
+	rm -f $(OBJ)
+	rm -f *.a
+
+%.o: %.c
+	$(CC) $(CCOPTS) $< -o $@
+
+%.c: %.l
+	lex -o$@ $<

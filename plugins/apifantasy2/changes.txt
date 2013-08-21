@@ -1,0 +1,6 @@
+------------------------
+ Changes :: APIFantasy2
+------------------------
+
+03/06/2004: utopian
+	- Primera version

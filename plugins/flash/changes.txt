@@ -1,0 +1,18 @@
+-----------------
+ Changes :: Flash
+-----------------
+
+>> 04/05/2003 enlar
+   - Subido al CVS
+   - Fixes y makefile para Linux
+
+>> 20/02/03
+   - Adaptado al nuevo epopeia y nueva estructura de directorios, independiente 
+   de la resolución
+
+>> 16/0702
+   - Cambiado el nombre del tipo de "KKFlash" a "Flash" (para que funcione hay
+   que usar una versión del epopeia >= 1.0.91)
+
+>> 14/07/02
+   - Añadido modos de blend (SetBlend). Por ahora está el modo normal y el aditivo.

@@ -1,0 +1,33 @@
+-------------------------------
+ Changes :: Canal Plus Encoder
+-------------------------------
+
+>> 26/04/2004 enlar
+   - Crear makefile.mingw32 unificado con el de linux
+
+>> 12/11/2003 enlar
+   - Cambiar 2 llamadas a timeGetTime por Epopeia_GetTimeMs()
+
+>> 04/11/2003 enlar
+   - Añadir al cVS
+   - Renombrar makefile a makefile.win32
+   - Crear makefile makefile.linux
+   - Crear TDS_GetTimer() generico usando Epopeia_GetTimeMs()
+   - Arreglar paths includes, compilacion en Linux
+
+>> 05/07/2003
+   - Nuevo parametro al metodo Start
+   - Ahora no se limpia la pantalla antes de hacer el efecto
+
+>> 15/07/2002
+   - Añadido una nueva funcionalidad, que aunque no tiene que ver mucho con el
+   efecto original de Canal+, debido a la similitud del código lo he metido aqui.
+   Es simplemente un efecto de desplazamiento vertical de la imagen (ver SetMode,
+   y SetSpeed).
+
+>> 14/07/2002
+   - Arreglado un pequeño error, que no hacia bien el efecto a no ser que el
+   viewport estuviera a pantalla completa.
+
+>> 13/07/2002
+   - Primera version: Idea original de la intro Zapping/Senco

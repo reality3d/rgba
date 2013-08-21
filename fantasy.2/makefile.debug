@@ -1,0 +1,53 @@
+##
+## COMPILER OPTIONS
+##
+
+#COPTS=/O2sy /G5As /DWINDOZE /DWIN32 /c  /Zm200
+
+#
+# PLUGIN Makefile
+#
+
+DST_FILE = fantasy.epl
+OBJ      = fantasy_epopeia.obj
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../include
+LIB_EPOPEIA = ../../rgba-bin/lib/epopeia.lib
+
+# System libs
+LIB_SYS     = user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib msvcrt.lib
+LIB_FANTASY = fantasy/fantasy.lib
+
+# Compiler options
+CC		= cl
+CCOPTS  = /Zi /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA) 
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+#
+# Main
+#
+
+$(DST_FILE): $(OBJ) $(LIB_FANTASY)
+#	@echo /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_FANTASY) $(LIB_EPOPEIA) $(LINKOPTS) > link.cmd2
+	link2.bat
+
+
+clean:
+	del $(OBJ)
+        del *.lib
+        del *.dll
+        del *.epl
+
+#
+# Objs
+#
+fantasy_epopeia.obj: fantasy_epopeia.cpp
+	$(CC) $(CCOPTS) fantasy_epopeia.cpp
+
+fantasy/fantasy.lib:
+	cd fantasy
+	nmake /f makefile.win32
+	cd ..

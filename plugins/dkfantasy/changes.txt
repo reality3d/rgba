@@ -1,0 +1,10 @@
+------------------------
+ Changes :: DKFantasy
+------------------------
+
+03/11/2003: enlar
+	- Arreglar makefile.linux para que compile y el plugin
+        sea .epx
+
+09/04/2003: utopian
+	- Primera version

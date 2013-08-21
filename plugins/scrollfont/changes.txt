@@ -1,0 +1,7 @@
+----------------------
+ Changes :: ScrollFont
+----------------------
+>> 10/04/2003
+   - Ahora carga 3 ficheros de texto, con un fade de transición. Ya compila en linux.
+>> 07/04/2003
+   - Primera versión "potable", a partir de código mezclado de epsilum y utopian   

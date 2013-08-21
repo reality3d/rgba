@@ -1,0 +1,51 @@
+OBJ        = image img_jpeg/img_jpeg img_jpeg/jpeg_io img_png/img_png
+OBJ_FULL   = $(addsuffix .$(OBJ_SUFFIX), $(OBJ))
+LIBS	   = img_jpeg/libjpeg.lib img_png/libpng.lib
+
+# definiciones Mingw32 sobre linux
+
+DST      = libimage.a
+
+# Compiler settings
+CC		= i586-mingw32msvc-gcc -c 
+CCOPTS		= -O2 -march=pentium -ffast-math -Wall -DMINGW32 -DDISABLE_DEBUG -I../../include-mingw32 -I../../include
+#CCOPTS   	= -O2 -march=pentium -ffast-math -Wall -DMINGW32 -g -I../../include-mingw32 -I../../include
+CCOUT        	= -o
+
+CCPP		= i586-mingw32msvc-g++ -c
+CCPPOPTS	= $(CCOPTS)
+CCPPOUT		= $(CCOUT)
+
+# Linker settings
+LINK		= i586-mingw32msvc-gcc 
+LINKOPTS    	= -shared --export-dynamic -Wl,--output-def,glt.def,--out-implib,libgltdll.a -L../../lib $(LIBS_DIR) 
+LINKOUT        	= -o
+LIB_IMPLICIT    = -lepopeiadll -lopengl32 -lglu32 -lgdi32 -lwinmm
+
+# Assembler settings
+NASM		= nasm -f win32
+NASMOUT		= -o
+
+# Commands
+DEL    	= rm
+
+$(DST): $(OBJ_FULL)
+	$(LINK) $(LINKOPTS) $(LINKOUT)$(DST) $(OBJ_FULL) $(LIB_SYS) $(LIB_IMPLICIT) $(LIBS)
+
+#
+# Main
+#
+
+clean:
+	$(DEL) $(OBJ_FULL)
+	$(DEL) $(PLUGIN_NAME).$(PLUGIN_SUFFIX)
+
+#
+# Objs
+#
+
+%.$(OBJ_SUFFIX): %.c
+	$(CC) $(CCOPTS) $< $(CCOUT)$@
+
+%.$(OBJ_SUFFIX): %.cpp
+	$(CCPP) $(CCPPOPTS) $< $(CCPPOUT)$@

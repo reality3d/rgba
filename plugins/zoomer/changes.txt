@@ -1,0 +1,14 @@
+-------------------
+ Changes :: Zoomer
+-------------------
+
+>> 04/05/2003 enlar
+   - Subido al CVS
+   - Fixes y makefile para linux
+
+>> 10/04/2003
+   - A¤adido parametro al metodo Start para hacerlo compatible con los
+     nuevos epopeia
+
+>> 31/07/2002
+   - Nueva version del zoomer a viewport completo (cualquier resolucion)

@@ -1,0 +1,87 @@
+Sobre lo ya implementado:
+
+-1) Pulir fallos (especialmente en transformaciones/jerarquías)
+
+
+0.1.1) Implementar los 3 rendering paths, y olvidarnos de extensiones individuales
+0.1.3) Implementar la animación via sampling
+0.1.4) Múltiples coordenadas de textura por objeto
+0.1.5) Mirar la posibilidad de usar glDrawRangeElemets()
+0.3) Implementar frustum culling
+0.4) Implementar el edgeflagpointer
+
+parámetro para grosor de línea por objeto
+antialiasing por flag
+
+1) sombras
+2) fragment programs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2) Definir el grosor de las líneas en modos wire y similares
+3) Decidir si se quiere Antialiasing o no
+4) los wires de un color unico definible
+5) Probar cartoon con foco en la cámara en vez de en una fuente de luz
+
+
+Para el futuro mas funciones expuestas(si se puede) serían las propiedades de los 
+materiales(glossiness emission specular) para poderlas animar o jugar con ellas.
+
+
+2 - ¿¿Normalizar todos los valores a un rango, para evitar problemas de escala??
+      A lo mejor es preferible ajustar los valores de plano frontal y trasero...
+
+6 - .mat en formato binario, con programa editor
+7-  más modos de mezclado en multitexturing (jugar con tex_env_combine)
+8- Parece que se cuelga en modo multimonitor ???
+
+
+
+On demand:
+
+- render a textura (pulirlo, pendiente de Epsilum)
+
+
+
+----------------------------------------------------------
+
+Fantasy preparado para explotar las características de las nuevas tarjetas y escalable. Básicamente debería tener soporte para lo que será en un tiempo opengl 2.0, y permitiria usar pixel y vertex shaders de forma eficiente para los artistas como los programadores. Incluiría distintos modos de pintado predefinidos, más los extensibles por las tecnologías antes comentadas. Se conseguirá un soporte completo de jerarquías y se iniciará el proceso de abandonar el formato .3ds por uno como FLEXPORTER por ejemplo. Un formato flexible que tenga cosas como
+
+Varios canales UV por objeto y un buen sistema escalable preparado para la dformación de malla por medio de morphs o huesos etc... junto con un sistema más solido de animación de objetos(por ejemplo cinemática inversa)
+
+Sería ideal tener un sistema de descarte de caras
+
+Funcionalidad completa del Epopeia, iniciar una interfaz visual "estilo" premiere sino surgen necesidades :P
+
+Sistema de Partículas potente, modular pero integrable bien con el  fantasy, que tambien aproveche las nuevas caracteristicas de las tarjetas

@@ -1,0 +1,32 @@
+
+DST = sound_bass.epl
+OBJ = sound_bass.obj sound_bass_epopeia.obj
+
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = epopeia.lib bass.lib
+LIB_SYS     = user32.lib kernel32.lib msvcrt.lib 
+
+# Compiler options
+CC	= cl
+CCOPTS  = /c /nologo /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA) -I.
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB /LIBPATH:../../lib /LIBPATH:bass
+
+
+$(DST): $(OBJ)
+	link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+
+sound_bass.obj: sound_bass.c
+	$(CC) $(CCOPTS) sound_bass.c
+
+sound_bass_epopeia.obj: sound_bass_epopeia.c
+	$(CC) $(CCOPTS) sound_bass_epopeia.c
+
+clean:
+	del $(OBJ)
+	del *.exp
+	del *.dll
+    
+install: $(DST)
+	copy $(DST) ..\..\..\rgba-bin\demosystem\plugin

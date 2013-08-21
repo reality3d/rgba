@@ -1,0 +1,13 @@
+--------
+ ZOOMER
+--------
+
+>> Zoomer zoomer ( );
+
+>> zoomer.SetScaleOld (real scale_x, real scale_y)
+
+>> zoomer.SetScaleNew (real scale_x, real scale_y)
+
+>> zoomer.SetAlphaOld (real alpha)
+
+>> zoomer.SetAlphaNew (real alpha)

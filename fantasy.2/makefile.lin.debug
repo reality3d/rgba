@@ -1,0 +1,53 @@
+##
+## COMPILER OPTIONS
+##
+
+
+#
+# PLUGIN Makefile
+#
+
+DST      = libfantasy.so
+DST_FILE = fantasy.epx
+OBJ      = fantasy_epopeia.o
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../src/include
+H_PNG       = ../../src/rgba
+LIB_EPOPEIA = ../../src/epopeia
+
+# System libs
+LIB_SYS     = -Lgl -Lglu
+LIB_FANTASY = fantasy/fantasy.a
+
+# Compiler options
+CC	= gcc
+CCOPTS  = -g -march=pentium -ffast-math -DLINUX  -I../include
+
+# Linker options
+LINKOPTS =
+
+#
+# Main
+#
+
+$(DST): $(OBJ) $(LIB_FANTASY)
+	gcc -shared $(OBJ) $(LIB_FANTASY) ../libepopeia.so.0 -o $(DST) 
+	cp $(DST) $(DST_FILE)
+
+clean:
+	rm -f $(OBJ)
+	rm -f *.so
+	rm -f *.epx
+
+#
+# Objs
+#
+fantasy_epopeia.o: fantasy_epopeia.cpp
+	$(CC) -c  $(CCOPTS) fantasy_epopeia.cpp
+
+fantasy/fantasy.so:
+	cd fantasy
+	make -f makefile.lin
+	cd ..
+

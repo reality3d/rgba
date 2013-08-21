@@ -1,0 +1,21 @@
+------------------------------------
+FantasySprite(fsprite.epl)
+------------------------------------
+
+Inicializacion
+--
+FantasySprite sprite ("img1.png,img2.jpg,img3.png", "descriptor");
+
+
+>> sprite.SetSprite (int num_sprite)
+    Fija el sprite a utilizar (por defecto se inicializa a cero)
+
+>> sprite.SetLoopMode (int mode)
+    mode 0: Static sprite
+    mode 1: Loop
+    mode 2: Ping - Pong
+    mode 3: Random
+
+>> sprite.SetChangeSpeed (float sprites_per_secs)
+    Fija la velocidad de transición entre sprites en sprites por segundo (def: 1.0)
+    Una velocidad de 0.0 significa que se cambie de sprite cada frame.

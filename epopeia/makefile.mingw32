@@ -1,0 +1,57 @@
+# Makefile para  Mingw32 sobre linux
+# Lo primero, debemos saber cual es el prefijo MING32 de la máquina
+# Lo mejor seria que se nos indique en la variable de entorno MINGW32_PREFIX
+
+ifeq ($(MINGW32_PREFIX),)
+	MINGW32_PREFIX=i386-mingw32
+endif
+
+# en endymion/debian es: MINGW32_PREFIX=i586-mingw32msvc
+# ¿un poco caprichoso no?
+
+# incluimos definiciones comunes del proyecto
+include makefile.common
+
+OBJ_SUFFIX	= o
+LIB_PREFIX	= lib
+LIB_SUFFIX	= a
+DLL_PREFIX	= 
+DLL_SUFFIX	= dll 
+
+CC		= $(MINGW32_PREFIX)-gcc -c 
+#CCOPTS		= -O2 -march=pentium -ffast-math -Wall -DMINGW32 -DEPOPEIA_EXPORTS -DDISABLE_DEBUG -Irgba -I../include-mingw32 -I../include
+CCOPTS   	= -O2 -march=pentium -ffast-math -Wall -DMINGW32 -DEPOPEIA_EXPORTS -g -Irgba -I../include-mingw32 -I../include
+CCOUT        	= -o
+
+LINK		= $(MINGW32_PREFIX)-gcc 
+LINKOPTS    	= -shared --export-dynamic -Wl,--output-def,epopeia.def,--out-implib,libepopeiadll.a $(LIBS_DIR)
+LINKOUT        	= -o
+LINKSRC		= $(OBJ) $(LIBS) $(SYSLIBS) $(RES) $(LIBS_WIN)
+
+LIBS_DIR	= -L../lib 
+LIBS 		= -lgdi32 -lwinmm #../lib/fmodvc.lib -lopengl32 -lglu32 
+LIBS_WIN	= 
+SYSLIBS 	= 
+
+NASM		= nasm -f win32
+NASMOUT		= -o
+
+$(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR): $(OBJ)
+	$(LINK) $(LINKOUT)$@ $(LINKOPTS) $(LINKSRC)
+	$(MINGW32_PREFIX)-strip $@
+
+%.$(OBJ_SUFFIX) : %.c
+	$(CC) $(CCOPTS) $< $(CCOUT)$@
+
+%.$(OBJ_SUFFIX) : %.asm
+	$(NASM) $< $(NASMOUT) $@
+
+clean:
+	rm $(OBJ) 2> /dev/null || true
+	rm $(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR) 2> /dev/null || true
+	@echo 
+	@echo "*** Chinches exterminadas ***"
+
+install:
+	cp $(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR) ../../rgba-bin/lib/$(DLL_PREFIX)$(TARGET).$(DLL_SUFFIX).$(VER_MAJOR)
+

@@ -1,0 +1,158 @@
+!!ARBvp1.0
+
+# Shader para skinned objects
+#
+# Requisitos y comentarios
+#
+# - De momento sin iluminación (bastante tenemos ya :)
+# - Máximo 28 bones
+# - 4 pesos
+# - De momento, 2 coordenadas de textura... ¿Generación de coordenadas? Habrá que mirarlo...
+# - Se podría optimizar para reducir el número de temporales. ¿Se ganaría algo?
+
+# Constantes
+PARAM mvp[4]     = { state.matrix.mvp };   # modelview projection matrix
+PARAM bonetr[84] = { program.local[0..83] };   # bone transformations (m_ref_inv * affine transform)
+
+# Address register
+
+ADDRESS addr;
+
+# Per-vertex inputs
+
+ATTRIB inPosition = vertex.position;
+ATTRIB inNormal = vertex.normal;
+ATTRIB inColor    = vertex.color;
+ATTRIB inTexcoord = vertex.texcoord;
+ATTRIB inTexcoord2 = vertex.texcoord[1]; 
+
+# These attributes must be enabled via glVertexAttrib4NuivARB and EnableVertexAttribArrayARB(X)
+
+ATTRIB weights = vertex.attrib[6];
+ATTRIB boneids = vertex.attrib[7];
+
+# Per-vertex outputs
+
+OUTPUT outPosition    = result.position;
+OUTPUT outColor    = result.color;
+OUTPUT outTexcoord = result.texcoord;
+OUTPUT outTexcoord2 = result.texcoord[1];
+
+# Temporales
+
+TEMP tmp1, tmp2, tmp3, tmp4;
+TEMP tmpn1, tmpn2, tmpn3, tmpn4;
+
+TEMP outPosTemp;
+TEMP vert2light,eye2vertex;
+TEMP distance,halfvector;
+TEMP attcoef, xfNormal, dots;
+
+# Beginning of the program
+
+# Load the index for the 1st bone
+ARL addr.x, boneids.x;
+
+# Transform the vertex by bone one's tranform
+DP4 tmp1.x, bonetr[addr.x],     inPosition;
+DP4 tmp1.y, bonetr[addr.x + 1], inPosition;
+DP4 tmp1.z, bonetr[addr.x + 2], inPosition;
+
+# Multiply the transformed offset by the weight
+MUL tmp1.xyz, tmp1, weights.x;
+
+# Transform the normal by bone one's tranform
+DP3 tmpn1.x, bonetr[addr.x],     inNormal;
+DP3 tmpn1.y, bonetr[addr.x + 1], inNormal;
+DP3 tmpn1.z, bonetr[addr.x + 2], inNormal;
+
+# Multiply the transformed normal by the weight
+MUL tmpn1.xyz, tmpn1, weights.x;
+
+# Repeat for bone 2: load the index for the 2nd bone
+ARL addr.x, boneids.y;
+
+# Transform the vertex by bone two's tranform
+DP4 tmp2.x, bonetr[addr.x],     inPosition;
+DP4 tmp2.y, bonetr[addr.x + 1], inPosition;
+DP4 tmp2.z, bonetr[addr.x + 2], inPosition;
+
+# Multiply the transformed offset by the weight
+# The final result is accumulated in tmp1
+MAD tmp1.xyz, tmp2, weights.y, tmp1;
+
+# Transform the normal by bone two's tranform
+DP3 tmpn2.x, bonetr[addr.x],     inNormal;
+DP3 tmpn2.y, bonetr[addr.x + 1], inNormal;
+DP3 tmpn2.z, bonetr[addr.x + 2], inNormal;
+
+# Multiply the transformed normal by the weight
+# The final result is accumulated in tmpn1
+MAD tmpn1.xyz, tmpn2, weights.y, tmpn1;
+
+
+# Repeat for bone 3: load the index for the 3rd bone
+ARL addr.x, boneids.z;
+
+# Transform the vertex by bone three's tranform
+DP4 tmp3.x, bonetr[addr.x],     inPosition;
+DP4 tmp3.y, bonetr[addr.x + 1], inPosition;
+DP4 tmp3.z, bonetr[addr.x + 2], inPosition;
+
+# Multiply the transformed offset by the weight
+# The final result is accumulated in tmp1
+MAD tmp1.xyz, tmp3, weights.z, tmp1;
+
+# Transform the normal by bone three's tranform
+DP3 tmpn3.x, bonetr[addr.x],     inNormal;
+DP3 tmpn3.y, bonetr[addr.x + 1], inNormal;
+DP3 tmpn3.z, bonetr[addr.x + 2], inNormal;
+
+# Multiply the transformed normal by the weight
+# The final result is accumulated in tmpn1
+MAD tmpn1.xyz, tmpn3, weights.z, tmpn1;
+
+
+# Repeat for bone 4: load the index for the 4th bone
+ARL addr.x, boneids.w;
+
+# Transform the vertex by bone four's tranform
+DP4 tmp4.x, bonetr[addr.x],     inPosition;
+DP4 tmp4.y, bonetr[addr.x + 1], inPosition;
+DP4 tmp4.z, bonetr[addr.x + 2], inPosition;
+
+# Multiply the transformed offset by the weight
+# The final result is accumulated in tmp1
+MAD tmp1.xyz, tmp4, weights.w, tmp1;
+
+# Transform the normal by bone four's tranform
+DP3 tmpn4.x, bonetr[addr.x],     inNormal;
+DP3 tmpn4.y, bonetr[addr.x + 1], inNormal;
+DP3 tmpn4.z, bonetr[addr.x + 2], inNormal;
+
+# Multiply the transformed normal by the weight
+# The final result is accumulated in tmp1
+MAD tmpn1.xyz, tmpn4, weights.w, tmpn1;
+
+# So the final result is now on tmp1 (vertex) and tmpn1 (normal)
+# Set the vertex w to 1.0
+MOV tmp1.w, 1.0;
+
+# Normalize the vertex normal 
+DP3 tmpn1.w, tmpn1, tmpn1;
+RSQ tmpn1.w, tmpn1.w;
+MUL tmpn1, tmpn1, tmpn1.w;
+
+# Finally, project and lit this and we are done
+# For the first attempt, we will leave the lighiting out for clarity reasons
+
+DP4 outPosition.x, mvp[0], tmp1;   # Transform the x component into clip-space
+DP4 outPosition.y, mvp[1], tmp1;   # Transform the y component into clip-space
+DP4 outPosition.z, mvp[2], tmp1;   # Transform the z component into clip-space
+DP4 outPosition.w, mvp[3], tmp1;   # Transform the w component into clip-space
+
+# Transfer the texture coords and color as they are (the color will change after lighting is enabled)
+MOV outTexcoord, inTexcoord;
+MOV outTexcoord2, inTexcoord2;
+MOV outColor.xyz, 1.0;
+END

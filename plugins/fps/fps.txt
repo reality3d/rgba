@@ -1,0 +1,8 @@
+------
+ FPS
+------
+
+ Unicamente muestra en la esquina inferior izquierda los frames por segundo.
+Se actualizan cada segundo!
+
+>> FPS mifps ( );

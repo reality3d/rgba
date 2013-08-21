@@ -1,0 +1,62 @@
+MINI MANUAL del EPOPEIA SCRIPTING DEMOSYSTEM
+1.1.94
+
+Sintaxis del script:
+-------------------
+
+El script es case insensitive.
+
+<tiempo>:
+	order, row
+        	En caso de modulos
+
+        segundos.milisegundos
+        	En caso de ogg/mp3
+
+
+At(<tiempo>);
+
+	Cambia la referencia temporal al indicado. Los comandos sucesivos se
+ejecutaran en ese momento (o en el posterior mas inmediato posible).
+
+	Los comandos dentro de un mismo <tiempo>, se ejecutan en el orden en el
+        que se encuentran en el script.
+
+
+Until (<tiempo>) [ every(<tiempo)) ] do
+	<commandos>
+end
+
+	Ejecuta a partir del ultimo At() hasta el momento <tiempo> (sin incluirlo)
+        los comandos indicados antes de la renderizacion de cada frame. Ejemplo:
+        Si el tiempo es 6.0s, los comandos se ejecutaran antes de cualquier frame
+        anterior al 6.0 (hasta 5.999999999999999s).
+
+        Si se indica la opcion every, el tiempo indica el periodo de ejecucion de lo comandos;
+        es decir, los comandos se ejecutaran con el periodo indicado antes de la renderizacion
+        del frame.
+
+        Los comandos indicados mediante until se "activan" (pasan a ser considerados)
+	durante la ejecucon de los comandos ordinarios.
+
+        Despues de la ejecucion de los comandos ordinarios, se ejecutan los commandos
+        "persistentes" o indicados mediante until, siempre que proceda (comprobacion
+        del every).
+
+        Por ultimo, se ejecuta la renderizacion del frame.
+
+        La desactivacion de los comandos "persistentes" ocurre durante la ejecucion de comandos
+        ordinarios correspondientes al <tiempo> indicado en el UNTIL. Por lo tanto, en la fase
+        de ejecucion de comandos persistentes NO llegan a ser considerados.
+
+        De manera esquematica:
+
+        1. EJECUCION COMANDOS
+           ACTIVAR NUEVOS COMANDOS PERSISTENTES
+           DESACTIVAR COMANDOS PERSISTENTES "CADUCADOS"
+           (en cualquier orden, es posible que se repitan)
+           
+        2. EJECUTAR CADA COMANDO PERSISTENTE SI CORRESPONDE
+        
+        3. RENDERIZACION DEL FRAME
+        

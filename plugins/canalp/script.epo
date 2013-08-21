@@ -1,0 +1,45 @@
+--
+-- CANAL PLUS ENCODER . SCRIPT TEST
+--
+Demoname     = "Canal Plus Encoder";
+StartMessage = "Loading...";
+EndMessage   = "END";
+ModName      = "style.xm";
+
+begin
+
+--
+-- LOAD
+--
+    Sprite   spr2 ("new.jpg", 640, 480);
+    FPS      fps ( );
+    CanalP   cp();
+
+--
+-- Canal +
+--
+At(0,0);
+    spr2.SetPos(320.0,240.0);
+	spr2.SetScale(1.0,1.0);
+    spr2.SetAlpha(1.0);
+	spr2.Start (700);
+
+	cp.SetDeform (0);            -- Deform: Canal + (default)
+    cp.SetMode (5, 100);         -- Max. Despl: 5 lineas; Num. Lineas: 100%
+    cp.SetDesplChange (0, 5.0);  -- Max. Despl 0 en 5 segundos
+    cp.Start(50);
+
+    fps.Start(1);
+
+At(0,30);
+	cp.SetDeform (1);			 -- Desplazamiento vertical
+    cp.SetSpeed (1.5);
+
+At(1,10);
+	cp.SetDeform (1);			 -- Desplazamiento vertical
+    cp.SetSpeed (-2.0);
+
+-- Kill all!
+At(10,0);
+	spr2.Delete();
+end

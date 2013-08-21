@@ -1,0 +1,15 @@
+--------------------
+ Changes :: BLUR_FP
+--------------------
+
+>> 15/11/2005 enlar  
+- Corregir x,y de entrada para r2t de forma que bajamos la res r2t en
+caso de que la res fisica sea menor que lo especificado en el script.
+
+>> 11/10/2004 utopian
+   - Primera versión
+
+TODO:
+
+- Que las texturas de r2t se compartan entre plugins (usar glt!)
+- Para el blur fullscreen, utilizar texturas NPOT (glt 2)

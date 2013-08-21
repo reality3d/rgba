@@ -1,0 +1,31 @@
+#
+# PNG IMAGE MAKEFILE (VisualC)
+#
+
+OBJS   = img_png.obj
+LIBS   = win32\libpng.lib
+DST    = img_png.lib
+
+CC     = cl
+CCOPTS = /nologo /Ox /c /I../../../include
+
+LIB     = lib
+LIBOPTS = /NOLOGO /NODEFAULTLIB
+
+
+#
+# MAIN
+#
+$(DST): $(OBJS) $(LIBS)
+	$(LIB) /OUT:$(DST) $(OBJS) $(LIBS) $(LIBOPTS)
+
+clean:
+	del $(OBJS)
+        del $(DST)
+
+
+#
+# FILES
+#
+img_png.obj: img_png.c
+	$(CC) $(CCOPTS) img_png.c

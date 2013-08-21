@@ -1,0 +1,50 @@
+#
+# GLT DLL Makefile
+#
+
+DST = glt.dll
+OBJ = cache.obj texture.obj
+
+IMAGE_LIB = imagelib\image.lib
+
+
+# System libs
+LIB_SYS = user32.lib kernel32.lib opengl32.lib glu32.lib msvcrt.lib #imagelib\img_png\libpng.lib imagelib\img_jpeg\libjpeg.lib
+
+# Compiler options
+CC	= cl 
+CCOPTS  = /nologo /c /Ox /DWIN32 /DGLT_DLL /DGLT_EXPORT
+
+# Linker options
+LINKOPTS = /DEF:glt.def /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+#
+# Main
+#
+$(DST): $(OBJ) $(IMAGE_LIB)
+	link /OUT:$(DST) $(OBJ) $(IMAGE_LIB) $(LIB_SYS) $(LINKOPTS)
+
+
+
+#
+# Objs
+#
+cache.obj: cache.c
+	$(CC) $(CCOPTS) cache.c
+
+texture.obj: texture.c
+	$(CC) $(CCOPTS) texture.c
+
+$(IMAGE_LIB):
+	cd imagelib
+	nmake /nologo -f makefile.win32
+	cd..
+
+clean:
+	del $(OBJ)
+	del $(DST)
+	del glt.lib glt.exp
+	cd imagelib
+	nmake /nologo -f makefile.win32 clean
+	cd ..

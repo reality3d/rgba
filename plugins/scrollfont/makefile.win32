@@ -1,0 +1,41 @@
+##########################################################################
+#
+#
+##########################################################################
+
+
+DST = scrollfont.epl
+OBJ = scrollfont.obj scrollfont_epopeia.obj fonts.obj
+
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../../rgba-bin/lib/epopeia.lib ../../../rgba-bin/lib/glt.lib
+LIB_SYS     = user32.lib kernel32.lib msvcrt.lib opengl32.lib glu32.lib 
+
+# Compiler options
+CC		= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS -I$(H_EPOPEIA)
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+$(DST): $(OBJ)
+    link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+
+scrollfont_epopeia.obj: scrollfont_epopeia.c
+    $(CC) $(CCOPTS) scrollfont_epopeia.c
+
+scrollfont.obj: scrollfont.c
+    $(CC) $(CCOPTS) scrollfont.c
+
+fonts.obj: fonts.c
+    $(CC) $(CCOPTS) fonts.c
+
+clean:
+	del $(OBJ)
+    	del *.exp
+    	del *.dll
+    	del *.lib
+    
+install: $(DST)
+	copy $(DST) ..\..\..\rgba-bin\demosystem\plugin

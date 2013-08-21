@@ -1,0 +1,42 @@
+------------------------------------
+R2Texture (r2texture.epl)
+------------------------------------
+Hace un render a textura de lo que haya puesto en ese momento en el color buffer. Una vez sacado 
+a textura, gracias a las excelencias del GLT lo puede usar cualquier buffer.
+
+-- Inicializacion
+R2Texture r2t(int x, int y, string nombretextura)
+
+	x, y:	tamaño de la textura que se va a generar (debe ser potencia de 2)
+	nombretextura: nombre que se va a dar a la textura compartida
+
+
+... Y no hay más. Para que sea efectivo, hay que jugar con el orden de las capas y el viewport. 
+Veamos un ejemplo:
+
+
+Viewport view1(0,0,0,256,256);	  -- Si el primer parametro es 0, el resto son pixeles
+Viewport view2(1,0,0,100,100);    -- Si el primer parametro es 1, el resto son porcentajes
+R2Texture r2t(256,256,"escena1");    
+Fondo fondo1();
+Fondo fondo2();
+
+Escena3D escena1 ("blablabla...");
+Escena3D escena2 ("blablabla...");
+
+En la escena2 hemos definido un material con una textura llamada "escena1". Entonces:
+
+fondo1.Start (2000);
+view1.Start  (1000);
+escena1.Start(800);
+r2t.Start    (700);
+fondo2.Start (600);
+view2.Start  (500)
+escena2.Start(10);
+
+Así, se limpia la pantalla, se pinta la primera escena en un viewport de 256x256 y se captura
+en la textura. Luego, se vuelve a limpiar la pantalla, se pone un viewport normal y se dibuja
+la segunda escena. Por supuesto esto no es exclusivo de escenas del fantasy, se puede poner
+todo lo que se quiera. Pero es importante poner el mismo tamaño al viewport que a la textura, 
+para que el render se haga bien.
+

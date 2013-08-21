@@ -1,0 +1,57 @@
+!!ARBvp1.0
+
+# Shader para cambiar entre dos texturas en un objeto, haciendo un degradado según el vertex
+# color
+#
+# Requisitos y comentarios
+#
+# - 2 unidades de textura, y el blend de la segunda unidad de textura definido como mask2
+# - De momento no calcula iluminación
+# - No es aplicable a objetos traslúcidos, porque tiene que jugar con el alpha del color
+#
+
+# Constantes
+PARAM mvp[4]     = { state.matrix.mvp };   #   modelview projection matrix
+PARAM divisor = 0.33333333;
+
+# Per-vertex inputs
+ATTRIB inPosition = vertex.position;
+ATTRIB inColor    = vertex.color;
+ATTRIB inTexcoord = vertex.texcoord;
+ATTRIB inTexcoord2 = vertex.texcoord[1]; 
+
+# Per-vertex outputs
+OUTPUT outPosition    = result.position;
+OUTPUT outColor    = result.color;
+OUTPUT outTexcoord = result.texcoord;
+OUTPUT outTexcoord2 = result.texcoord[1];
+
+# Temporales
+
+TEMP temporal;
+
+# Primero pasamos a coordenadas de vista
+
+DP4 outPosition.x, mvp[0], inPosition;   # Transform the x component of the per-vertex position into clip-space
+DP4 outPosition.y, mvp[1], inPosition;   # Transform the y component of the per-vertex position into clip-space
+DP4 outPosition.z, mvp[2], inPosition;   # Transform the z component of the per-vertex position into clip-space
+DP4 outPosition.w, mvp[3], inPosition;   # Transform the w component of the per-vertex position into clip-space
+
+
+
+# Tan solo falta calcular el alpha del color, que modelara la textura, segun el alpha
+# Para hacerlo hacemos que:
+# Si luminancia >= 1, textura 2
+# Si luminancia = 0, textura 1
+# en cualquier caso intermedio, es un blend de las dos
+
+MOV temporal, inColor.x;
+ADD temporal, inColor.y;
+ADD temporal, inColor.z;
+MUL outColor.w, temporal, divisor;
+
+
+MOV outTexcoord, inTexcoord;
+MOV outTexcoord2, inTexcoord2;
+MOV outColor.xyz, inColor;
+END

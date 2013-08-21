@@ -1,0 +1,10 @@
+Cambios Nieve3D
+---------------
+
+2003-11-03 enlar:
+	- Arreglado radix.c para que index no colisione con una 
+        variable definida en string.h . Renombrado a "indice".
+
+2003-08-10 enlar:
+- Hacer que los makefiles funcionen
+- Arreglar path del include de epopeia_system.h

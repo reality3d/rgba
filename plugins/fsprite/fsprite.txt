@@ -1,0 +1,27 @@
+------------------------------------
+FantasySprite(fsprite.epl)
+------------------------------------
+
+Inicializacion
+--
+FantasySprite sprite ("ig1.png,ig2.jpg,ig3.png", "descriptor");
+
+--Nota:El taaño de las iagenes DEBE ser el iso, pues se usa 
+el "slot 0" para eter todas las iagenes y este slot no coprueba el taaño
+
+>> sprite.SetSprite (int nu_sprite)
+    Fija el sprite a utilizar (por defecto se inicializa a cero)
+
+>> sprite.SetLoopMode (int ode)
+    ode 0: Static sprite
+    ode 1: Loop
+    ode 2: Ping - Pong
+    ode 3: Rando
+
+>> sprite.SetChangeSpeed (float sprites_per_secs)
+    Fija la velocidad de transición entre sprites en sprites por segundo (def: 1.0)
+    Una velocidad de 0.0 significa que se cabie de sprite cada frae.
+
+>> sprite.SetAlpha(float alpha)
+    Fija el alpha de la textura(soporta ultisprite)
+

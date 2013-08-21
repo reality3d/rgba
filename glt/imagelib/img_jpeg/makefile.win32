@@ -1,0 +1,34 @@
+#
+# JPEG IMAGE MAKEFILE (VisualC)
+#
+
+OBJS   = img_jpeg.obj jpeg_io.obj
+LIBS   = libjpeg.lib
+DST    = img_jpeg.lib
+
+CC     = cl
+CCOPTS = /nologo /Ox /c /I../../../include
+
+LIB     = lib
+LIBOPTS = /NOLOGO /NODEFAULTLIB
+
+
+#
+# MAIN
+#
+$(DST): $(OBJS) $(LIBS)
+	$(LIB) /OUT:$(DST) $(OBJS) $(LIBS) $(LIBOPTS)
+
+clean:
+	del $(OBJS)
+	del $(DST)
+
+
+#
+# FILES
+#
+img_jpeg.obj: img_jpeg.c
+	$(CC) $(CCOPTS) img_jpeg.c
+
+jpeg_io.obj: jpeg_io.c
+	$(CC) $(CCOPTS) jpeg_io.c

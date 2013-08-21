@@ -1,0 +1,56 @@
+* Instalación:
+--------------
+
+Copiar el contenido del directorio plugins al directorio con el mismo nombre de Max. El resto de 
+ficheros van al propio directorio de max. Aquí van las peculiaridades del exportador a día de hoy:
+
+* Generales:
+------------
+
+Exportar en el frame 0. Si se hace en otro frame puede dar "problemillas" :)
+
+* Objetos:
+----------
+
+- De momento sólo se exporta un set de coordenadas de textura
+
+* Controllers:
+--------------
+
+- Actualmente el engine sólo soporta controladores TCB, nada de Bezier ni lineal
+
+* Luces:
+--------
+
+- Sólo se soportan luces omni
+
+* Hints:
+--------
+
+- El campo "User properties" de un objeto puede contener texto. Si en ese campo está la cadena
+  "dynamic", se considera que este objeto va a ser modificable dinámicamente desde otro plugin,
+  con lo cual se crea de la forma adecuada para un rendimiento óptimo de vertex buffer objects. 
+  Si se pone y el objeto no es modificado no pasa nada, y al revés, si no se pone y se modifica 
+  el objeto. Tan sólo se pierde rendimiento.
+  
+* Jerarquías:
+-------------
+
+- Están soportadas. Justo antes de exportar una escena con jerarquías, seleccionar todos los 
+  objetos y RESETEAR LOS PIVOTS. Si no se hace puede dar problemas.
+
+* Bones:
+--------
+
+- Las escalas en los bones están implementadas de forma experimental, sin testear aún lo bastante
+- Un objeto puede ser definido como bone si pertenece a una clase concreta de Max (no recuerdo),
+  o bien si en el campo user properties está la cadena "bone", sin las comillas
+- Máximo 28 bones por objeto, y 4 bones afectando a un mismo vértice
+
+Si da problemas la reference pose del objeto (malla mal deformada), seguir estos pasos:
+
+<r3D^away> he hecho un bake de los pesos
+<r3D^away> una copia de la malla deformada
+<r3D^away> y luego he pegado los pesos
+
+Se resume en que la reference pose no debe tener deformación

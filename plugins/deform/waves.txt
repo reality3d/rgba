@@ -1,0 +1,24 @@
+-----------------------
+ Waves (Deform Update)
+-----------------------
+
+ Deform df (grid_width, grid_height);
+
+ >> df.SetMode (int mode)
+    - mode = 7: "Waves1"
+    - mode = 8: "Waves2"
+
+  Existen 32 "huecos" numerados de 0 a 31 para guardar movimientos de ondas,
+que se pueden ejecutar en cualquier momento. Las operaciones sobre estos
+huecos son las siguientes:
+
+ >> df.WaveLoad (int hueco, string filename);
+    Carga en el hueco indicado la onda del fichero "filename". El contenido
+  del fichero debe estar convertido a binario con la utilidad correspondiente.
+
+ >> df.WaveStart (int hueco)
+    Comienza la ejecucion de la secuencia de comandos de la onda grabada.
+
+ >> df.WaveStop (int hueco)
+    Para la reproduccion de la onda del hueco indicado.
+

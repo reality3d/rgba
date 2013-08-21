@@ -1,0 +1,8 @@
+
+
+>> 2003/11/07 enlar
+   - Añadir al CVS
+   - Crear makefile Linux
+   - Arreglar includes
+   
+>> Version original por IQ

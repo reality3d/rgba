@@ -1,0 +1,25 @@
+-----------------
+ Changes :: Blur
+-----------------
+
+>> 26/04/2004 enlar
+   - Crear makefile mingw32 y unificarlo con el de linux
+
+>> 12/11/2003 enlar
+   - Cambiar 2 llamadas a timeGetTime por Epopeia_TimeGetMs para portabilidad
+
+>> 04/11/2003 enlar
+   - Creado makefile.linux
+   - Arreglar path includes + ifdef windows.h
+   - Incluir en el CVS
+
+>> 31/10/2003
+   - Corregido bug que actualizaba mal los datos si se cambiaba el
+     viewport dinamicamente.
+
+>> 19/08/2003 [QUITADO para la red]
+   - Actualizado a nueva version de GLT: En TEX_New le pasamos un formato opengl
+   - Subida a la cache la textura para el render a textura
+
+>> 21/07/2003
+   - Primera version

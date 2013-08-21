@@ -1,0 +1,8 @@
+--------
+  BLUR
+--------
+
+>> Blur blur ( );
+
+>> blur.SetBlur (float blur_level)
+    - blur_level: Nivel de blur entre 0 (nada de blur) y 100 (maximo blur)

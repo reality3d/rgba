@@ -1,0 +1,108 @@
+GRAMATICA DE EPOPEIA SCRIPTING DEMOSYSTEM
+-----------------------------------------
+v1.1.6
+
+Demoscript 	-> Header Body 
+
+Header		-> DemoName "=" TextString ";"
+		| StartMessage "=" TextString ";"
+		| EndMessage "=" TextString ";"
+                | ModName "=" TextString ModnameEnd ";"
+		| CoolKeys "=" Integer ";"
+		| WarningLevel "=" Integer ";"
+		| ForceModTiming "=" Integer ";"
+                | E
+
+ModnameEnd 	-> "," TextString ModnameEnd
+		| E
+
+Body		-> ComandSequence "end"
+
+CommandSequence -> Command CommandSequence 
+		| E
+
+Command		-> "At" TimingPoint ";"
+		| "SetOrder" TimingPoint ";"
+		| "SetTime" TimingPoint ";"
+		| TypeName Identifier "(" ArgList ")" ";"
+		| Identifier CommandIdentifierEnd
+                | "begin"				
+                	{ CommandList_InsertMusicPlay() }
+		| "Until" TimingPoint CommandUntilEvery "Do" CommandSequence "End"
+                
+
+CommandIdentifierEnd	-> "." Identifier "(" ArgList ")" ";"
+				{
+                                  match(".")
+                                  if(!is_object(Ident1))
+                                	semantic_error()
+                                  match(Identifier) -> Ident2
+                                  if(!class_has_method(Ident1, Ident2))
+                                  	semantic_error()
+                                  match("(")
+                                  ArgList1 = ArgList()
+                                  match(")")
+                                  match(";")
+                                  if(!check_arg_list_types(Ident1, Ident2, ArgList1))
+                                  	semantic_error()
+                                  build_command_method_call(Ident1, Ident2, ArgList1)
+                                  if(Ident2 == "Start")
+                                  	build_command_start(Ident1, ArgList1[0]);
+                                  elseif(Ident2 == "Stop")
+                                  	build_command_stop(Ident1);
+                                }
+			|  "=" Expression ";"
+                        	{
+                                  match("=")
+                                  if(!is_variable(Ident1))
+                                  	semantic_error()
+                                  Expr = Expression()
+                                  if(Expr.type != type(Ident1))
+                                  	semantic_error()
+                                  match(";")
+                                  build_command_assign(Ident1, Expr)
+				}
+
+CommandUntilEvery	-> "Every" TimingPoint
+			|  E
+
+
+ArgList		-> Expression ArgListEnd 
+		| E
+
+ArgListEnd	-> "," Expression ArgListEnd 
+		| E
+
+Expression     	-> Term ExpressionEnd
+
+ExpressionEnd  	-> {"+", "-"} Term ExpressionEnd
+		| E
+
+Term 		->  Factor TermEnd
+
+TermEnd		-> {"*", "/", "%"} Factor TermEnd
+		| E
+
+(TermNoSign)
+FactorNoSign   	-> Identifier IdentifierEnd
+		| Number
+                | TextString
+                | "(" Expression ")"
+*                | "int" "(" Expression ")"
+*                | "real" "(" Expression ")"
+
+Factor		-> "-" FactorNoSign 
+		| FactorNoSign
+
+IdentifierEnd	-> "(" ArgList ")"			# Llamada a funcion
+		| "." Identifier "(" ArgList ")"        # Llamada a metodo
+                | E					# Variable normal
+
+Integer		-> Number
+
+Real		-> Number
+
+TimingPoint	-> "(" Integer "," Integer ")"		# modulo
+		|  "(" Number ")"			# stream
+		|  "(" "-" Number ")"			# stream
+

@@ -1,0 +1,1 @@
+/OUT:fantasy.dll fantasy_epopeia.obj user32.lib kernel32.lib gdi32.lib opengl32.lib glu32.lib msvcrt.lib fantasy/fantasy.lib ../../src/epopeia.lib /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB 

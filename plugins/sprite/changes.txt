@@ -1,0 +1,32 @@
+-------------------
+ Changes :: Sprite
+-------------------
+
+>> 20/11/2003 enlar
+ - Fix TEX_New + CACHE_InsertTexure -> CACHE_LoadTexture, para evitar 
+   fallo al cargar la misma textura en diferentes Sprites.
+
+>> 21/07/2003 utopian
+   - Modificada la carga de la textura para que también la añada a la caché y puedan jugar otros
+     plugins
+
+>> 05/05/2003 enlar
+   - Renombrados los makefiles a lowercase
+
+>> 04/05/2003 enlar
+   - Cambiadas las llamadas a timeGetTime a Epopeia_GetTimeMs
+   - Fixes y makefile para Linux
+
+>> 02/05/2003
+   - Adaptado al nuevo epopeia, e independiente de la resolución
+
+>> 22/11/2002
+   - Añadido metodo SetAlphaPulse
+
+>> 31/07/2002
+   - Añadido metodo SetScaleFade
+
+>> 08/07/2002
+   - Soporte multisprite (se pasan como un solo string separados por comas)
+   - Soporte de sprites de cualquier tamaño (por ahora, internamete se convierte
+     a textura en potencia de 2)

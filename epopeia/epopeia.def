@@ -1,0 +1,73 @@
+EXPORTS
+    DEBUG_printMsg @1
+    DEBUG_printMsgDec @2
+    DEBUG_printMsgHex @3
+    DEBUG_printMsgReal @4
+    DEBUG_printMsgString @5
+    EpopeiaVersionString @6 DATA
+    Epopeia_DisableMenu @7
+    Epopeia_DumpClassInfo @8
+    Epopeia_DumpFunctionInfo @9
+    Epopeia_End @10
+    Epopeia_GetDemoName @11
+    Epopeia_GetResX @12
+    Epopeia_GetResY @13
+    Epopeia_GetResolution @14
+    Epopeia_GetSongNumber @15
+    Epopeia_GetSoundContext @16
+    Epopeia_GetTimeMs @17
+    Epopeia_Init @18
+    Epopeia_Load @19
+    Epopeia_LoadPlugins @20
+    Epopeia_Play @21
+    Epopeia_Print @22
+    Epopeia_RegisterBuilinTypes @23
+    Epopeia_ScriptCompile @24
+    Epopeia_ScriptInit @25
+    Epopeia_SetConsoleOutput @26
+    Epopeia_SetOutputFilename @27
+    Epopeia_SetResolution @28
+    Epopeia_SetSongNumber @29
+    Epopeia_SetStencilBuffer @30
+    Epopeia_SetWindowed @31
+    Epopeia_SetZBuffer @32
+    Epopeia_UnLoadPlugins @33
+    Epopeia_Unload @34
+    FunctionTable_Register @35
+    Function_AddParameterType @36
+    Function_New @37
+    Method_AddParameterType @38
+    Method_New @39
+    Method_SetReturnType @40
+    Type_AddConstant @41
+    Type_AddConstantInteger @42
+    Type_AddConstantReal @43
+    Type_AddMethod @44
+    Type_GetConstantType @45
+    Type_GetConstantValue @46
+    Type_GetConstantValueInteger @47
+    Type_GetConstantValueReal @48
+    Type_GetId @49
+    Type_GetMethod @50
+    Type_HasConstant @51
+    Type_HasMethod @52
+    Type_IntegerId @53 DATA
+    Type_InvalidId @54 DATA
+    Type_RealId @55 DATA
+    Type_Register @56
+    Type_StringId @57 DATA
+    pak_close @58
+    pak_feof @59
+    pak_fgetc @60
+    pak_fgets @61
+    pak_fseek @62
+    pak_ftell @63
+    pak_init @64
+    pak_kill @65
+    pak_list_current_filename @66
+    pak_list_current_size @67
+    pak_list_next @68
+    pak_list_reset @69
+    pak_open @70
+    pak_read @71
+    pak_write @72

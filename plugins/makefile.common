@@ -1,0 +1,35 @@
+PLUGINS_COMMON = \
+apifantasy \
+apifantasy2 \
+blur \
+blurtext \
+canalp \
+cross \
+cross2 \
+deform \
+deform3d \
+deform3d_2 \
+dkfantasy \
+dots \
+fade \
+flash \
+fondo \
+fonts \
+fps \
+fsprite \
+fuego \
+glow \
+kscroll \
+mblur \
+nieve3d \
+pelo \
+portada \
+r2texture \
+scrollfont \
+simplefx \
+spiral \
+spline \
+sprite \
+test_retorno \
+viewport \
+zoomer

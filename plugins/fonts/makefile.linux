@@ -1,0 +1,45 @@
+#
+# PLUGIN Makefile
+#
+
+
+DST_FILE = fonts.epx
+OBJ      = fonts.o fonts_epopeia.o 
+
+
+# Epopeia headers and libs
+H_EPOPEIA   = ../../include
+LIB_EPOPEIA = ../../../rgba-bin/lib/
+
+# System libs
+LIB_SYS     = -Lgl -Lglu
+
+# Compiler options
+CC	= gcc
+CCOPTS  = -c -O3 -march=pentium -ffast-math -DLINUX  -I../../include
+
+# Linker options
+LINKOPTS =
+
+#
+# Main
+#
+$(DST_FILE): $(OBJ) $(LIB_FANTASY)
+	gcc -shared $(OBJ) $(LIB_FANTASY) -L../../../rgba-bin/lib/ -lglt -lepopeia  -o $(DST_FILE) 
+
+clean:
+	rm -f $(OBJ)
+	rm -f *.so
+	rm -f *.epx
+	
+install: $(DST_FILE)
+	cp $(DST_FILE) ../../../rgba-bin/demosystem/plugin
+	
+#
+# Objs
+#
+fonts_epopeia.o: fonts_epopeia.c
+	$(CC) $(CCOPTS) fonts_epopeia.c
+
+fonts.o: fonts.c
+	$(CC) $(CCOPTS) fonts.c

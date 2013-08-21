@@ -1,0 +1,12 @@
+-----------------
+ Changes :: FPS
+-----------------
+
+>> 22/04/2004 enlar
+   - Fixes para que copile en linux
+   - Subir al CVS
+   - Reemplazar llamada timeGetTime por Epopeia_GetTimeMs
+   - Definir correctamente metodo start con su parametro
+
+>> 11/07/2002
+   - Primera version

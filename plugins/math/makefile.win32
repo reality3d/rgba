@@ -1,0 +1,40 @@
+##########################################################################
+#
+# Makefile para la nieve
+#
+# modificaci¢n del que tra¡a el "bombillita":
+#
+# * crea directamente el .epl, ya no crea un dll y lo copia
+# * sobraban librer¡as
+#
+##########################################################################
+
+
+DST = math.epl
+OBJ = math_epopeia.obj turb.obj
+
+LIB_EPOPEIA = epopeia.lib
+LIB_SYS     = user32.lib kernel32.lib msvcrt.lib 
+
+# Compiler options
+CC		= cl
+CCOPTS  = /c /Ox /DWIN32 /DFX_EXPORTS 
+
+# Linker options
+LINKOPTS = /DLL /nologo /incremental:no /subsystem:windows /NODEFAULTLIB
+
+
+$(DST): $(OBJ)
+    link /OUT:$(DST) $(OBJ) $(LIB_SYS) $(LIB_EPOPEIA) $(LINKOPTS)
+
+math_epopeia.obj: math_epopeia.c
+    $(CC) $(CCOPTS) math_epopeia.c
+turb.obj: turb.c
+    $(CC) $(CCOPTS) turb.c
+
+clean:
+	del $(OBJ)
+    	del *.exp
+    	del *.dll
+    	del *.lib
+    

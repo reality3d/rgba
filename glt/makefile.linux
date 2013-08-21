@@ -1,0 +1,47 @@
+# Linux rulez
+#
+# GLT Dynamic LIB Makefile
+#
+
+DST = libglt.so
+OBJ = cache.o texture.o
+
+
+# Libs
+IMAGE_LIB = imagelib/libimage.a /usr/lib/libpng.a /usr/lib/libz.a
+
+# Compiler options
+CC	= gcc
+CCOPTS  = -g -c -O3 -march=pentium -ffast-math -DLINUX
+
+LINK		= gcc
+LINKOPTS    	= -shared -Wl,-soname,libglt.so -lGL -lGLU -lm -ljpeg #-lpng da problemas de versiones, ver lib estatica arriba
+LINKOUT        	= -o
+LINKSRC		= $(OBJ) $(IMAGE_LIB) 
+
+#
+# Main
+#
+$(DST): $(OBJ) $(IMAGE_LIB)
+	$(LINK) $(LINKOUT)$@ $(LINKOPTS) $(LINKSRC)
+	strip $(DST)
+
+#	ar r $(DST) $(OBJ) $(IMAGE_LIB)
+
+install: $(DST)
+	cp $(DST) ../../rgba-bin/lib
+
+clean:
+	rm -f $(DST) $(OBJ)
+
+imagelib/libimage.a:
+	make -C imagelib -f makefile.linux
+
+#
+# Objs
+#
+cache.o: cache.c
+	$(CC) $(CCOPTS) cache.c
+
+texture.o: texture.c
+	$(CC) $(CCOPTS) texture.c
